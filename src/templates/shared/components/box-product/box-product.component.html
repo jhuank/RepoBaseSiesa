@@ -1,0 +1,149 @@
+<!-- Toast template -->
+<ng-template #templateAfterAddToShoppingCart>
+  <h5>{{product.name}}</h5>
+  <p>Ha sido agregado correctamente</p>
+  <P *ngIf="!itemIsAlreadyInCart">Cantidad añadida: <b>{{productFactor}}</b></P>
+  <P *ngIf="itemIsAlreadyInCart">Cantidad añadida: <b>{{productFactor}}</b></P>
+  <div class="text-right">
+    <a class="btn btn-light rounded-0" [routerLink]="['/', 'order']">Ir al Carrito</a>
+  </div>
+</ng-template>
+<!-- Box Product -->
+<div class="box-product-container">
+  <div class="item-product">
+    <!-- Image Image -->
+    <div class="item-image" *ngIf="product.imagesDetail">
+      <!-- Badges -->
+      <div class="badges d-flex flex-column position-absolute">
+        <small class="badge badge--featured mb-1" *ngIf="product.isOutstanding">
+          Destacado
+        </small>
+        <small class="badge badge--new mb-1" *ngIf="product.isNew">
+          Nuevo
+        </small>
+        <small class="badge badge--discount mb-1"
+               *ngIf="+product.discountPercentage && product.showValuePercentage">
+          {{ product.discountPercentage | number: '1.0-2'}}%
+        </small>
+        <small class="badge badge--offert mb-1" *ngIf="product.isOffert">
+          Oferta
+        </small>
+        <small class="badge badge--promo mb-1" *ngIf="product.isPromo">
+          Promo
+        </small>
+        <small class="badge badge--exclusive mb-1" *ngIf="product.obsequio?.id">
+          + Obsequio
+        </small>
+        <small class="badge badge--exclusive mb-1" *ngIf="product.isInternetExclusive">
+          E. Internet
+        </small>
+      </div>
+      <!-- Actions: Compare / Favorite -->
+      <div class="btn-fab-item">
+        <a class="btn-add-favorites"
+           (click)=" toggleFavoriteProduct();"
+           data-placement="top"
+           [hidden]="!(authService.isAuthenticated || product.isSettingAsFavorite)"
+           [ngClass]="{'selected': product.isFavorite}" ngbTooltip="Favoritos" placement="left">
+          <i class="icon fas fa-heart"></i>
+        </a>
+        <a class="btn-compare-products"
+           [ngClass]="{selected: selectedToCompare()}"
+           (click)="setItemToCompare()" ngbTooltip="Comparar" placement="left">
+          <i class="icon icon-refresh"></i>
+        </a>
+      </div>
+      <a class="w-100" [routerLink]="['/', product.category.slug, product.slug]">
+        <img [src]="product.imagesDetail[0].path + product.imagesDetail[0].image"
+             [alt]="product.imagesDetail[0]?.alt || product.name"
+             [title]="product.imagesDetail[0]?.title || product.name"
+             class="item-image-product img-fluid">
+        <img *ngIf="product.obsequio?.id" [src]="product.obsequio.imagen" class="img-gift">
+      </a>
+    </div>
+    <!-- Product Description -->
+    <div class="product-description">
+      <!-- Product Name -->
+      <div class="item-name-container">
+        <a class="item-name-link" [routerLink]="['/', product.category.slug, product.slug]">
+          {{product.name}}
+        </a>
+      </div>
+      <!-- Price -->
+      <div class="item-price-container">
+        <!--rating-->
+        <div class="rating" *ngIf="showRating">
+          <ngb-rating [(rate)]="rating" [max]="5" [readonly]="true"></ngb-rating>
+        </div>
+        <!-- Prices before -->
+        <div class="item-price-list"
+             *ngIf="((product.currentPrice > 0 && (product.currentPrice !== product.lastPrice) ))">
+          <p class="mb-0 small">
+            Antes: <span class="line-through text-black-50">${{ product.lastPrice | number : '1.0-0' }}</span>
+          </p>
+        </div>
+        <!-- Price From -->
+        <div class="item-price-content">
+          <p class="mb-0 mr-1" *ngIf="product.isTemplate">Desde:</p>
+          <h3 class="item-price" *ngIf="product.currentPrice">
+            ${{ product.currentPrice | number : '1.0-0' }}
+          </h3>
+        </div>
+        <!-- Price Colpatria -->
+        <div class="item-price-list" *ngIf="product.flagMedioPago">
+          <img src="/assets/images/card-colpatria-2.png" class="mr-2">
+          <h6 class="text-secondary font-weight-bold mb-0">${{product.currentPrice | number : '1.0-0'}}</h6>
+        </div>
+        <!-- Not Available -->
+        <div class="item-price-list" *ngIf="product.isSoldOut || !product.currentPrice">
+          <p class="item-not-available">Agotado</p>
+        </div>
+        <!-- PUM -->
+        <div class="item-price-list"
+             *ngIf="product.mostrar_price_unity_measure && product.unidad_pum && product.pum">
+          <p class="small mb-0">{{product.unidad_pum}} a ${{product.pum}}</p>
+        </div>
+        <!-- VAT Included -->
+        <div class="item-price-list" [hidden]="!product.currentPrice">
+          <p class="small mb-0">{{product.taxText}}</p>
+        </div>
+      </div>
+      <!-- Action -->
+      <div class="row no-gutters mt-2" *ngIf="product.showProductAction && product.cantidad">
+        <div class="col-12 col-lg mr-0 mr-lg-2 mb-3 mb-lg-0">
+          <!-- Component: Quantity -->
+          <div [hidden]="product.currentPrice === null || product.isSoldOut"
+               *ngIf="product.showProductAction || product.showClonedAction">
+            <app-quantity [quantity]="quantityProduct"
+                          [min]="product.factor_pedido || product.cantidad_minima"
+                          [factor]="product.factor_pedido"
+                          (changeQuantity)="handleQuantity($event)"
+                          [updatingQuantityPd]="true">
+            </app-quantity>
+          </div>
+        </div>
+        <div class="col-12 col-lg">
+          <!-- Button Add Cart -->
+          <div class="item-action">
+            <button *ngIf="product.showProductAction && product.cantidad" (click)="addToCart()"
+                    class="btn btn-block btn-primary">
+              <i class="icon-bag"></i>
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row no-gutters mt-2" *ngIf="!product.showProductAction">
+        <div class="col-12 col-lg-6 offset-lg-6">
+          <div class="item-action">
+            <button [routerLink]="['/', product.category.slug, product.slug]"
+                    class="btn btn-block btn-secondary">
+              <i class="icon-magnifier"></i>
+              Ver Más
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

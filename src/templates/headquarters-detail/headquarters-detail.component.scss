@@ -1,0 +1,37 @@
+// Accordion
+.headquarters-info {
+  position: sticky;
+  top: 120px;
+}
+.headquarters-location {
+  &.accordion {
+    .card-header {
+      cursor: pointer;
+      padding: 1.25em;
+
+      &:after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f068";
+        position: absolute;
+        right: 1.25em;
+        top: 1.1em;
+      }
+
+      &.collapsed {
+        background: var(--primary);
+        color: white;
+        transition-duration: 0.5s;
+
+        &:after {
+          content: "\f067";
+        }
+      }
+    }
+    .headquarters-location-map{
+      height:50vh;
+    }
+  }
+}
+
+agm-map { height: 300px; }

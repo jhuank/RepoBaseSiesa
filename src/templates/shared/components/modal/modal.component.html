@@ -1,0 +1,37 @@
+<div class="app-modal" [class.open]="modalService.show" >
+  <!-- Modal content -->
+  <div class="app-modal-content modal-content" role="dialog">
+
+    <div class="app-modal-header position-relative"
+      [ngClass]="{
+        'modal-header bg-primary text-white': modalService.context?.title
+      }">
+      <h5 class="modal-title w700">
+        <span *ngIf="modalService.context?.title as title" [innerHTML]="title"></span>
+        <button role="button" class="close" *ngIf="modalService.context?.close || true"
+            [ngClass]="{ 'text-dark': !modalService.context?.title }"
+            (click)="close()">
+            &times;
+        </button>
+      </h5>
+    </div>
+
+    <div class="app-modal-body modal-body">
+
+      <!-- Contenido con string -->
+      <ng-template #text>
+        <p class="mb-0" [innerHTML]="modalService.template"></p>
+      </ng-template>
+
+      <!-- Contenido con template -->
+      <ng-container *ngIf="isTemplate(modalService.template); else text">
+        <ng-template [ngTemplateOutlet]="modalService.template" [ngTemplateOutletContext]="{ data: modalService.context }">
+        </ng-template>
+      </ng-container>
+    </div>
+    <div class="app-modal-footer modal-footer" *ngIf="modalService.showActions">
+        <button type="button" class="btn btn-danger" (click)="accept(false)">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="accept(true)">Aceptar</button>
+    </div>
+  </div>
+</div>

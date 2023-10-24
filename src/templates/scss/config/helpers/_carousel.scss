@@ -1,0 +1,40 @@
+.carousel-wrapper {
+  &--item {
+    margin: 0 2.1rem !important;
+
+    img {
+      border-radius: 0.6rem;
+    }
+  }
+}
+
+.carousel {
+  &.slide {
+    .carousel-indicators {
+      li {
+        background-color: var(--gray-500);
+      }
+    }
+  }
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-image: none;
+}
+
+.carousel-control-next-icon:after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f054";
+  font-size: 24px;
+  color: var(--gray-500);
+}
+
+.carousel-control-prev-icon:after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f053";
+  font-size: 24px;
+  color: var(--gray-500);
+}

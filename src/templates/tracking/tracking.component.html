@@ -1,0 +1,149 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small px-0 bg-transparent">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item ">
+
+              <span class="w700">
+                <a [routerLink]="['/orders']">Mis pedidos</a>
+              </span>
+
+            </li>
+            <li class="breadcrumb-item active">
+              <span class="w700">
+                Tracking
+              </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 tracking__title">
+        <h1>Resultado Rastreo de Guía</h1>
+        <hr>
+      </div>
+
+      <div *ngIf="showTracking" class="col-md-12 tracking__box--icon-status d-flex justify-content-center ">
+        <h2>Número de Guía: {{trackingInfo.NUMERO_ENVIO}}  </h2>
+      </div>
+
+      <!--<div class="col-md-12 tracking__box--icon-status row bg-dangser d-flex justify-content-center pt-3 pb-4">
+        <div *ngFor="let item of trackingArray" style="border-radius: 50%" class="ml-3" [ngClass]="{'tracking__icon--line-status': item.estado,'tracking__icon--no-status': !item.estado}">
+          <img [src]="item.url" alt="" >
+        </div>
+
+      </div>-->
+      <div *ngIf="showTracking" class="col-md-12">
+        <div class="col-md-12 d-flex justify-content-center ">
+          <h2>Estado: {{customEstados[0].DESCRIPCION}}</h2><br>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center ">
+          <b>Origen: &nbsp; </b> {{trackingInfo.POBLACION_REMITENTE}}<br>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center ">
+          <b>Destino: &nbsp; </b> {{trackingInfo.POBLACION_DESTINATARIO}}<br>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center ">
+          <b>Fecha reporte: &nbsp; </b> {{customEstados[0].FECHA_EVENTO}}
+        </div>
+      </div>
+
+      <div *ngIf="!showTracking" class="col-md-12">
+        <div class="col-md-12 d-flex justify-content-center p-5 ">
+          <h2>No se ha encontrado información de seguimiento.</h2>
+        </div>
+      </div>
+
+      <ngb-tabset *ngIf="showTracking" class="col-md-12 pt-4" >
+
+        <ngb-tab title="Detalles y fechas">
+          <ng-template ngbTabContent>
+            <div class="col-md-12 pt-3" style="height: 500px; overflow-y: auto">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>ESTADO</th>
+                    <th>FECHA</th>
+                    <th>HORA</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let item of customEstados">
+                  <tr>
+                    <td> {{item.DESCRIPCION}}</td>
+                    <td>{{item.FECHA_EVENTO.split(' ')[0]}}</td>
+                    <td>{{item.FECHA_EVENTO.split(' ')[1]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </ngb-tab>
+
+        <ngb-tab>
+          <ng-template ngbTabTitle>Incidencias</ng-template>
+          <ng-template ngbTabContent>
+            <div class="col-md-12 pt-3" style="height: 500px; overflow-y: auto">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>ESTADO</th>
+                  <th>FECHA</th>
+                  <th>HORA</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="IncidenciasText">
+                  <tr>
+                    <td colspan="3">No se encontraron incidencias.</td>
+                  </tr>
+                </tbody>
+                <tbody *ngFor="let item of customNovedades">
+                <tr>
+                  <td> {{item.DESCRIPCION}}</td>
+                  <td>{{item.FECHA_ALTA.split(' ')[0]}}</td>
+                  <td>{{item.FECHA_ALTA.split(' ')[1]}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+        </ngb-tab>
+
+      </ngb-tabset>
+    </div>
+
+
+  </div>
+
+  <!--Shopping Cart--
+  <div class="shopping-cart-container">
+    <div class="container">
+      <!-- shopping Cart Empty ---
+      <ng-templates>
+        <div class="row">
+          <div class="col-12 mb-5 d-flex flex-column align-items-center">
+            <div class="mb-5">
+            </div>
+            <h2 class="title-section">
+              contenido
+            </h2>
+            <p>Lo invitamos a ver nuestro catálogo que cuenta con productos de excelente calidad.</p>
+            <a [routerLink]="['/']">Ir al inicio</a>
+          </div>
+        </div>
+      </ng-templates>
+
+    </div>
+  </div>-->
+</ng-container>

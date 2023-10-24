@@ -1,0 +1,99 @@
+export interface  IAttributes {
+  id: string;
+  name: string;
+  title: string;
+  type: string;
+  typeId: number;
+  order: number;
+  value: string | any;
+}
+
+export class Product {
+  id?: string;
+  reference?: string;
+  erpCode?: string;
+  name?: string;
+  shortDescription?: string;
+  descriptionAxB?: string;
+  slug?: string;
+  measureUnit?: string;
+  textAction?: string;
+  label_unidades_por_um?: string;
+  unidades_por_um?: number;
+  mostrar_price_unity_measure?: any;
+  showPrices?: any;
+  currentPrice?: number;
+  discountPercentage?: number;
+  taxText?: string;
+  mostrar_price_look_up?: boolean;
+  visualExcludedIva?: any;
+  unidad_pum?: any;
+  pum?: any;
+  lastPrice?: any;
+  showProductAction?: any;
+  cantidad?: any;
+  isSettingAsFavorite?: boolean;
+  discountValue?: number;
+  imagesDetail?: {
+    alt: string;
+    image: string;
+    path: string;
+    title: string;
+  }[];
+  clonedAttributesDetail?: IAttributes[];
+  attributesDetail?: IAttributes[];
+  videos?: any;
+  isOutstanding?: boolean;
+  isNew?: boolean;
+  isOffert?: boolean;
+  isInternetExclusive?: boolean;
+  isSoldOut?: boolean;
+  isTemplate?: boolean;
+  isFavorite?: boolean;
+  isPromo?: boolean;
+  showClonedAction?: boolean;
+  quote?: boolean;
+  minValueClonedAttributes?: number;
+  showProductDetailContactAction?: boolean;
+  description?: string;
+  description_strip?: string;
+  globalRating?: any;
+  reviewCount?: any;
+  itemPrice?: any;
+  rate?: any;
+  datasheet?: any[];
+  category?: {
+    id?: string;
+    title?: string;
+    slug?: string;
+    attachments: any;
+    slugCompare?: any
+  };
+  urls?: any[];
+  attachments?: any[];
+  breadcrumb?: {
+    id: number;
+    name: string;
+    target: string;
+    title: string;
+    url: string;
+  }[];
+  relatedProducts?: Product[];
+  seo?: any;
+  preciosxvolumen?: any;
+  clonedId?: string;
+  textLabel?: string;
+  textLabelContinue?: string;
+  update?: boolean;
+  id_tipo_relacion?: any;
+  factor?: number;
+  factor_pedido?: number;
+  cantidad_minima?: number;
+  tipo_relacionado?: any;
+  showValuePercentage?: boolean;
+  parentId?: string;
+  colorSizeRelationArray?: any[];
+  flagMedioPago?: boolean;
+  currentPriceIncludedIvaWithoutDmp?: number;
+  obsequio: any;
+}

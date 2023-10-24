@@ -1,0 +1,64 @@
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--light);
+  padding: 0.75rem;
+  width: 100%;
+  @media (max-width: 991.98px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .pagination {
+    margin-bottom: 0;
+
+    .page-item {
+
+      &:first-child, &:last-child {
+        .page-link {
+          border-radius: .25rem;
+
+          span {
+            font-size: 0;
+
+            &:before {
+              font-size: 0.9rem;
+              content: "\f053";
+              font-family: "Font Awesome 5 Free";
+              font-weight: 900;
+            }
+          }
+        }
+      }
+
+      &:last-child {
+        .page-link {
+          span {
+            &:before {
+              content: "\f054";
+            }
+          }
+        }
+      }
+
+      &:first-child {
+        .page-link {
+          border-radius: .25rem;
+        }
+      }
+
+      .page-link {
+        border-radius: .25rem;
+        margin-left: .25rem;
+        color: var(--text);
+      }
+
+      &.active {
+        .page-link {
+          color: white;
+        }
+      }
+    }
+  }
+}

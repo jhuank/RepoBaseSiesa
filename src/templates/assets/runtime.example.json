@@ -1,0 +1,11 @@
+{
+  clientName: "REDES ELECTRICAS B2C",
+  apiGatewayFront: "https://redeslectricasb2cawsecommerce.siesaecommerce.com/backend/admin/frontend/web/index.php",
+  apiGatewayBackOffice: "https://redeslectricasb2cawsecommerce.siesaecommerce.com/backend/admin/backend/web/index.php",
+  siteKeyCaptcha: "6Lf6bP4jAAAAAJqemVAcp1rUIy5w-z-KqGn1Q-2a",
+  apiKeyGoogleMap: "AIzaSyCjxvf_vNXJTuSHGQAKEx_CfJB2R2xXOrU",
+  tagId: "",
+  saveParametersInStorage: false,
+  toastDelay: 4000,
+  maximumItemsDisplayedInListOnHome: 4
+}

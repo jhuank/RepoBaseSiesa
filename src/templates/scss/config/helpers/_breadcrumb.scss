@@ -1,0 +1,19 @@
+.breadcrumb-container {
+  background: var(--light);
+  margin-bottom: 2rem;
+
+  .breadcrumb {
+    margin-bottom: 0;
+    padding-right: 0;
+    padding-left: 0;
+    background: transparent;
+  }
+}
+
+// Breadcrumb md
+@media (max-width: 991.98px) {
+  .breadcrumb {
+    justify-content: center;
+    margin-bottom: 0 !important;
+  }
+}

@@ -1,0 +1,31 @@
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
+<link rel="stylesheet" href="https://cdn.lineicons.com/2.0/LineIcons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<script type="application/ld+json" id="json-ld-organization"></script>
+<script type="application/ld+json" id="json-ld-page"></script>
+<div class="wrapper">
+  <main>
+    <app-header></app-header>
+    <app-load-spinner></app-load-spinner>
+    <router-outlet id="content" class="main-content"></router-outlet>
+  </main>
+  <footer *ngIf="parametersService.page?.pageOnline">
+    <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+    <app-modal></app-modal>
+    <app-footer></app-footer>
+  </footer>
+</div>
+
+<ng-template #modalAge >
+  <div class="modal-body">
+    <div [innerHTML]="cmsData"></div>
+      <div class="custom-control custom-checkbox text-center">
+        <input type="checkbox" class="custom-control-input" (click)="changeAge(checkAge)" id="customCheck1" #checkAge>
+        <label class="custom-control-label" for="customCheck1">Soy mayor de 18 Años</label>
+      </div>
+  </div>
+  <div class="modal-footer  d-flex justify-content-center">
+    <button type="button" class="btn btn-primary rounded-0" id="btn_prueba" (click)="acepAge()" [disabled]="!activeBotton">Aceptar</button>
+  </div>
+</ng-template>

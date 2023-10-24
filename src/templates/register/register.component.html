@@ -1,0 +1,575 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Registrarse
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Header Register -->
+<div class="container">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <h1 class="title-section">
+        Registrarse
+      </h1>
+      <div [innerHTML]="parametersService?.page?.cmsInfo?.CREACION_CUENTA_FRONTEND_INTRO"></div>
+    </div>
+  </div>
+</div>
+<!-- Register -->
+<div class="register-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-5">
+        <!-- Form -->
+        <form [formGroup]="registerForm" (ngSubmit)="registerUser()" autocomplete="off" novalidate>
+          <!-- Nav -->
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="person-tab" data-toggle="tab" href="#person" role="tab"
+                 aria-controls="person"
+                 aria-selected="true"
+                 (click)="changeTypeForm('personas')">
+                Registro para Personas
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="parametersService.page?.checkFormPersonaJuridica">
+              <a class="nav-link" id="business-tab" data-toggle="tab" href="#business" role="tab"
+                 aria-controls="business"
+                 aria-selected="false"
+                 (click)="changeTypeForm('empresas')">
+                Registro para Empresas
+              </a>
+            </li>
+          </ul>
+          <!-- Content -->
+          <div class="tab-content" id="myTabContent">
+            <!-- Person -->
+            <div class="tab-pane fade show active my-3" id="person" role="tabpanel">
+              <p class="text-justify">Los campos marcados con * son obligatorios.</p>
+              <div class="form-row">
+                <!-- Name -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Nombre(s)*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user-circle"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="firstName"
+                           placeholder="Ingrese su(s) nombre(s)"
+                           maxlength="50"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('firstName')"
+                           appOnlyLetters>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('firstName')"></div>
+                  </div>
+                </div>
+                <!-- Last Name -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Apellido(s)*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user-circle"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="lastName"
+                           placeholder="Ingrese su(s) apellido(s)"
+                           maxlength="50"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('lastName')"
+                           appOnlyLetters>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('lastName')"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <!-- ID Type -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Tipo de Identificación*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-address-card"></i>
+                      </div>
+                    </div>
+                    <select class="custom-select" formControlName="typeId"
+                            [class.is-invalid]="isInvalid('typeId')">
+                      <option disabled value="">Seleccione...</option>
+                      <option *ngFor="let IdType of identificationsTypes" [value]="IdType.id">
+                        {{IdType.nombre}}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('typeId')"></div>
+                  </div>
+                </div>
+                <!-- ID -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Número de Identificación*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-address-card"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="numberId"
+                           placeholder="Por favor ingrese el número de identificación"
+                           maxlength="15"
+                           minlength="8"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('numberId')"
+                           appOnlyNumbers>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('numberId')"></div>
+                  </div>
+                  <small class="text-info mt-1" *ngIf="registerForm.get('numberId').pending">
+                    <i class="fas fa-spinner fa-pulse"></i> Validando el número de identificación...
+                  </small>
+                </div>
+              </div>
+              <div class="form-row">
+                <!-- Gender -->
+                <div class="form-group col-12 col-lg-6"
+                     [ngClass]="!parametersService?.company?.config?.data?.register?.ocultarFechaNocimientoRegistro ? 'form-group col-12 col-lg-6' : 'form-group col-12 col-lg-12'">
+                  <label>Género*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-venus-mars"></i>
+                      </div>
+                    </div>
+                    <select class="custom-select" formControlName="gender"
+                            [class.is-invalid]="isInvalid('gender')">
+                      <option disabled value="">Seleccione...</option>
+                      <option value="1">Femenino</option>
+                      <option value="2">Masculino</option>
+                    </select>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('gender')"></div>
+                  </div>
+                </div>
+                <!-- Date of Birth -->
+
+                <div class="form-group col-12 col-lg-6"
+                     *ngIf=" !parametersService?.company?.config?.data?.register?.ocultarFechaNocimientoRegistro">
+                  <label>Fecha de Nacimiento*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-calendar-alt"></i>
+                      </div>
+                    </div>
+                    <input type="date" formControlName="birthdate"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('birthdate')">
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('birthdate')"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Business -->
+            <div class="tab-pane fade my-3" id="business" role="tabpanel">
+              <p class="text-justify">Los campos marcados con * son obligatorios.</p>
+              <div class="form-row">
+                <!-- Business Name -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Razón Social*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-address-card"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="businessName"
+                           placeholder="Razón Social"
+                           class="form-control"
+                           maxlength="50"
+                           [class.is-invalid]="isInvalid('businessName')"
+                           appOnlyLetters>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('businessName')"></div>
+                  </div>
+                </div>
+                <!-- NIT -->
+                <div class="form-group col-8 col-lg-4">
+                  <label>NIT*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-address-card"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="nit"
+                           placeholder="NIT"
+                           maxlength="12"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('nit')"
+                           appOnlyNumbers>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('nit')"></div>
+                  </div>
+                  <small class="text-info mt-1" *ngIf="registerForm.get('nit').pending">
+                    <i class="fas fa-spinner fa-pulse"></i> Validando el NIT...
+                  </small>
+                </div>
+                <!-- DV -->
+                <div class="form-group col-4 col-lg-2">
+                  <label>DV*</label>
+                  <input type="text" formControlName="dv"
+                         placeholder="DV*"
+                         maxlength="3"
+                         class="form-control"
+                         [class.is-invalid]="isInvalid('dv')"
+                         appOnlyNumbers>
+                  <div class="invalid-feedback" [innerHTML]="getFeedback('dv')"></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <!-- Economic Activity -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Actividad Económica*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-city"></i>
+                      </div>
+                    </div>
+                    <select class="custom-select" formControlName="activity"
+                            [class.is-invalid]="isInvalid('activity')">
+                      <option value="">Actividad Económica</option>
+                      <option *ngFor="let item of economicActivities" [value]="item.id">{{item.nombre}}</option>
+                    </select>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('activity')"></div>
+                  </div>
+                </div>
+                <!-- Number of Employees -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Número de Empleados</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-users"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="numberEmployees"
+                           placeholder="Por favor ingrese el número de empleados"
+                           maxlength="3"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('numberEmployees')"
+                           appOnlyNumbers>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('numberEmployees')"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <!-- Contact Name -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Nombre(s) del Contacto*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user-tie"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="firstNameContactPerson"
+                           maxlength="50"
+                           placeholder="Nombre de la persona de contacto"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('firstNameContactPerson')"
+                           appOnlyLetters>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('firstNameContactPerson')"></div>
+                  </div>
+                </div>
+                <!-- Contact Last Name -->
+                <div class="form-group col-12 col-lg-6">
+                  <label>Apellido(s) del Contacto*</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user-tie"></i>
+                      </div>
+                    </div>
+                    <input type="text" formControlName="lastNameContactPerson"
+                           placeholder="Apellido de la persona de contacto"
+                           maxlength="50"
+                           class="form-control"
+                           [class.is-invalid]="isInvalid('lastNameContactPerson')"
+                           appOnlyLetters>
+                    <div class="invalid-feedback" [innerHTML]="getFeedback('lastNameContactPerson')"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <!-- City -->
+            <div class="form-group col-12 col-lg-6">
+              <label>Ciudad de Residencia*</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                </div>
+                <input type="search" #searchLocation="ngModel" placeholder="Ciudad de Residencia" autocomplete="nope"
+                       class="form-control" [class.is-invalid]="(searchLocation.touched || registerForm.get('city').dirty)
+                  && registerForm.get('city').invalid"
+                       [(ngModel)]="dataForm.searchLocationText" [ngModelOptions]="{ standalone: true }"
+                       (input)="setSearchTerm(searchLocation.value)" appOnlyLetters>
+                <div class="invalid-feedback" [innerHTML]="getFeedback('city')"></div>
+                <div role="listbox" class="box-search-container small position-absolute w-100"
+                     *ngIf="!dataForm.locationSelected">
+                  <ul class="list-group" *ngIf="dataForm.locationsByFastSearch">
+                    <li class="list-group-item" *ngFor="let locationByFastSearch of dataForm.locationsByFastSearch"
+                        (click)="setLocationCity(locationByFastSearch);">
+                      {{locationByFastSearch.cityName}}, {{locationByFastSearch.stateName}} -
+                      {{locationByFastSearch.countryName}}</li>
+                  </ul>
+                  <ul class="list-group"
+                      *ngIf="!dataForm.locationsByFastSearch && dataForm.loadedLocationsByFastSearch && searchLocation.value.length >= 3">
+                    <li class="list-group-item">
+                      No hay resultados para '{{dataForm.searchLocationText}}'
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <!-- Town -->
+            <div class="form-group col-12 col-lg-6" *ngIf="dataForm.SolicitarBarrioRegistro">
+              <label>Barrio*</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-city"></i>
+                  </div>
+                </div>
+                <!--<input #neighborhoodInput type="text" class="form-control" placeholder="Barrio" name="neighborhood"
+                       autocomplete="off" [(ngModel)]="neighborhood" [ngbTypeahead]="searchNeighborhoodByQuery"
+                       [resultTemplate]="autocomplete" [inputFormatter]="formatter"
+                       [class.is-valid]="neighborhood?.id" [ngModelOptions]="{standalone: true}">-->
+                <input type="search" #searchNeighborhood="ngModel" placeholder="Barrio" autocomplete="nope"
+                       class="form-control" [class.is-invalid]="(searchNeighborhood.touched || registerForm.get('neighborhood').dirty)
+                  && registerForm.get('neighborhood').invalid"
+                       [(ngModel)]="dataForm.searchNeighborhoodText" [ngModelOptions]="{ standalone: true }"
+                       (input)="setSearchTermNeighborhood(searchNeighborhood.value)" appOnlyLetters>
+                <div class="invalid-feedback" [innerHTML]="getFeedback('neighborhood')"></div>
+                <div role="listbox" class="box-search-container small position-absolute w-100"
+                     *ngIf="!dataForm.NeighborhoodSelected">
+                  <ul class="list-group" *ngIf="dataForm.NeighborhoodsByFastSearch">
+                    <li class="list-group-item"
+                        *ngFor="let NeighborhoodByFastSearch of dataForm.NeighborhoodsByFastSearch"
+                        (click)="setNeighborhood(NeighborhoodByFastSearch);">
+                      {{NeighborhoodByFastSearch.nombre}}</li>
+                  </ul>
+                  <ul class="list-group"
+                      *ngIf="!dataForm.NeighborhoodsByFastSearch && dataForm.loadedNeighborhoodsByFastSearch && searchNeighborhood.value.length >= 2">
+                    <li class="list-group-item">
+                      No hay resultados para '{{dataForm.searchNeighborhoodText}}'
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+            <!-- Celular -->
+            <div class="form-group col-12 col-lg-2">
+              <label>Indicativo
+                <span *ngIf="mostrarAsteriscoIndicativo">*</span>
+              </label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-plus"></i>
+                  </div>
+                </div>
+                <input type="tel" formControlName="indicative" placeholder="57" maxlength="4" class="form-control"
+                       [class.is-invalid]="isInvalid('indicative')" appOnlyNumbers>
+                <div class="invalid-feedback" [innerHTML]="getFeedback('indicative')"></div>
+              </div>
+            </div>
+            <!-- Celular -->
+            <div class="form-group col-12 col-lg-4">
+              <label>Celular*</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-mobile"></i>
+                  </div>
+                </div>
+                <input type="tel" formControlName="phone"
+                       placeholder="3100000000"
+                       maxlength="10"
+                       class="form-control"
+                       [class.is-invalid]="isInvalid('phone')"
+                       appOnlyNumbers>
+                <div class="invalid-feedback" [innerHTML]="getFeedback('phone')"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Address -->
+          <div class="form-group">
+            <label>Dirección de Residencia*</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-map-pin"></i>
+                </div>
+              </div>
+              <input type="text" formControlName="address"
+                     placeholder="Ingrese la dirección de contacto"
+                     class="form-control"
+                     minlength="3"
+                     [class.is-invalid]="isInvalid('address')">
+              <div class="invalid-feedback" [innerHTML]="getFeedback('address')"></div>
+            </div>
+          </div>
+          <h6 class="w700">
+            <i class="icon icon-user"></i> Información de Acceso a la Cuenta
+          </h6>
+          <hr>
+          <!-- Email -->
+          <div class="form-group">
+            <label>Correo Electrónico*</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-envelope"></i>
+                </div>
+              </div>
+              <input type="text" formControlName="email"
+                     placeholder="Correo Electrónico"
+                     maxlength="50"
+                     autocomplete="nope"
+                     class="form-control"
+                     [class.is-invalid]="isInvalid('email')">
+              <div class="invalid-feedback" [innerHTML]="getFeedback('email')"></div>
+            </div>
+            <small class="text-info mt-1" *ngIf="registerForm.get('email').pending">
+              <i class="fas fa-spinner fa-pulse"></i> Validando el correo electrónico...
+            </small>
+          </div>
+          <!-- Confirm Email -->
+          <div class="form-group">
+            <label>Confirmar Correo Electrónico*</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-envelope"></i>
+                </div>
+              </div>
+              <input type="text" formControlName="emailConfirmation"
+                     placeholder="Confirmar Correo Electrónico"
+                     maxlength="50"
+                     autocomplete="nope"
+                     class="form-control"
+                     [class.is-invalid]="isInvalid('emailConfirmation')">
+              <div class="invalid-feedback" [innerHTML]="getFeedback('emailConfirmation')"></div>
+            </div>
+          </div>
+          <!-- Password -->
+          <div class="form-group">
+            <label>Contraseña*</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-lock"></i>
+                </div>
+              </div>
+              <input type="password" formControlName="password"
+                     placeholder="Contraseña"
+                     minlength="7"
+                     maxlength="50"
+                     autocomplete="nope"
+                     class="form-control"
+                     [class.is-invalid]="isInvalid('password')">
+              <div class="invalid-feedback" [innerHTML]="getFeedback('password')"></div>
+            </div>
+          </div>
+          <!-- Confirmar clave -->
+          <div class="form-group">
+            <label>Confirmar Contraseña*</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-lock"></i>
+                </div>
+              </div>
+              <input type="password" formControlName="passwordConfirmation"
+                     placeholder="Confirmar Contraseña"
+                     autocomplete="nope"
+                     class="form-control"
+                     [class.is-invalid]="isInvalid('passwordConfirmation')">
+              <div class="invalid-feedback" [innerHTML]="getFeedback('passwordConfirmation')"></div>
+            </div>
+          </div>
+          <!-- Checkbox: Aceptar boletín de promociones -->
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" formControlName="receiveInformation"
+                     id="receiveInformation"
+                     class="form-check-input">
+              <label class="form-check-label" for="receiveInformation">
+                Deseo recibir información de promociones y productos
+              </label>
+            </div>
+          </div>
+          <!-- Checkbox: Aceptar términos y condiciones -->
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" formControlName="acceptPolicies"
+                     id="acceptPolicies"
+                     class="form-check-input"
+                     [class.is-invalid]="registerForm.get('acceptPolicies').invalid">
+              <label class="form-check-label" for="acceptPolicies">
+                Acepto <a [routerLink]="['/', 'politics', 'terminos-y-condiciones']" target="_blank">Términos y Condiciones</a>*
+              </label>
+              <div class="invalid-feedback" [innerHTML]="getFeedback('acceptPolicies')"></div>
+            </div>
+          </div>
+          <re-captcha formControlName="captcha"></re-captcha>
+          <!-- Action Desktop -->
+          <div class="form-group d-none d-lg-flex mt-3">
+            <button type="submit" class="btn btn-primary mr-2" [disabled]="loading">
+              <span *ngIf="loading">
+                <i class="fas fa-spinner fa-pulse"></i>
+              </span>
+              Crear cuenta
+            </button>
+            <a class="btn btn-secondary" role="button" [routerLink]="['/','login']">
+              Iniciar Sesión
+            </a>
+          </div>
+          <!-- Action Mobile -->
+          <div class="form-group d-block d-lg-none mt-3">
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+              <span *ngIf="loading">
+                <i class="fas fa-spinner fa-pulse"></i>
+              </span>
+              Crear cuenta
+            </button>
+            <a class="btn btn-secondary btn-block" role="button" [routerLink]="['/','login']">
+              Iniciar Sesión
+            </a>
+          </div>
+        </form>
+      </div>
+      <!-- ADS -->
+      <div class="col-5 d-none d-lg-block mb-5">
+        <app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                            [contentData]="cmsData"></app-advertisements>
+      </div>
+    </div>
+  </div>
+</div>

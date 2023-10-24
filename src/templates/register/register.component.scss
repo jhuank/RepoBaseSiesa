@@ -1,0 +1,17 @@
+// Register
+.register-container {
+  // Box Search
+  .box-search-container {
+    top: 100%;
+    z-index: 2;
+    .list-group {
+      .list-group-item {
+        cursor: pointer;
+        &:hover {
+          background: var(--primary);
+          color: white;
+        }
+      }
+    }
+  }
+}

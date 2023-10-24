@@ -1,0 +1,46 @@
+// Quantity
+.quantity {
+  .input-group {
+    width: 100%;
+
+    .input-group-prepend {
+      position: absolute;
+      left: 0;
+
+      .btn-min {
+        background: white;
+        border: 1px solid var(--secondary);
+        background: var(--secondary);
+        color: white;
+
+        &:hover {
+          background: var(--primary);
+          border: 1px solid var(--primary);
+          color: white;
+        }
+      }
+    }
+
+    .form-control {
+      border: 1px solid var(--gray-200);
+    }
+
+    .input-group-append {
+      position: absolute;
+      right: 0;
+
+      .btn-max {
+        background: white;
+        border: 1px solid var(--secondary);
+        background: var(--secondary);
+        color: white;
+
+        &:hover {
+          background: var(--primary);
+          border: 1px solid var(--primary);
+          color: white;
+        }
+      }
+    }
+  }
+}

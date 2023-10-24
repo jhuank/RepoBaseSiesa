@@ -1,0 +1,223 @@
+<!-- Ads -->
+<app-advertisements *ngIf="cmsData != undefined" [typeContent]="'espacios'" [positions]="1"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- Newsletter-->
+<div class="container-fluid footer-top py-5 bg-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="w700 text-center">Suscríbete</h2>
+        <p class="text-center">
+          Se el primero en enterarte de las últimas tendencias y todas las novedades que traemos para ti.
+        </p>
+        <form [formGroup]="subscribeForm" (submit)="sendSubscribe()" novalidate>
+          <fieldset [disabled]="loadingSubscribeForm">
+            <div class="form-row">
+              <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+                <app-input placeholder="Nombre"
+                           [inputControl]="subscribeForm.get('name')"
+                           [feedback]="{ required: 'Nombre es requerido' }"></app-input>
+              </div>
+              <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+                <app-input placeholder="Correo electrónico"
+                           [inputControl]="subscribeForm.get('email')"
+                           [feedback]="{
+                    required: 'Correo electrónico es requerido',
+                    pattern: 'Correo electrónico invalido'
+                  }"></app-input>
+              </div>
+              <!-- Submit button -->
+              <div class="col">
+                <button type="submit" class="btn btn-block btn-primary rounded-0"
+                        [disabled]="subscribeForm.invalid || loadingSubscribeForm">
+                  <span *ngIf="loadingSubscribeForm">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                  </span>
+                  <span *ngIf="!loadingSubscribeForm">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                  </span>
+                  <span class="d-inline-block ml-1">Suscribirse</span>
+                </button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+        <p class="small mt-2 mb-0 text-center">
+          *Al hacer clic en <span class="w700">Suscribirse</span>, estás aceptando nuestros <a class="w700"
+                                                                                               [routerLink]="['/', 'politics', 'terminos-y-condiciones']">términos
+          y condiciones.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<div class="container-fluid footer py-5 bg-primary text-white small">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-3">
+        <h5 class="w700">{{parametersService.company?.info?.company?.name}}</h5>
+        <hr class="bg-white">
+        <ul class="list-unstyled">
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.address">
+            {{parametersService.company?.info?.company?.address}}
+          </li>
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.pbx">
+            {{parametersService.company?.info?.company?.pbx}}
+          </li>
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.phone">
+            {{parametersService.company?.info?.company?.phone}}
+          </li>
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.phone3">
+            {{parametersService.company?.info?.company?.phone3}}
+          </li>
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.email">
+            {{parametersService.company?.info?.company?.email}}
+          </li>
+          <li class="widget-list mb-2" *ngIf="parametersService.company?.info?.company?.location">
+            {{parametersService.company?.info?.company?.location}}
+          </li>
+        </ul>
+      </div>
+      <div class="col-12 col-lg-3">
+        <h5 class="w700">Información</h5>
+        <hr class="bg-white">
+        <ul class="widget list-unstyled">
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics' ,'nosotros']">Nosotros</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics', 'preguntas-frecuentes']">Preguntas Frecuentes</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics', 'terminos-y-condiciones']">Términos y Condiciones</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics', 'politicas-de-tratamiento-de-datos']">Políticas de
+              Tratamiento de Datos</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics' ,'derecho-al-retracto']">Derecho al Retracto</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/', 'politics' ,'politicas-de-privacidad']">Políticas de
+              Privacidad</a>
+          </li>
+          <li class="widget-list mb-2">
+            <a class="widget-link" [routerLink]="['/','contact']">Contáctenos</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-12 col-lg-3">
+        <h5 class="w700">Mi Cuenta</h5>
+        <hr class="bg-white">
+        <ul class="widget list-unstyled">
+          <li class="widget-list mb-2" *ngIf="!authService.isAuthenticated">
+            <a class="widget-link" [routerLink]="['/','login']">Iniciar Sesión</a>
+          </li>
+          <li class="widget-list mb-2" *ngIf="!authService.isAuthenticated">
+            <a class="widget-link" [routerLink]="['/','register']">Registrarse</a>
+          </li>
+          <li class="widget-list mb-2" *ngIf="!authService.isAuthenticated">
+            <a class="widget-link" [routerLink]="['/','password-recovery']">Recuperar Contraseña</a>
+          </li>
+          <ng-container *ngIf="authService.isAuthenticated">
+            <li class="widget-list mb-2">
+              <a class="widget-link" [routerLink]="['/','account']">Actualice sus Datos</a>
+            </li>
+            <li class="widget-list mb-2">
+              <a class="widget-link" [routerLink]="['/','favorites']">Mis Favoritos</a>
+            </li>
+            <li class="widget-list mb-2">
+              <a class="widget-link" [routerLink]="['/','orders']">Estado de Mis Compras</a>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="col-12 col-lg-3">
+        <h5 class="w700">Síguenos en</h5>
+        <hr class="bg-white">
+        <div class="social-networks d-flex">
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.facebook?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.facebook?.link" target="_blank">
+              <i class="fab fa-facebook fa-2x" aria-hidden="true"></i></a>
+          </div>
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.twitter?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.twitter?.link" target="_blank">
+              <i class="fab fa-twitter fa-2x"></i></a>
+          </div>
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.youtube?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.youtube?.link" target="_blank">
+              <i class="fab fa-youtube fa-2x"></i></a>
+          </div>
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.pinterest?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.pinterest?.link" target="_blank">
+              <i class="fab fa-pinterest fa-2x"></i></a>
+          </div>
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.instagram?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.instagram?.link" target="_blank">
+              <i class="fab fa-instagram fa-2x"></i></a>
+          </div>
+          <div class="mr-2" *ngIf="parametersService.company?.info?.social?.linkedin?.show">
+            <a class="item" [href]="parametersService.company?.info?.social?.linkedin?.link" target="_blank">
+              <i class="fab fa-linkedin fa-2x"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Copyright -->
+<div class="container-fluid py-2 bg-primary text-white border-top">
+  <div class="row d-flex">
+    <div class="col-12">
+      <p class="text-center m-0 small">Copyright {{parametersService.company?.app?.footer?.info?.date | date:'yyyy' }} ©
+        {{parametersService.company?.info?.company?.name}} - Todos los derechos reservados | Powered by Siesa
+        E-Commerce</p>
+    </div>
+  </div>
+</div>
+<!-- Cookies -->
+<div class="container-fluid cookies small text-center" *ngIf="!cookiesAccepted">
+  <div class="row d-flex">
+    <div class="col-12">
+      <span>
+        Utilizamos cookies para asegurar que damos la mejor experiencia al usuario en nuestro sitio web. Si continúa
+        utilizando este sitio asumiremos que está de acuerdo.
+      </span>
+      <div class="btn-group">
+        <button class="btn btn-light btn-sm ml-1" (click)="enableCookies()">
+          Estoy de Acuerdo
+        </button>
+        <button class="btn btn-light btn-sm ml-1" [routerLink]="['/', 'politics', 'cookies']">
+          Políticas de Cookies
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Scroll Top -->
+<button class="scroll-top-link btn" id="scroll-top" title="Ir a Arriba"
+        [hidden]="!showUpButton"
+        (scroll)="onScroll()"
+        (click)="scrollToTop()">
+  <i class="fa fa-angle-up"></i>
+</button>
+<div *ngIf="mainService.chatScript" [innerHtml]="mainService.chatScript"></div>
+<!-- Compare Products Desktop -->
+<a *ngIf="getNumberElementToCompare() >= 2"
+   [routerLink]="['/compare-products', getStrElementsToCompare()]"
+   role="button"
+   class="compare-products btn d-lg-inline-block d-none"
+   title="Comparar Productos">
+  Comparar Productos ({{getNumberElementToCompare()}})
+</a>
+<!-- Compare Products Mobile -->
+<a *ngIf="getNumberElementToCompare() >= 2"
+   [routerLink]="['/compare-products', getStrElementsToCompare()]"
+   role="button"
+   class="compare-products btn d-lg-none d-inline-block"
+   title="Comparar Productos">
+  <!--  <i class="icon icon-refresh h4"></i> ({{getNumberElementToCompare()}})-->
+  <i class="icon icon-refresh h4"></i>
+</a>

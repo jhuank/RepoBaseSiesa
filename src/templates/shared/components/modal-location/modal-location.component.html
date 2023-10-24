@@ -1,0 +1,26 @@
+<!-- Modal -->
+<ngx-smart-modal #modalLocation [identifier]="locationService.modalReference"
+                 [escapable]="false"  [dismissable]="false" [closable]="false">
+
+    <!-- Contenedor -->
+    <div class="modal-content">
+
+        <!-- Encabezado -->
+        <div class="modal-header bg-primary text-white">
+
+            <!-- Titulo -->
+            <div class="modal-title">
+                <h5 class="w700" [innerHTML]="getModalTitle()"></h5>
+                <p class="small mb-0" [innerHTML]="getModalSubtitle()"></p>
+            </div>
+
+            <!-- Botón de cerrar -->
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalLocation.close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <app-form-location [option]="locationOption"></app-form-location>
+    </div>
+</ngx-smart-modal>
+

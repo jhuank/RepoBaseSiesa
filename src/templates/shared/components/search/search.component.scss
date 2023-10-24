@@ -1,0 +1,53 @@
+// Search
+.search {
+  position: relative;
+
+  .search-form {
+    .input-search {
+      height: auto;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      padding-right: 3rem;
+    }
+
+    .btn-search {
+      position: absolute;
+      top: 50%;
+      right: .7rem;
+      transform: translateY(-50%);
+      background: transparent;
+      border: 0;
+    }
+  }
+}
+
+// Mobile Search
+.mobile-search-content {
+  top: 0;
+  position: sticky;
+  z-index: 1071;
+  width: 100%;
+
+  .search-form {
+    .input-search {
+      border-radius: 0;
+    }
+  }
+}
+
+// Results
+.search-results {
+  position: absolute;
+  width: 100%;
+
+  .list-result {
+    .list-result-item {
+      color: var(--text);
+
+      &:hover {
+        color: white;
+        background: var(--primary);
+      }
+    }
+  }
+}

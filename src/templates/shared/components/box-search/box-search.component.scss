@@ -1,0 +1,38 @@
+// Box Search
+.box-search-container {
+  .form-control {
+    &::placeholder {
+      font-size: .8em;
+    }
+  }
+
+  // Medium devices (tablets, less than 992px)
+  @media (max-width: 991.98px) {
+    .box-search-results {
+      position: relative;
+    }
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) {
+    .box-search-results {
+      position: absolute;
+    }
+  }
+
+  .box-search-results {
+    z-index: 100;
+    max-height: 230px;
+    overflow-y: auto;
+
+    .list-group {
+      .list-group-item:not(.normal) {
+        cursor: pointer;
+        &:hover {
+          background: var(--primary);
+          color: white;
+        }
+      }
+    }
+  }
+}

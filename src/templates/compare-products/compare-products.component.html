@@ -1,0 +1,140 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Comparar Productos
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Compare Products -->
+<div class="compare-products-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="row">
+      <div class="col-12">
+        <h1 class="title-section mb-3">
+          Comparar Productos
+        </h1>
+      </div>
+    </div>
+    <!-- Alert -->
+    <ng-template #notProducts>
+      <div class="alert alert-warning alert-dismissable small text-center d-none">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button"> ×</button>
+        <strong>Nota: </strong> No hay productos para comparar.
+        <a class="alert-link" [href]="parametersService?.company.app.header.logo.url">Ir al inicio</a>.
+      </div>
+    </ng-template>
+    <!-- Content -->
+    <div class="row" *ngIf="productsToCompare; else notProducts">
+      <!-- Compare Products Cards -->
+      <div class="col-6 col-md-6 col-lg-3 mb-3" *ngFor="let productCompare of productsToCompare">
+        <div class="box-product-container">
+          <div class="item-product">
+            <!-- Image Image -->
+            <img class="img-fluid item-image"
+                 [src]="productCompare.imagesDetail[0].path+productCompare.imagesDetail[0].image"
+                 alt="{{productCompare.name}}">
+            <div class="item-name-container">
+              <a class="item-name-link h6" [routerLink]="['/',productCompare.category.slug, productCompare.slug]">
+                {{productCompare.name}}
+              </a>
+            </div>
+            <div *ngIf="productCompare.showPrices">
+              <div class="d-flex align-items-center" *ngIf="productCompare.currentPrice !== null">
+                <h5 class="font-weight-bold text-secondary mb-0" *ngIf="!productCompare.visualExcludedIva">
+                  ${{productCompare.currentPrice | number : '1.0-0'}}
+                </h5>
+                <h5 class="font-weight-bold text-secondary mb-0" *ngIf="productCompare.visualExcludedIva">
+                  ${{(productCompare.currentPrice - productCompare.taxValue) | number : '1.0-0'}}
+                </h5>
+                <p class="mb-0 ml-1">{{productCompare.rate}}
+                  <i class="fa fa-info-circle small text-muted" data-placement="top"
+                     [ngbTooltip]="productCompare.taxText" data-container="body"></i>
+                </p>
+              </div>
+              <p class="mb-0" *ngIf="!productCompare.showPrices">
+                $-
+              </p>
+            </div>
+            <div class="item-description-container small">
+              <p class="mb-0">
+                <span class="w700">Referencia:</span> {{productCompare.reference}}
+              </p>
+              <p class="mb-0" *ngIf="productCompare.erpCode">
+                <span class="w700">Código:</span> {{productCompare.erpCode}}
+              </p>
+              <div *ngIf="productCompare.showPrices">
+                <p class="mb-0" *ngIf="productCompare.category">
+                  <span class="w700">Categoria:</span>
+                  <a [routerLink]="'/' + productCompare.category.slugCompare" [title]="productCompare.category.title">
+                    {{productCompare.category.title}}
+                  </a>
+                </p>
+                <!-- Short Description -->
+                <div [innerHTML]="productCompare.shortDescription"></div>
+              </div>
+            </div>
+            <div class="row no-gutters mt-3">
+              <div class="col-12 col-lg mr-2 mb-3" *ngIf="productCompare.showProductAction">
+                <span [hidden]="productCompare.currentPrice === null || productCompare.isSoldOut"
+                      *ngIf="productCompare.showProductAction || productCompare.showClonedAction">
+                  <app-quantity [quantity]="quantity"
+                                [min]="productCompare.factor_pedido || productCompare.cantidad_minima"
+                                [factor]="productCompare.factor_pedido"
+                                (changeQuantity)="handleQuantity($event)"
+                                [updatingQuantityPd]="true">
+                  </app-quantity>
+                </span>
+              </div>
+              <!-- Actions -->
+              <div class="col-12 col-lg mb-3" *ngIf="productCompare.showProductAction">
+                <button data-target=".precanasta-cantidad"
+                        (click)="AddToCart(productCompare)"
+                        class="btn btn-block btn-primary">
+                  <i class="icon-bag"></i>
+                  Agregar
+                </button>
+              </div>
+              <div class="col-12 col-lg-12 mb-3" *ngIf="!productCompare.showProductAction">
+                <button [routerLink]="['/',productCompare.category.slug, productCompare.slug]"
+                        class="btn btn-block btn-secondary">
+                  <i class="icon icon-magnifier-add"></i> Ver Más
+                </button>
+              </div>
+              <br>
+              <div class="col-12 col-lg-12">
+                <button (click)="delProductToArray(productCompare.id)"
+                        class="btn btn-block btn-danger">
+                  <i class="icon-close icons"></i> Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="back-container">
+          <button (click)="backClicked()" class="btn btn-secondary">
+            <i class="fas fa-chevron-left"></i> Regresar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

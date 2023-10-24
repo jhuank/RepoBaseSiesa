@@ -1,0 +1,108 @@
+//--------------------------Tablas Angular --------------------------//
+ng2-smart-table{
+  table {
+    line-height: 1.3em !important;
+    font-size: .9em;
+    margin-bottom: 0 !important;
+    &.table-account-statements{
+      width: 1460px !important;
+    }
+    &.table-payments-made{
+      width: 2000px !important;
+    }
+    thead{
+      .ng2-smart-titles{
+        .ng2-smart-th{
+          font-size: inherit;
+          padding: .3em 1em;
+          text-align: center;
+          text-transform: uppercase;
+          ng2-st-column-title{
+            .ng2-smart-title{
+              .ng2-smart-sort-link {
+                color: white;
+              }
+            }
+          }
+          &.compania {
+            width: 130px;
+          }
+          &.factura_cliente {
+            width: 140px;
+          }
+          &.valor_facturado{
+            width: 130px;
+          }
+          &.fecha_proveedor{
+            width: 140px;
+          }
+          &.fecha_vencimiento{
+            width: 140px;
+          }
+          &.dias_vencidos{
+            width: 130px;
+          }
+          &.fecha_cancelacion{
+            width: 140px;
+          }
+          &.valor_bruto{
+            width: 130px;
+          }
+          &.iva{
+            width: 80px;
+          }
+          &.rete_fuente{
+            width: 110px;
+          }
+          &.rete_iva{
+            width: 90px;
+          }
+          &.rete_ica{
+            width: 90px;
+          }
+          &.pronto_pago{
+            width: 140px;
+          }
+          &.otros_valores{
+            width: 140px;
+          }
+          &.cuenta_beneficiario{
+            width: 260px;
+          }
+          &.saldo_corriente{
+            width: 170px;
+          }
+          &.saldo_vencido{
+            width: 150px;
+          }
+          &.saldo_total{
+            width: 150px;
+          }
+          &.fecha_estimada_pago{
+            width: 200px;
+          }
+        }
+      }
+      .ng2-smart-filters{
+        ng2-smart-table-filter{
+          .ng2-smart-filter{
+            default-table-filter{
+              input-filter{
+                .form-control{
+                  color: $text-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ng2-smart-action {
+  color:$primary !important;
+  &:hover {
+    color: $primary-darken;
+  }
+}

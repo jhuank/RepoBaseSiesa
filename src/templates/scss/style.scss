@@ -1,0 +1,34 @@
+// Awesome Font
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css");
+
+// Helpers
+@import "config/variables";
+@import "config/helpers/root";
+@import "config/header/logo";
+@import "config/helpers/tables";
+@import "config/helpers/breadcrumb";
+@import "config/helpers/ratings";
+@import "config/helpers/slider";
+@import "config/helpers/modal";
+@import "config/helpers/advertisements";
+@import "config/helpers/animate";
+@import "config/helpers/title-section";
+
+//  Bootstrap
+@import "bootstrap/bootstrap";
+
+// Helpers
+@import "config/helpers/buttons";
+@import "config/helpers/badge";
+@import "config/helpers/collapse";
+@import "config/helpers/icons";
+@import "config/helpers/navs";
+@import "config/helpers/mixins";
+@import "config/helpers/links";
+@import "config/helpers/forms";
+@import "config/helpers/carousel";
+@import "config/helpers/card";
+@import "config/helpers/filter-attributes";
+@import "config/helpers/pagination";
+
+

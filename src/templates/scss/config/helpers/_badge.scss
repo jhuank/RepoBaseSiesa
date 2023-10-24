@@ -1,0 +1,33 @@
+.badge {
+  font-weight: normal;
+
+  &--featured {
+    background: var(--yellow);
+    color: var(--text);
+  }
+
+  &--new {
+    background: var(--primary);
+    color: white;
+  }
+
+  &--discount {
+    background: var(--red);
+    color: white;
+  }
+
+  &--offert {
+    background: var(--red);
+    color: white;
+  }
+
+  &--promo {
+    background: var(--red);
+    color: white;
+  }
+
+  &--exclusive {
+    background: var(--secondary);
+    color: white;
+  }
+}

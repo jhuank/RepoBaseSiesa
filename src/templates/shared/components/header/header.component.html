@@ -1,0 +1,392 @@
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- Modal Location -->
+<app-modal-location *ngIf="parametersService.page?.showLocationQuestion"></app-modal-location>
+<!-- Topbar -->
+<div class="top-bar container-fluid bg-primary text-white d-none d-lg-block">
+  <div class="row">
+    <!-- Info User -->
+    <div class="col-6 py-2">
+      <ul class="list-inline d-flex my-0 small">
+        <li class="list-inline-item">
+          {{parametersService.company?.info?.company?.pbx}}
+        </li>
+        <li class="list-inline-item">
+          {{parametersService.company?.info?.company?.email}}
+        </li>
+      </ul>
+    </div>
+    <div class="col-6 py-2">
+      <ul class="list-inline d-flex justify-content-end my-0 small">
+        <li class="list-inline-item" *ngIf="parametersService.company?.config?.header?.showBlog">
+          <a class="list-inline-item-link" [routerLink]="['blog']">
+            Blog
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="parametersService.company?.config?.header?.showEvent">
+          <a class="list-inline-item-link" [routerLink]="['events']">
+            Eventos
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="parametersService.company?.config?.header?.showKnowUs">
+          <a class="list-inline-item-link" [routerLink]="['/pages','conocenos']">
+            Nosotros
+          </a>
+        </li>
+        <li class="list-inline-item" *ngIf="parametersService.company?.config?.header?.showContact">
+          <a class="list-inline-item-link" [routerLink]="['/','contact']">
+            Contáctenos
+          </a>
+        </li>
+        <li class="list-inline-item">
+          <a class="list-inline-item-link" [routerLink]="['/','headquarters']">
+            Sedes
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- Desktop Menu -->
+<header class="container-fluid d-none d-lg-block">
+  <div class="row d-flex align-items-center">
+    <!-- Logo -->
+    <div class="col-auto">
+      <a [routerLink]="['/']">
+        <img class="logo" src="{{parametersService.company?.app?.header?.logo?.logo_front}}"
+             alt="{{parametersService.company?.app?.header?.logo?.title}}"/>
+      </a>
+      <ng-template #title>
+        <h2 class="text-hidden" [innerHtml]="parametersService.company?.app?.header?.logo?.title"></h2>
+      </ng-template>
+    </div>
+    <!-- Component: Mega Menu -->
+    <div class="col-auto">
+      <nav class="navbar navbar-expand menu-desktop p-0 d-none d-lg-block">
+        <ul class="navbar-nav">
+          <app-mega-menu [hidden]="!parametersService.company?.config?.header?.showCategories"
+                         [promocion]="parametersService.company?.config?.header?.showOfferts"
+                         *ngFor="let menu of categoriesMenu"
+                         [menu]="menu"></app-mega-menu>
+        </ul>
+      </nav>
+    </div>
+    <!-- Component: Search -->
+    <div class="col">
+      <app-search [placeholder]=" parametersService.company?.app?.header?.placeholder"
+                  *ngIf=" parametersService.company?.config?.menu?.showSearchInsideMenu">
+      </app-search>
+    </div>
+    <div class="col-auto">
+      <nav class="navbar navbar-expand justify-content-end p-0">
+        <!-- Search -->
+        <ul class="navbar-nav position-relative">
+          <!-- User Settings -->
+          <li class="nav-item d-flex align-items-center shop-user-item position-relative"
+              *ngIf="authService.isAuthenticated">
+            <a class="nav-link shop-user-link" role="button">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex flex-column align-items-start justify-content-center mr-1">
+                  <i class="icon icon-user"></i>
+                </div>
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                  <p class="shop-user-title w700">¡Hola!</p>
+                  <p class="shop-user-text">{{ authService.currentUserValue.firstname }}</p>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right w-100">
+              <ul class="fa-ul">
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon icon-user"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/','account']">
+                    <p class="mb-0">
+                      <small>Cuenta</small>
+                    </p>
+                  </a>
+                </li>
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon-docs"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/','orders']">
+                    <p class="mb-0">
+                      <small>Pedidos</small>
+                    </p>
+                  </a>
+                </li>
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon icon-location-pin"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/','address']">
+                    <p class="mb-0">
+                      <small>Direcciones</small>
+                    </p>
+                  </a>
+                </li>
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon icon-logout"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/']" (click)="logout()">
+                    <p class="mb-0">
+                      <small>Cerrar Sesión</small>
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!-- Login -->
+          <li class="nav-item d-flex align-items-center shop-user-item position-relative"
+              *ngIf="!authService.isAuthenticated">
+            <a class="nav-link shop-user-link" role="button">
+              <div class="d-flex justify-content-center">
+                <div class="d-flex flex-column align-items-start justify-content-center mr-1">
+                  <i class="icon icon-user"></i>
+                </div>
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                  <p class="shop-user-title w700 mb-0">¡Bienvenido!</p>
+                  <p class="shop-user-text">¿Qué deseas hacer?</p>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <ul class="fa-ul">
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon icon-user"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/','login']">
+                    <p class="mb-0">
+                      <small>Iniciar Sesión</small>
+                    </p>
+                  </a></li>
+                <li class="list-user py-1">
+                  <span class="fa-li">
+                    <i class="icon icon-user-follow"></i>
+                  </span>
+                  <a class="link-user" [routerLink]="['/','register']">
+                    <p class="mb-0">
+                      <small>Registrarse</small>
+                    </p>
+                  </a></li>
+              </ul>
+            </div>
+          </li>
+          <!-- Favorites -->
+          <li class="nav-item d-flex align-items-center shop-user-item position-relative"
+              *ngIf="authService.isAuthenticated">
+            <a class="nav-link shop-user-link" [routerLink]="[ '/favorites' ]">
+              <div class="d-flex justify-content-center">
+                <i class="icon icon-heart"></i>
+              </div>
+              <div class="d-flex justify-content-center">
+                <p class="shop-user-text">Favoritos</p>
+              </div>
+            </a>
+          </li>
+          <!-- Location -->
+          <li class="nav-item d-flex align-items-center shop-user-item position-relative"
+              *ngIf="parametersService.page?.showLocationQuestion">
+            <a class="nav-link shop-user-link" (click)="ngxSmartModalService.getModal('myModal').toggle()"
+               role="button">
+              <div class="d-flex justify-content-center">
+                <i class="icon icon-location-pin"></i>
+              </div>
+              <div class="d-flex justify-content-center">
+                <p class="shop-user-text" [innerText]="textLocation() || ''"></p>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-location dropdown-menu-right">
+              <div class="row p-3">
+                <div class="col-12">
+                  <p class="text-justify m-0 small"> En este momento este es el destino de tu pedido <strong *ngIf="cartService.shoppingCart?.cartLocation" class="shop-user-text" [innerText]="textLocation() || ''"></strong>. Si deseas puedes ajustarlo presionando la opción Cambiar.</p>
+                </div>
+              </div>
+              <div class="row no-gutters px-3 pb-3">
+                <div class="col-6">
+                  <button type="button" class="btn btn-block" [ngClass]="{'btn-primary': activeInfoModalLocation == false, 'btn-outline-primary':activeInfoModalLocation == true}" (mouseenter)="changeActiveInfoModalLocation(1)">Mantener</button>
+                </div>
+                <div class="col-6">
+                  <button type="button" class="btn btn-block" [ngClass]="{'btn-primary': activeInfoModalLocation == true, 'btn-outline-primary':activeInfoModalLocation == false}" (mouseenter)="changeActiveInfoModalLocation(2)" (click)="ngxSmartModalService.getModal('myModal').toggle()">Cambiar</button>
+                </div>
+              </div>
+            </div>
+          </li>
+          <!-- Shopping Cart -->
+          <li class="nav-item d-flex align-items-center shop-user-item position-relative">
+            <a class="nav-link shop-user-link" [routerLink]="[ '/order' ]">
+              <div class="d-flex justify-content-center position-relative">
+                <i class="icon icon-bag"></i>
+                <span class="badge badge-primary badge-cart rounded-circle border-white"
+                      *ngIf="(totalItemsInCart$ | async) as total">{{total}}</span>
+              </div>
+              <div class="d-flex justify-content-center">
+                <p class="shop-user-text">Canasta</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<header class="d-block d-lg-none">
+  <div class="container-fluid py-2">
+    <div class="row d-flex align-items-center">
+      <!-- Menú -->
+      <div class="col-4 list-items-mobile">
+        <a class="list-items-mobile-link" (click)="toggleMenu = true">
+          <i class="list-items-mobile-icon fas fa-bars"></i>
+        </a>
+      </div>
+      <!-- Logo -->
+      <div class="col-4 d-flex justify-content-center">
+        <a [routerLink]="['/']">
+          <img class="logo" src="{{parametersService.company?.app?.header?.logo?.logo_front}}"
+               alt="{{parametersService.company?.app?.header?.logo?.title}}"/>
+        </a>
+        <ng-template #title>
+          <h1 class="text-hidden" [innerHtml]="parametersService.company?.app?.header?.logo?.title"></h1>
+        </ng-template>
+      </div>
+      <!-- Actions -->
+      <div class="col-4 list-items-mobile d-flex justify-content-end">
+        <!-- Ubicación -->
+        <a class="list-items-mobile-link pl-2" (click)="ngxSmartModalService.getModal('myModal').toggle()">
+          <i class="list-items-mobile-icon icon-location-pin"></i>
+        </a>
+        <!-- Component: Search -->
+        <a class="list-items-mobile-link pl-2" (click)="doFocusInSearchInput()" onclick="openSearch()">
+          <i class="list-items-mobile-icon icon-magnifier"></i>
+        </a>
+        <!-- Shopping Cart -->
+        <a class="list-items-mobile-link pl-2" [routerLink]="[ '/order' ]">
+          <i class="list-items-mobile-icon icon-bag"></i>
+          <span class="badge badge-primary badge-cart rounded-circle border-white"
+                *ngIf="(totalItemsInCart$ | async) as total">{{total}}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="position-relative">
+    <app-search id="mobileSearch" class="mobile-search"
+                [placeholder]="parametersService.company?.app?.header?.placeholder"
+                *ngIf="parametersService.company?.config?.menu?.showSearchInsideMenu">
+    </app-search>
+  </div>
+</header>
+<!-- Search -->
+
+<!-- Aside Mobile Content -->
+<aside id="sideNav" class="sidenav" [ngStyle]="{ 'width': toggleMenu ? '100%' : '0%' }">
+  <!-- Header -->
+  <div class="container-fluid">
+    <div class="row sidenav-header py-2">
+      <div class="col-4 offset-4 d-flex justify-content-center">
+        <a [routerLink]="['/']" (click)="toggleMenu = false">
+          <img class="logo" src="{{parametersService.company?.app?.header?.logo?.logo_front}}"
+               alt="{{parametersService.company?.app?.header?.logo?.title}}"/>
+        </a>
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center">
+        <a class="btn-close" (click)="toggleMenu = false">
+          <i class="fas fa-times"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Content -->
+  <div class="row">
+    <div class="col-12">
+      <!-- My Account -->
+      <div *ngIf="authService.isAuthenticated">
+        <p class="title-menu mb-0 w700">¡Hola! {{ authService.currentUserValue.fullname }}</p>
+        <a class="btn-menu-accordion d-block text-left collapsed" data-toggle="collapse" href="#myAccount" role="button"
+           aria-expanded="false" aria-controls="multiCollapseExample1">
+          <i class="icon-user"></i> Mi Perfil
+        </a>
+        <div class="row">
+          <div class="col">
+            <div class="collapse multi-collapse" id="myAccount">
+              <div class="card card-body p-0 rounded-0 border-0">
+                <a class="btn-menu-accordion-item d-block text-left" [routerLink]="['/','account']"
+                   (click)="toggleMenu = false">
+                  <i class="icon-user"></i> Cuenta
+                </a>
+                <a class="btn-menu-accordion-item d-block text-left" [routerLink]="['/','orders']"
+                   (click)="toggleMenu = false">
+                  <i class="icon-docs"></i> Pedidos
+                </a>
+                <a class="btn-menu-accordion-item d-block text-left" [routerLink]="['/','favorites']"
+                   (click)="toggleMenu = false">
+                  <i class="icon-heart"></i> Favoritos
+                </a>
+                <a class="btn-menu-accordion-item d-block text-left" [routerLink]="['/','address']"
+                   (click)="toggleMenu = false">
+                  <i class="icon-location-pin"></i> Direcciones
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Register / Login -->
+      <div *ngIf="!authService.isAuthenticated">
+        <p class="title-menu mb-0 w700">
+          ¡Bienvenidos!
+        </p>
+        <a class="btn-menu d-block text-left" [routerLink]="['/','login']"
+           (click)="toggleMenu = false">
+          <i class="icon-user"></i> Iniciar Sesión
+        </a>
+        <a class="btn-menu d-block text-left" [routerLink]="['/','register']"
+           (click)="toggleMenu = false">
+          <i class="icon-user-follow"></i> Registrarse
+        </a>
+      </div>
+      <!-- Mega Menu -->
+      <p class="title-menu mb-0 w700" [hidden]="!parametersService.company?.config?.header?.showCategories">Menú de
+        Productos</p>
+      <app-mega-menu *ngFor="let menu of categoriesMenu"
+                     [hidden]="!parametersService.company?.config?.header?.showCategories"
+                     [menu]="menu"
+                     [promocion]="parametersService.company?.config?.header?.showOfferts"
+                     (closeMenu)="toggleMenu = false">
+      </app-mega-menu>
+      <!-- Others Options -->
+      <p class="title-menu mb-0 w700">Otras Opciones</p>
+      <a class="btn-menu d-block text-left" *ngIf="authService.isAuthenticated" [routerLink]="['/','favorites']"
+         (click)="toggleMenu = false">
+        <i class="icon-heart"></i> Favoritos
+      </a>
+      <a class="btn-menu d-block text-left" *ngIf="parametersService.company?.config?.header?.showBlog"
+         [routerLink]="['blog']" (click)="toggleMenu = false">
+        <i class="icon-book-open"></i> Blog
+      </a>
+      <a class="btn-menu d-block text-left" *ngIf="parametersService.company?.config?.header?.showEvent"
+         [routerLink]="['events']" (click)="toggleMenu = false">
+        <i class="icon-calendar"></i> Eventos
+      </a>
+      <a class="btn-menu d-block text-left" *ngIf="parametersService.company?.config?.header?.showKnowUs"
+         [routerLink]="['/pages','conocenos']" (click)="toggleMenu = false">
+        <i class="icon-briefcase"></i> Nosotros
+      </a>
+      <a class="btn-menu d-block text-left" *ngIf="parametersService.company?.config?.header?.showContact"
+         [routerLink]="['/','contact']" (click)="toggleMenu = false">
+        <i class="icon-envelope"></i> Contáctenos
+      </a>
+      <a class="btn-menu d-block text-left" *ngIf="authService.isAuthenticated" [routerLink]="['/']"
+         (click)="logout();toggleMenu = false">
+        <i class="icon-logout"></i> Cerrar Sesión
+      </a>
+    </div>
+  </div>
+</aside>
+<ngx-json-ld [json]="schema"></ngx-json-ld>

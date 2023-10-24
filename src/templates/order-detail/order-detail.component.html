@@ -1,0 +1,546 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/','orders']">
+                Mis pedidos
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+            <span class="w700">
+              Pedido #{{orderData?.id}}
+            </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Order Detail -->
+  <div class="order-detail-container">
+    <div class="container">
+      <!-- Header -->
+      <div class="row" *ngIf="orderData">
+        <!-- Title -->
+        <div class="col-12 col-lg mb-3">
+          <h1 class="title-section">Pedido #{{orderData?.id}}</h1>
+        </div>
+        <!-- Repucharse -->
+        <div class="col-12 col-lg d-flex justify-content-lg-end justify-content-center mb-3">
+          <button class="btn btn-link"
+                  *ngIf="parametersService?.company?.config?.orders?.duplicateOrders"
+                  (click)="duplicateOrder()"><i class="icon-docs mr5" aria-hidden="true"></i> Volver a Comprar
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Client -->
+        <div class="col-12 col-lg-4 d-flex flex-column small mb-3">
+          <div class="card filters h-100">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Cliente
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <span class="w700">{{orderData?.tercero.nombre}}</span>
+                </li>
+                <li>
+                  <span class="w700">{{orderData?.tercero.tipo_documento}}:</span>
+                  {{orderData?.tercero.documento_numero}}{{orderData?.tercero.documento_dv}}
+                </li>
+                <li *ngIf="user?.isB2B">
+                  <span class="w700">Sucursal:</span> {{orderData?.branch.nombre}}
+                </li>
+                <li>
+                  <span class="w700">Dirección:</span> {{orderData?.direccion_despacho}}
+                </li>
+                <li *ngIf="orderData?.barrio_despacho">
+                  <span class="w700">Barrio:</span> {{orderData?.barrio_despacho}}
+                </li>
+                <li>
+                  <span class="w700">Teléfono:</span>
+                  {{orderData?.telefono_contacto ? orderData?.telefono_contacto : orderData?.applicant.movil }}
+                </li>
+                <li>
+                  <span class="w700">Ciudad:</span> {{orderData?.location.city.name}}
+                  ({{orderData?.location.state.name}})
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Order Contact -->
+        <div class="col-12 col-lg-4 d-flex flex-column small mb-3">
+          <div class="card filters h-100">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Contacto del Pedido
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <span class="w700">{{orderData?.nombre_contacto}}</span>
+                </li>
+                <li>
+                  <span class="w700">Teléfono:</span> {{orderData?.telefono_contacto}}
+                </li>
+                <li>
+                  <span class="w700">Celular:</span>
+                  {{orderData?.movil_contacto ? orderData?.movil_contacto : 'Sin definir'}}
+                </li>
+                <li>
+                  <span class="w700">Email:</span> {{orderData?.correo_contacto}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Order Info -->
+        <div class="col-12 col-lg-4 d-flex flex-column small mb-3">
+          <div class="card filters h-100">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Información del Pedido
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li *ngIf="orderData?.numero_factura">
+                  <span class="w700">Factura No.:</span> {{orderData?.numero_factura}}
+                </li>
+                <li *ngIf="orderData?.numero_factura">
+                  <span class="w700">Medio de Pago:</span> {{orderData?.medioPago.nombre}}
+                </li>
+                <li *ngIf="orderData?.numero_factura">
+                  <span class="w700">Fecha de Eaboración:</span> {{orderData?.fecha_elaboracion}}
+                </li>
+                <li
+                  *ngIf="orderData?.fecha_entrega_programada_label && parametersService?.company?.config?.orders?.mostrarFechaEntregaProgramada">
+                  <span class="w700">Entrega Programada:</span> {{orderData?.fecha_entrega_programada_label}}
+                </li>
+                <li *ngIf="!user?.isSeller">
+                  <span class="w700">Estado del Pedido:</span> {{orderData?.estado_documento}}
+                </li>
+                <li>
+                  <span class="w700">Estado del Pago:</span> {{orderData?.estado_pago}}
+                </li>
+                <li>
+                  <span class="w700">Medio de Pago:</span> {{orderData?.medioPago?.nombre}}
+                </li>
+                <li>
+                  <span class="w700">Elaborada el:</span> {{orderData?.fecha_elaboracion}}
+                </li>
+                <li *ngIf="orderData?.estado_pago!='Pagada'">
+                  <span class="w700">Días Restantes para Pago:</span> {{orderData?.tiempoRetomarPedido}} día(s)
+                </li>
+                <li *ngIf="!orderData?.tiempoRetomarPedido && orderData?.payment.id==1">
+                  <span class="w700">Días Restantes para Pago:</span> Expirado
+                </li>
+                <div>
+                  <li *ngIf="orderData?.pasarela?.codigoAutorizacion">
+                    <span class="w700">Código de Autorización:</span> {{orderData?.pasarela?.codigoAutorizacion}}
+                  </li>
+                  <li *ngIf="orderData?.pasarela?.numeroTransaccion">
+                    <span class="w700">Número de la Transacción:</span> {{orderData?.pasarela?.numeroTransaccion}}
+                  </li>
+                  <li *ngIf="orderData?.pasarela?.referenciaTransaccion">
+                    <span
+                      class="w700">Referencia de la Transacción:</span> {{orderData?.pasarela?.referenciaTransaccion}}
+                  </li>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Header Order Detail Table -->
+      <div class="row">
+        <div class="col-12 mb-3 mb-lg-0">
+          <div class="card filters">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Detalle del Pedido
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Order Detail Table Desktop -->
+        <div class="col-12 d-none d-lg-block">
+          <div class="table-responsive table-custom">
+            <table class="table small">
+              <thead>
+              <tr>
+                <th class="text-center" colspan="2">ITEMS</th>
+                <th class="text-center">REF.</th>
+                <th
+                  *ngIf="orderData.showErpCode"
+                  class="text-center">
+                  Cod. ERP
+                </th>
+                <th class="text-center">U.M.</th>
+                <th class="text-center">CANT.</th>
+                <th class="text-center" *ngIf="orderData?.clientPriceList === 'client'">
+                  Vr. UNIT
+                </th>
+                <th class="text-center" *ngIf="orderData?.clientPriceList === 'cost'">Vr.
+                  COSTO
+                </th>
+                <th class="text-center" *ngIf="orderData?.clientPriceList === 'client'">
+                  DCTO.
+                </th>
+                <th class="text-center"
+                    *ngIf="orderData?.clientPriceList === 'client' && (parametersService.company?.config?.data?.cart?.showDiscountCoupon || orderData?.descuentosCupon)">
+                  DCTO. X CUPÓN
+                </th>
+                <th class="text-center"
+                    *ngIf="user?.isSeller && orderData?.clientPriceList === 'cost'">
+                  FACTOR %
+                </th>
+                <th class="text-center">IMP IVA. %</th>
+                <th class="text-center" *ngIf="orderData?.manejaImpoConsumo">IMPOCONSUMO</th>
+                <th class="text-center">SUBTOTAL</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of orderData?.items; let i = index">
+                <td class="text-center">{{i + 1}}</td>
+                <td class="text-left">
+                  <a
+                    *ngIf="(item?.currentItemCartPrice && item?.currentItemCartPrice > 0) || !this.parametersService?.page?.showProductNotFound; else anchorWithoutLinkTemplate"
+                    [routerLink]="['/', item.category.slug, item.slug]"
+                    title="{{item.nombre}}">
+                    {{item.nombre}}
+                  </a>
+                  <ng-template #anchorWithoutLinkTemplate>
+                    <a title="{{item.nombre}}">
+                      {{item.nombre}}
+                    </a>
+                  </ng-template>
+                  <ul class="list-unstyled mb-0">
+                    <li *ngFor="let attribute of item.atributos">
+                      <span class="w700">{{attribute.title}}:</span> {{attribute.value[0]}}
+                    </li>
+                  </ul>
+                  <p *ngIf="item.comentario" class="small">Nota:{{item.comentario}}</p>
+                </td>
+                <td class="text-center">{{item.referencia}}</td>
+                <td *ngIf="orderData?.showErpCode"
+                    class="text-center">
+                  {{item?.erpCode}}
+                </td>
+                <td class="text-center">{{item.unidadMedida}}</td>
+                <td class="text-center">{{item.cantidad}}</td>
+                <td class="text-center">$ {{item.precio_unitario | number : '1.0-0'}}</td>
+                <td class="text-center" *ngIf="orderData?.clientPriceList === 'client'">
+                  <p *ngIf="item.esCupon != 0">$ 0</p>
+                  <p *ngIf="item.esCupon == 0">$ {{item.descuento | number: '1.0-0'}}</p></td>
+                <td class="text-center"
+                    *ngIf="orderData?.clientPriceList === 'client' && parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                  <p *ngIf="item.esCupon == 0">$ 0</p>
+                  <p *ngIf="item.esCupon != 0">$ {{item.descuento | number: '1.0-0'}}</p></td>
+                <td class="text-center"
+                    *ngIf="user?.isSeller && orderData?.clientPriceList === 'cost'">
+                  {{item.margen_ganancia}}</td>
+                <td class="text-center">{{item.impuesto | number: '1.0-2'}} %</td>
+                <td class="text-center" *ngIf="orderData?.manejaImpoConsumo">
+                  $ {{item.impoconsumoValor | number: '1.0-0'}}</td>
+                <td class="text-center">
+                  <span *ngIf="!item.obsequio">$ {{ item.total | number : '1.0-0' }}</span>
+                  <span *ngIf="item.obsequio">$ 0</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-responsive mt-2" *ngIf="obsequios.length">
+            <h6>Obsequios en el pedido</h6>
+            <table class="table small">
+              <thead>
+              <tr>
+                <th class="text-center">Nombre</th>
+                <th class="text-center">Referencia</th>
+                <th class="text-center">Impuesto</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let item of obsequios; let i = index">
+                <td class="text-left">
+                  {{item.nombre_corto}}
+                </td>
+                <td class="text-center">{{item.codigo}}</td>
+                <td class="text-center">$ {{item.total_impuesto | number: '1.0-0'}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Order Detail Table Mobile -->
+        <div class="col-12 d-block d-lg-none">
+          <div class="card filters mb-3" *ngFor="let item of orderData?.items; let i = index">
+            <div class="card-header">
+              <a [routerLink]="['/', item.category.slug, item.slug]" title="{{item.nombre}}">
+                <h5 class="card-header-link font-weight-bold m-0">
+                  {{item.nombre}}
+                </h5>
+              </a>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0 small">
+                <li *ngFor="let attribute of item.atributos">
+                  <span class="w700">{{attribute.title}}:</span> {{attribute.value[0]}}
+                </li>
+                <li *ngFor="let attribute of item.atributos">
+                  <span class="w700">{{attribute.title}}:</span> {{attribute.value[0]}}
+                </li>
+                <li>
+                  <span class="w700">Referencia:</span> {{item.referencia}}
+                </li>
+                <li *ngIf="parametersService.page?.mostrarUnidadMedidaItemCanasta">
+                  <span class="w700">Unidad de Medida:</span> {{item.unidadMedida}}
+                </li>
+                <li>
+                  <span class="w700">Cantidad:</span> {{item.cantidad}}
+                </li>
+                <li>
+                  <span class="w700">Precio:</span> ${{item.precio_unitario | number : '1.0-0'}}
+                </li>
+                <li *ngIf="orderData?.clientPriceList === 'client'">
+                  <span class="w700">Descuento:</span> $ {{item.descuento | number: '1.0-0'}}
+                </li>
+                <li *ngIf="user?.isSeller && orderData?.clientPriceList === 'cost'">
+                  <span class="w700">Factor:</span> {{item.margen_ganancia}}%
+                </li>
+                <li>
+                  <span class="w700">Imp IVA:</span> {{item.impuesto}}%
+                </li>
+                <li *ngIf="orderData?.manejaImpoConsumo">
+                  <span class="w700">Impoconsumo:</span>$ {{item.impoconsumoValor}} %
+                </li>
+                <li *ngIf="!item.obsequio">
+                  <span class="h6 w700 text-primary">
+                    Total: $ {{item.total | number : '1.0-0'}}
+                  </span>
+                </li>
+                <li *ngIf="item.obsequio">
+                  <span class="h6 w700 text-primary">
+                    Total: $ 0
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div *ngIf="obsequios.length">
+            <div class="card filters mb-3" *ngFor="let item of obsequios; let i = index">
+              <div class="card-header">
+                <h5 class="card-header-link font-weight-bold m-0">
+                  {{item.nombre_corto}}
+                </h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-unstyled mb-0 small">
+                  <li>
+                    <span class="w700">Referencia:</span> {{item.codigo}}
+                  </li>
+                  <li>
+                    <span class="w700">Impuestos:</span> ${{item.total_impuesto | number: '1.0-0'}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Notes -->
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <!-- Customer Notes -->
+          <div class="card filters mb-3">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Anotaciones del Cliente
+              </h5>
+            </div>
+            <div class="card-body">
+              <small class="text-justify" *ngIf="orderData?.comentario">{{orderData?.comentario}}</small>
+              <small class="text-justify"
+                     *ngIf="!orderData?.comentario">No se han ingresado comentarios para este pedido</small>
+            </div>
+          </div>
+          <p class="text-justify small" *ngIf="orderData?.tiempoRetomarPedido">
+            <span class="w700">Nota:</span> Recuerda que podrás realizar el pago de tu pedido hasta
+            {{orderData?.tiempoRetomarPedido}} días a partir de la fecha de realización.
+          </p>
+          <!-- TODO: Oculto, esto se debe mostrar solo en la impresión -->
+          <div class="row d-none">
+            <div class="col-12 mb-3 small">
+              <!-- Customer Info -->
+              <span class="w700">{{orderData?.seller.name}}</span><br>
+              {{orderData?.seller.email}}<br>
+              {{orderData?.seller.co.nombre}}<br>
+              {{orderData?.seller.co.direccion_principal}}<br>
+              <span class="w700">Teléfono:</span> {{orderData?.seller.phone}}<br>
+              {{orderData?.seller.co.ciudad}} - {{orderData?.seller.co.pais}}
+            </div>
+          </div>
+          <!-- Seller Notes -->
+          <div class="card filters mb-3">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Anotaciones del Vendedor
+              </h5>
+            </div>
+            <div class="card-body">
+              <small class="text-justify"
+                     *ngIf="orderData?.anotaciones_vendedor">{{orderData?.anotaciones_vendedor}}</small>
+              <small class="text-justify"
+                     *ngIf="!orderData?.anotaciones_vendedor">No se han ingresado comentarios por parte del vendedor
+                para este pedido</small>
+            </div>
+          </div>
+          <!-- Informacion de empaque de regalo -->
+          <div *ngIf="parametersService?.page?.showGiftForm
+              && orderData?.giftParams?.de.length > 0
+              && orderData?.giftParams?.para.length > 0
+              && orderData?.giftParams?.mensaje.length > 0"
+               class="d-flex flex-column small">
+            <h5 class="bg-primary text-white text-center p-2 mb-0 w700">Información de Empaque de Regalo</h5>
+          </div>
+          <div
+            *ngIf="parametersService?.page?.showGiftForm
+              && orderData?.giftParams?.de.length > 0
+              && orderData?.giftParams?.para.length > 0
+              && orderData?.giftParams?.mensaje.length > 0"
+            class="border p-3 mb-3">
+            <ul class="list-group list-group-flush small">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="w700">De:</span>
+                <span>{{orderData?.giftParams?.de}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="w700">Para:</span>
+                <span>{{orderData?.giftParams?.para}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="w700">Mensaje:</span>
+                <span>{{orderData?.giftParams?.mensaje}}</span>
+              </li>
+            </ul>
+          </div>
+          <!-- /Informacion de empaque de regalo -->
+        </div>
+        <!-- Totals -->
+        <div class="col-12 col-lg-4">
+          <div class="card filters mb-3">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Resumen
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0 small">
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Subtotal:</span>
+                  <span>${{orderData?.subtotal | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="orderData?.clientPriceList === 'client'">
+                  <span class="w700">Descuento:</span>
+                  <span>${{orderData?.descuentos | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="orderData?.clientPriceList === 'client' && (parametersService.company?.config?.data?.cart?.showDiscountCoupon || orderData?.descuentosCupon)">
+                  <span class="w700">Descuento x cupón:</span>
+                  <span>${{orderData?.descuentosCupon | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Impuestos:</span>
+                  <span>${{orderData?.impuestos | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="orderData?.valueTaxBag > 0">
+                  <span class="w700">Impuesto a la bolsa:</span>
+                  <span>${{orderData?.valueTaxBag | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Subtotal Neto:</span>
+                  <span>${{(orderData?.subtotal - orderData?.descuentos - orderData?.descuentosCupon + orderData?.impuestos) | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="orderData?.preliquidacion">
+                  <span class="w700">Preliquidación:</span>
+                  <span>${{orderData?.preliquidacion | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="orderData?.preliquidacion">
+                  <span class="w700">Transporte:</span>
+                  <span>${{orderData?.gestion_y_transporte | number : '1.0-0'}}</span>
+                </li>
+                <div *ngIf="user?.isMaster || user?.isSupervisor">
+                  <li class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="w700 mb-0">Descuento Financieros</h5>
+                  </li>
+                  <div *ngFor="let decuentoFinanciero of orderData?.decuentosFinancieros">
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Fecha Límite:</span>
+                      <span>{{decuentoFinanciero.fechaLimite}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Descuento:</span>
+                      <span>{{decuentoFinanciero.descuento}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Valor:</span>
+                      <span>${{decuentoFinanciero.valor | number : '1.0-0'}}</span>
+                    </li>
+                  </div>
+                </div>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span class="w700 h6 text-primary">Total a Pagar:</span>
+                  <span class="w700 h6 text-primary">$ {{orderData?.total | number : '1.0-0'}}</span>
+                </li>
+                <!-- TODO: No se si se deben mostar -->
+                <!--            <li class="list-group-item d-flex justify-content-between align-items-center"-->
+                <!--                *ngIf="params.showTotalKilosCanasta">-->
+                <!--              <span class="w700 h6 text-primary">Total Kilos:</span>-->
+                <!--              <span class="w700 h6 text-primary">{{orderData?.totalPesoItems}}</span>-->
+                <!--            </li>-->
+                <!--            <li class="list-group-item d-flex justify-content-between align-items-center">-->
+                <!--              <span class="w700 h6 text-primary">Total Unidades:</span>-->
+                <!--              <span class="w700 h6 text-primary">{{orderData?.cantidadTotalCanasta}}</span>-->
+                <!--            </li>-->
+              </ul>
+            </div>
+          </div>
+          <!-- Actions -->
+          <!-- TODO: No se que función cumple estos botones en B2C -->
+          <button class="btn btn-primary btn-block mb-3"
+                  *ngIf="user?.userId && orderData?.estado_pago == 'Pagada' && orderData?.show_tracking_guide == 1"
+                  ui-sref="home.tracking({orderId : orderData?.id})">
+            <i class="icon icon-location-pin"></i> Dónde está mi pedido
+          </button>
+          <div *ngIf="orderData">
+            <button class="btn btn-block btn-primary mb-5"
+                    *ngIf="parametersService?.company?.config?.orders?.duplicateOrders" (click)="duplicateOrder()">
+              <i class="icon-docs" aria-hidden="true"></i> Volver a Comprar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

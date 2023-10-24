@@ -1,0 +1,19 @@
+<ngb-toast *ngIf="toast" [class]="toast.className" @toastAnimation (@toastAnimation.done)="doneLeaveAnimation($event)">
+
+  <!-- Close -->
+  <div class="float-right" *ngIf="!toast.title">
+    <button type="button" class="close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  
+  <!-- Template Content -->
+  <ng-container *ngIf="isTemplate(toast); else text">
+    <ng-template [ngTemplateOutlet]="toast.textOrTemplate"></ng-template>
+  </ng-container>
+
+  <!-- String or HTML string Content -->
+  <ng-template #text>
+    <div [innerHTML]="toast.textOrTemplate"></div>
+  </ng-template>
+</ngb-toast>

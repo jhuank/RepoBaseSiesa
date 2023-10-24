@@ -1,0 +1,44 @@
+@import "src/templates/scss/config/variables";
+
+// Tables
+.table-custom {
+  border: 1px solid var(--light);
+  margin-bottom: 1rem;
+  border-radius: .25rem;
+
+  .table {
+    margin-bottom: 0;
+
+    thead {
+      background: var(--light);
+
+      th {
+        border-top: 0;
+        border-bottom: 0;
+        vertical-align: middle;
+        text-transform: uppercase;
+        font-family: $font-family-title;
+      }
+    }
+
+    tbody {
+      td {
+        border-top: 0;
+        vertical-align: middle;
+        .item-text {
+          margin-bottom: 0;
+
+          .link {
+            font-weight: bold;
+            color: var(--text);
+
+            &:hover {
+              color: var(--primary);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

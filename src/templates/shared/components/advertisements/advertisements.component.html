@@ -1,0 +1,52 @@
+<section [ngSwitch]="typeContent" class="container-fluid p-0">
+  <div *ngSwitchCase="'espacios'">
+    <div *ngIf="contentData[typeContent][positions]">
+      <div class="cms-space" [innerHTML]="contentData[typeContent][positions].html | domSeguro"></div>
+    </div>
+  </div>
+  <div *ngSwitchCase="'carrusel'">
+    <!-- Carrousel tipo uno -->
+    <div *ngIf="contentData?.carrusel?.info">
+      <ngb-carousel #carousel
+                    interval="6000"
+                    *ngIf="contentData?.carrusel?.info[positions]?.tipo_carrusel == 1"
+                    [showNavigationArrows]="true"
+                    [showNavigationIndicators]="true"
+                    [pauseOnHover]="pauseOnHover">
+        <ng-template ngbSlide *ngFor="let slide of contentData[typeContent]?.images[positions]">
+          <a *ngIf="slide.url" [href]="slide.url">
+            <img [src]="slide.imagen" class="img-fluid w-100" [alt]="slide.alt" [title]="slide.title">
+          </a>
+          <img *ngIf="!slide.url" [src]="slide.imagen" class="img-fluid w-100" [alt]="slide.alt" [title]="slide.title">
+        </ng-template>
+      </ngb-carousel>
+      <!-- Carrousel tipo uno -->
+      <aside *ngIf="contentData?.carrusel?.info[positions]?.tipo_carrusel == 2"
+             class="container">
+        <h2 class="title-section text-center py-5 mb-0 ng-cloak">{{contentData?.carrusel?.info[positions]?.titulo}}</h2>
+        <div class="carousel-wrapper pb-5">
+          <button class="btn carousel-wrapper--actions" (click)="scrollLeft(carouselContent)">
+            <i class="icon icon-arrow-left"></i>
+          </button>
+          <div class="carousel-wrapper--content" #carouselContent>
+            <div
+              *ngFor="let slide of contentData[typeContent]?.images[positions]"
+              class="img-fluid carrousel-wrapper--item px-2">
+              <a *ngIf="slide.url" [href]="slide.url" target="_blank">
+                <img [src]="slide.imagen" [alt]="slide.imagen_id">
+              </a>
+              <img *ngIf="!slide.url" [src]="slide.imagen" [alt]="slide.imagen_id">
+            </div>
+          </div>
+          <button class="btn carousel-wrapper--actions" (click)="scrollRight(carouselContent)">
+            <i class="icon icon-arrow-right"></i>
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <p *ngSwitchDefault>
+    Sin tipo
+  </p>
+</section>
+

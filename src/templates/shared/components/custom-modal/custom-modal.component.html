@@ -1,0 +1,18 @@
+<ngx-smart-modal #customModal [identifier]="'customModal'">
+    <div class="modal-content">
+        <!-- Encabezado -->
+        <div class="modal-header bg-primary text-white">
+            <!-- Titulo -->
+            <div class="modal-title">
+                <h5 class="w700 break-text" >{{ parametersService?.page?.giftFormLabel }}</h5>
+                <!-- <p class="small mb-0" [innerHTML]="parametersService?.page?.cmsInfo?.GIFT_MODAL_MESSAGE"></p> -->
+            </div>
+        </div>
+        <div class="row mt-2 mb-2 ">
+            <div class="col-12">
+                <p class="small mb-0 ml-3 mr-3 break-text" [innerHTML]="parametersService?.page?.cmsInfo?.GIFT_MODAL_MESSAGE"></p>
+            </div>
+        </div>
+        <app-gift-form></app-gift-form>
+    </div>
+</ngx-smart-modal>

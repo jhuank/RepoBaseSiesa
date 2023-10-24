@@ -1,0 +1,17 @@
+// Filter Attributes
+.filter-attributes{
+    &-title{
+      font-weight: bold;
+      margin: 1.3rem 0 0.6rem;
+    }
+    &-item{
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.6rem;
+    }
+    &-checkbox{
+        background-color: rgba($color: black, $alpha: 0.1);
+        border: none;
+        margin-right: 4px;
+    }
+  }

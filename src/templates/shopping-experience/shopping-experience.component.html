@@ -1,0 +1,32 @@
+<!-- Rate Your Experience -->
+<h2 class="title-section">
+  Cuéntanos tu experiencia
+</h2>
+<p class="text-center" *ngIf="!alreadySend">
+  Escribe aquí cómo te pareció la experiencia de compra en nuestra tienda virtual
+</p>
+<p class="text-center text-success" *ngIf="alreadySend">
+  Gracias por haber calificado tu experiencia de compra, tu opinión es muy importante para nosotros
+</p>
+<div *ngIf="!alreadySend">
+  <div class="row">
+    <div class="col-12 col-lg-6 offset-lg-3">
+      <textarea name="comment"
+                #inputCommentary
+                rows="4"
+                class="form-control mb-3"
+                placeholder="Añadir comentario"
+                maxlength="500"></textarea>
+      <div class="d-flex flex-column align-items-center mb-3">
+        <small class="text-center">{{500 - inputCommentary.value.length}} carácteres restantes</small>
+        <small class="text-center">
+          Seleccione el número de estrellas de 1 a 5
+        </small>
+        <ngb-rating class="text-warning" #rating [max]="5"></ngb-rating>
+      </div>
+      <button class="btn btn-primary" *ngIf="!alreadySend"
+              type="submit" (click)="experienceRequest(inputCommentary.value, rating.rate || 0)">Calificar
+      </button>
+    </div>
+  </div>
+</div>

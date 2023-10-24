@@ -1,0 +1,107 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Confirmación del Pedido
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Confirmation Order -->
+<div class="confirmation-order-container" *ngIf="!loadingDataOrder">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 offset-lg-2 col-lg-8">
+        <h1 *ngIf="!orderData.medioPago.pasarela_pago_id" class="title-section text-center">
+          Su pedido se realizó exitosamente
+        </h1>
+        <div *ngIf="orderData.medioPago.pasarela_pago_id" class="text-center">
+          <h1 class="title-section">
+            Su pedido está confirmado
+          </h1>
+          <h4 class="text-black-50">Ahora solo falta el pago de su pedido</h4>
+        </div>
+        <p class="text-center">
+          Verifique el resumen de su pedido
+        </p>
+      </div>
+      <!-- Payment Summary -->
+      <div class="col-12 col-lg-4 offset-lg-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <ul class="list-unstyled">
+              <li class="mb-3 d-flex justify-content-between">
+                <span class="w700">N. de Pedido</span>
+                <span>{{orderData.id}}</span>
+              </li>
+              <li class="mb-3 d-flex justify-content-between">
+                <span class="w700">Fecha</span>
+                <span>{{orderData.fecha_elaboracion}}</span>
+              </li>
+              <li class="mb-3 d-flex justify-content-between">
+                    <span class="w700">Valor {{orderData.estado_pago == 'Pagada' ? 'cancelado' :
+                      (orderData.estado_pago == 'Pago pendiente' ? 'cancelado' : 'a Cancelar')}}</span>
+                <span>$ {{orderData.total| number : '1.0-0'}}</span>
+              </li>
+              <li class="mb-3 d-flex justify-content-between">
+                <span class="w700">Medio de Pago</span>
+                <span>{{orderData.medioPago.nombre}}</span>
+              </li>
+              <li class="mb-3 d-flex justify-content-between">
+                <span class="w700">Estado de Pago</span>
+                <span>{{orderData.estado_pago}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p class="text-center small mb-3" ng-if="orderData.medioPago.id != 1">
+          Hemos enviado a su correo electrónico un mensaje de confirmación en donde encontrará los detalles de su
+          compra.
+        </p>
+        <!-- Actions -->
+        <div class="d-flex justify-content-center mb-3">
+          <button (click)="payNow()" class="btn btn-primary" *ngIf="orderData.medioPago.pasarela_pago_id">
+            Ir a Pagar
+          </button>
+        </div>
+      </div>
+      <div class="col-12 offset-lg-2 col-lg-8">
+        <div class="text-center mb-3">
+          <!-- Component: Shopping Experience -->
+          <app-shopping-experience [orderId]="orderId"></app-shopping-experience>
+        </div>
+        <!-- Actions Mobile -->
+        <div class="btn-group mb-5 d-lg-none d-block" *ngIf="!orderData.medioPago.pasarela_pago_id">
+          <button [routerLink]="['/order',orderData.id]"
+                  class="btn btn-secondary btn-block">
+            Conocer el Estado de mi Pedido
+          </button>
+        </div>
+        <!-- Actions Desktop -->
+        <div class="btn-group mb-5 d-lg-block d-none"
+             *ngIf="!orderData.medioPago.pasarela_pago_id">
+          <div class="text-center">
+            <button [routerLink]="['/order',orderData.id]"
+                    class="btn btn-secondary mr-1">
+              Conocer el Estado de mi Pedido
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                    [contentData]="cmsData"></app-advertisements>

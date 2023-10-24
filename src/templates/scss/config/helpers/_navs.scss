@@ -1,0 +1,48 @@
+// Navs
+.nav-tabs {
+  flex-wrap: nowrap;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--primary);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -webkit-overflow-scrolling: touch;
+
+  .nav-item {
+    white-space: nowrap;
+
+    &.nav-link {
+      text-transform: uppercase;
+      font-weight: bold;
+
+      &:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      &.active {
+        background: var(--primary);
+        color: white;
+      }
+    }
+
+    .nav-link {
+      text-transform: uppercase;
+      font-weight: bold;
+
+      &:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      &.active {
+        background: var(--primary);
+        color: white;
+      }
+    }
+  }
+}

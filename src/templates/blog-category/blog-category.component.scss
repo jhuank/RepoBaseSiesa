@@ -1,0 +1,15 @@
+// Blog
+.blog-container {
+  .post {
+    .badge {
+      padding: 0.25em 0.75em 0.25em 0;
+    }
+
+    .img-post {
+      width: 100%;
+      object-fit: cover;
+      height: 225px;
+      border-radius: .25rem;
+    }
+  }
+}

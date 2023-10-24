@@ -1,0 +1,25 @@
+//Localtion Content
+.container-location {
+  background: url('../assets/images/fondo-domicilios.jpg');
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
+  height: 88vh;
+  .form-control {
+    height: calc(2.5em + 0.75rem + 2px);
+  }
+  .custom-select {
+    height: calc(2.5em + 0.75rem + 2px);
+  }
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+  .container-location {
+    background: url('../assets/images/fondo-domicilios.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 94vh;
+  }
+}

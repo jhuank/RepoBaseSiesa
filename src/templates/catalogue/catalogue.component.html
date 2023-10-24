@@ -1,0 +1,379 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <ng-template #breadcrumbCategories>
+              <li class="breadcrumb-item" *ngFor="let breadcrumbItem of category.breadcrumb.slice(0, -1)">
+                <a [routerLink]="['/', breadcrumbItem?.url.split('/')[2]]" [title]="breadcrumbItem.title">
+                  {{breadcrumbItem.name}}
+                </a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span>
+                  {{ category.title || currentFilters.searchText || currentFilters.slug }}
+                  {{ currentFilters.slugPromition ? 'Ofertas' : '' }}
+                  {{ currentFilters.typeProducts ? currentFilters.typeProducts : '' | uppercaseFirstLetter}}
+                </span>
+              </li>
+            </ng-template>
+            <ng-container *ngIf="!(category); else breadcrumbCategories">
+              <li class="breadcrumb-item active" aria-current="page">
+                Búsqueda: <span class="text-uppercase w700">{{currentFilters.searchText}}</span>
+              </li>
+            </ng-container>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <!-- Aside -->
+      <aside class="col-12 col-lg-3">
+        <!-- Filter: Price Desktop -->
+        <section class="d-none d-lg-block mb-3"
+                 *ngIf="currentFilters.filters.productLowPrice != null|| currentFilters.filters.productHighPrice != null">
+          <div class="card filters">
+            <div class="card-header">
+              <h5 class="font-weight-bold mb-0">
+                Filtro por Precio
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row no-gutters">
+                <div class="col mr-2 mb-3">
+                  <input type="number" class="form-control form-control-sm"
+                         placeholder="min" min="0" placeholder="Mínimo"
+                         [(ngModel)]="filterProductLowPrice"
+                         [max]="currentFilters.filters.productHighPrice"
+                         (keydown.enter)="updateListByPrice()">
+                </div>
+                <div class="col mb-3">
+                  <input type="number" placeholder="max"
+                         class="form-control form-control-sm"
+                         placeholder="Máximo"
+                         [(ngModel)]="filterProductHighPrice"
+                         [min]="filterProductLowPrice"
+                         [max]="currentFilters.filters.productHighPrice"
+                         (keydown.enter)="updateListByPrice()">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button class="btn btn-primary btn-block"
+                          (click)="updateListByPrice()">
+                    Filtrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Filter: Attributes Desktop -->
+        <section class="d-none d-lg-block mb-3"
+                 *ngIf="categoryAttributes && categoryAttributes?.data?.length">
+          <div class="card filters">
+            <div class="card-header">
+              <h5 class="font-weight-bold mb-0">
+                Filtro por Atributos
+              </h5>
+            </div>
+            <div class="card-body">
+              <!-- Filter: Attributes -->
+              <app-filter-by-attribute (filterChange)="updateListByAttributes($event)"
+                                       [markedAttributes]="currentFilters.filters.attributes"
+                                       [attributes]="categoryAttributes?.data">
+              </app-filter-by-attribute>
+            </div>
+          </div>
+        </section>
+        <!-- Ads -->
+        <app-advertisements *ngIf="cms" class="d-none d-lg-block" typeContent="espacios" positions="2"
+                            [contentData]="cms"></app-advertisements>
+      </aside>
+      <!-- Content Catalogue -->
+      <div class="col-12 col-lg-9">
+        <!-- Pare y Compare Message -->
+        <div class="alert d-flex align-items-center alert-dark alert-dismissible fade show" role="alert"
+             *ngIf="parametersService?.page?.mostrar_seccion_pare_compare && parametersService?.page?.seccion_pare_compare_texto">
+          <i class="icon-info h2 mb-0 mr-3 text-danger"></i>
+          <p class="small text-justify mb-0" [innerHTML]="parametersService?.page?.seccion_pare_compare_texto"></p>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Category Info -->
+        <div class="row mb-3" id="category-info" #categoryInfo>
+          <ng-template #notCategory>
+            <div class="col-12 d-flex flex-column justify-content-center">
+              <div class="d-flex align-items-center">
+                <h1 class="title-section mr-1">
+                  Búsqueda:
+                  <span class="text-uppercase w700">
+                    {{ currentFilters.searchText || currentFilters.slug }}
+                  </span>
+                </h1>
+              </div>
+            </div>
+          </ng-template>
+          <div class="col-12 d-flex flex-column justify-content-center" *ngIf="category; else notCategory">
+            <div class="row">
+              <div class="col-12 col-lg-auto">
+                <h1 class="title-section">
+                  {{ category.title }}
+                  {{ currentFilters.slugPromition ? 'Ofertas' : '' }}
+                  {{ currentFilters.typeProducts ? currentFilters.typeProducts : '' | uppercaseFirstLetter}}
+                </h1>
+              </div>
+              <div class="col-12 col-lg d-flex align-items-center">
+                <p class="mb-0">
+                  {{ pagination.total | numberFormatPipe }} Producto(s)
+                </p>
+              </div>
+            </div>
+            <!-- ADS -->
+            <section class="d-none d-lg-block" *ngIf="cms">
+              <app-advertisements [typeContent]="'espacios'" [positions]="1" [contentData]="cms"></app-advertisements>
+            </section>
+            <div class="row d-none d-lg-block mt-3" *ngIf="category?.bannerImgComplete">
+              <div class="col-12">
+                <img [src]="category?.bannerImgComplete" [alt]="category?.title" alt="Placeholder" class="img-fluid">
+              </div>
+            </div>
+            <!-- Description -->
+            <div class="mt-3" *ngIf="category?.description?.length" [innerHTML]="category.description"></div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <!-- Accordion Filters Options -->
+            <div id="accordion">
+              <div class="card filter-options position-relative">
+                <div class="card-header" id="headingThree">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col-auto col-lg d-block d-lg-none mr-2 order-3">
+                      <!-- Filters -->
+                      <a type="button" class=" btn-card-header" title="Filtros"
+                         [ngClass]="{'collapsed':!isCollapsedFilters}" data-toggle="collapse"
+                         data-target="#collapseFilters"
+                         (click)="isCollapsedFilters = !isCollapsedFilters"
+                         [attr.aria-expanded]="isCollapsedFilters" aria-controls="collapseFilters">
+                        <i class="icon icon-equalizer"></i>
+                      </a>
+                    </div>
+                    <div class="col-auto col-lg order-4 order-lg-1">
+                      <!-- Search -->
+                      <a type="button" class="btn-card-header"
+                         [ngClass]="{'collapsed':!isCollapsedFilters}"
+                         data-toggle="collapse"
+                         data-target="#collapseSearch"
+                         (click)="isCollapsedSearch = !isCollapsedSearch"
+                         [attr.aria-expanded]="isCollapsedSearch" aria-controls="collapseSearch">
+                        <i class="icon icon-magnifier"></i>
+                        <p class="d-none d-lg-inline-flex ml-2 mb-0">Buscar producto</p>
+                      </a>
+                    </div>
+                    <div class="col-auto mr-0 mr-lg-2 order-5 order-lg-2"
+                         *ngIf="filtered">
+                      <button type="button" class="btn btn-sm btn-outline-danger btn-clear" (click)="clearFilter()">
+                        <svg class="bi bi-backspace-reverse" width="1em" height="1em" viewBox="0 0 16 16"
+                             fill="currentColor"
+                             xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd"
+                                d="M9.08 2H2a1 1 0 00-1 1v10a1 1 0 001 1h7.08a1 1 0 00.76-.35L14.682 8 9.839 2.35A1 1 0 009.08 2zM2 1a2 2 0 00-2 2v10a2 2 0 002 2h7.08a2 2 0 001.519-.698l4.843-5.651a1 1 0 000-1.302L10.6 1.7A2 2 0 009.08 1H2z"
+                                clip-rule="evenodd"/>
+                          <path fill-rule="evenodd"
+                                d="M9.854 5.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.708 0z"
+                                clip-rule="evenodd"/>
+                          <path fill-rule="evenodd"
+                                d="M4.146 5.146a.5.5 0 000 .708l5 5a.5.5 0 00.708-.708l-5-5a.5.5 0 00-.708 0z"
+                                clip-rule="evenodd"/>
+                        </svg>
+                        <span class="d-none d-lg-inline-block align-middle ml-1">Limpiar filtros</span>
+                      </button>
+                    </div>
+                    <div class="col col-lg-auto mr-2 order-1 order-lg-3">
+                      <div class="form-inline">
+                        <label class="mr-2 d-none d-lg-inline-flex">Ordenar por:</label>
+                        <select class="custom-select custom-select-sm"
+                                (change)="updateListBySort($event.target.value)">
+                          <option value="">Ordenar por</option>
+                          <option value="1">Posición Inicial</option>
+                          <option value="2">Productos de A-Z</option>
+                          <option value="3">Productos de Z-A</option>
+                          <option value="4">Precio Menor a Mayor</option>
+                          <option value="5">Precio Mayor a Menor</option>
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Quantity in View -->
+                    <div class="col-auto mr-2 order-2 order-lg-4">
+                      <div class="form-inline">
+                        <label class="mr-2 d-none d-lg-inline-flex">Ver:</label>
+                        <select class="custom-select custom-select-sm"
+                                (change)="updateListByPageSize($event.target.value)">
+                          <option value="">Ver</option>
+                          <option value="12">12</option>
+                          <option value="24">24</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Filters -->
+                <div class="d-block d-lg-none">
+                  <div class="collapse-filters bg-white card-body w-100"
+                       id="collapseFilters" [ngbCollapse]="!isCollapsedFilters"
+                       [ngClass]="{'collapse':!isCollapsedFilters}">
+                    <div class="d-flex justify-content-between">
+                      <h2 class="w700">
+                        Filtros
+                      </h2>
+                      <!-- btn Close -->
+                      <button type="button" class="btn btn-default btn-close"
+                              [ngClass]="{'collapsed':!isCollapsedFilters}"
+                              data-toggle="collapse"
+                              data-target="#collapseFilters"
+                              (click)="isCollapsedFilters = !isCollapsedFilters"
+                              [attr.aria-expanded]="isCollapsedFilters" aria-controls="collapseFilters"
+                              title="Filtros">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <div class="w-100">
+                      <hr class="m-0">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item px-0" *ngIf="filtered">
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                (click)="clearFilter()">
+                          <svg class="bi bi-backspace-reverse" width="1em" height="1em" viewBox="0 0 16 16"
+                               fill="currentColor"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M9.08 2H2a1 1 0 00-1 1v10a1 1 0 001 1h7.08a1 1 0 00.76-.35L14.682 8 9.839 2.35A1 1 0 009.08 2zM2 1a2 2 0 00-2 2v10a2 2 0 002 2h7.08a2 2 0 001.519-.698l4.843-5.651a1 1 0 000-1.302L10.6 1.7A2 2 0 009.08 1H2z"
+                                  clip-rule="evenodd"/>
+                            <path fill-rule="evenodd"
+                                  d="M9.854 5.146a.5.5 0 010 .708l-5 5a.5.5 0 01-.708-.708l5-5a.5.5 0 01.708 0z"
+                                  clip-rule="evenodd"/>
+                            <path fill-rule="evenodd"
+                                  d="M4.146 5.146a.5.5 0 000 .708l5 5a.5.5 0 00.708-.708l-5-5a.5.5 0 00-.708 0z"
+                                  clip-rule="evenodd"/>
+                          </svg>
+                          Limpiar filtros
+                        </button>
+                      </li>
+                      <li class="list-group-item px-0">
+                        <h6>Filtra por Precio</h6>
+                        <div class="form-row">
+                          <!-- Filter: Prices -->
+                          <div class="form-group col-12">
+                            <input type="number" class="form-control" placeholder="min" min="0"
+                                   placeholder="Mínimo"
+                                   [(ngModel)]="filterProductLowPrice"
+                                   [max]="currentFilters.filters.productHighPrice"
+                                   (keydown.enter)="updateListByPrice()"
+                                   appOnlyNumbers>
+                          </div>
+                          <div class="form-group col-12">
+                            <input type="number" placeholder="max" class="form-control"
+                                   placeholder="Máximo"
+                                   [(ngModel)]="filterProductHighPrice"
+                                   [min]="filterProductLowPrice"
+                                   [max]="currentFilters.filters.productHighPrice"
+                                   (keydown.enter)="updateListByPrice()"
+                                   appOnlyNumbers>
+                          </div>
+                          <div class="col-12">
+                            <button class="btn btn-block btn-primary"
+                                    (click)="updateListByPrice()">
+                              Filtrar
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                    <!-- Filter: Attributes -->
+                    <app-filter-by-attribute (filterChange)="updateListByAttributes($event)"
+                                             [markedAttributes]="currentFilters.filters.attributes"
+                                             [attributes]="categoryAttributes?.data">
+                    </app-filter-by-attribute>
+                  </div>
+                </div>
+                <!-- Search -->
+                <div id="collapseSearch" class="collapse-search card-body"
+                     [ngbCollapse]="!isCollapsedSearch" [ngClass]="{'collapse':!isCollapsedSearch}"
+                     aria-labelledby="headingSearch" data-parent="#accordion">
+                  <!-- Search -->
+                  <div class="position-relative">
+                    <input #filterText type="text" class="form-control" placeholder="Busca tu producto"
+                           aria-label="Busca tu producto" aria-describedby="internal-search-addon"
+                           (keydown.enter)="updateListByText(filterText.value)"
+                           (blur)="updateListByText(filterText.value)">
+                    <button class="btn btn-search" type="button" id="internal-search-addon"
+                            (click)="updateListByText(filterMobileText.value)">
+                      Buscar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- product list -->
+        <section class="box-product mb-3">
+          <ng-container
+            *ngIf="localSpinner; then localSpinnerTemplate; else productListTemplate">
+          </ng-container>
+          <ng-template #productListTemplate>
+            <div class="row" *ngIf="products.length; else notProducts">
+              <div class="col-6 col-lg-4 mb-3" *ngFor="let product of products">
+                <!-- Component: Box Products -->
+                <app-box-product [product]="product" [showRating]="true"></app-box-product>
+              </div>
+            </div>
+          </ng-template>
+          <!-- local spinner -->
+          <ng-template #localSpinnerTemplate>
+            <div class="row d-flex justify-content-center align-items-center" style="height: 300px;">
+              <div class="d-flex flex-column text-center">
+                <div class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <p class="mt-1 w700"> Cargando...</p>
+              </div>
+            </div>
+          </ng-template>
+          <!-- /local spinner -->
+          <ng-template #notProducts>
+            <div class="alert alert-info" role="alert">
+              No se han encontrado productos para esta búsqueda.
+            </div>
+          </ng-template>
+        </section>
+        <section class="paginator mb-5" *ngIf="!localSpinner">
+          <label class="mb-2 mb-lg-0">
+            Mostrando {{ pagination.page }} a {{ pagination.pageSize }} de {{ pagination.total }} productos
+          </label>
+          <ngb-pagination [(page)]="pagination.page" [pageSize]="pagination.pageSize" [maxSize]="3"
+                          [collectionSize]="pagination.total"
+                          (pageChange)="handlePageChange($event)"></ngb-pagination>
+        </section>
+      </div>
+      <!-- app-advertisements space 3 -->
+      <div class="col-12 col-lg-12">
+        <section class="mb-3 d-none d-lg-block" *ngIf="cms">
+          <app-advertisements [typeContent]="'espacios'" [positions]="3" [contentData]="cms"></app-advertisements>
+        </section>
+      </div>
+    </div>
+  </div>
+</ng-container>

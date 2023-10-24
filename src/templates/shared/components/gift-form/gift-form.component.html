@@ -1,0 +1,61 @@
+<div class="modal-body">
+    <form 
+        [formGroup]="giftForm"
+        >
+        <!-- (ngSubmit)="onSubmit()" -->
+        <div class="row">
+            <div class="col-2">
+            De:
+            </div> 
+            <input class="col-11 ml-3" type="text" formControlName="de" (keyup)="onChange()" maxlength="50">
+        </div>
+        <div class="row mt-2 mb-2">
+          <div class="col-12">
+            <span *ngIf="de.invalid && de.errors.required" style="color: red;">
+              *campo es requerido.
+            </span>        
+          </div>
+        </div>
+        
+        <div class="row mt-2 mb-2">
+            <div class="col-2">
+              Para:
+            </div>
+            <input class="col-11 ml-3" type="text" formControlName="para" (keyup)="onChange()" maxlength="50">
+        </div>
+        <div class="row mt-2">
+          <div class="col-12">
+            <span *ngIf="para.invalid && para.errors.required" style="color: red;">
+              *campo es requerido.
+            </span>        
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mb-1">
+              Mensaje:
+            </div>
+            <textarea class="col-11 ml-3" style="height: 100px;" formControlName="mensaje" (keyup)="onChange()" maxlength="250"></textarea>
+        </div>
+        <div class="row mt-2 mb-2">
+          <div class="col-12">
+            <span *ngIf="mensaje.invalid && mensaje.errors.required" style="color: red;">
+              *campo es requerido.
+            </span>        
+          </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-3 offset-6">
+              <button (click)="locationService.closeCustomModal()" class="btn btn-block btn-primary">Cancelar</button>
+            </div> 
+            <div class="col-3">
+              <button
+                class="btn btn-block btn-primary"
+                (click)="onSubmit()"
+                [disabled]="!giftForm.valid">Guardar</button>
+              </div>
+              <!-- type="submit"  -->
+        </div>
+        
+      
+      </form>
+</div>

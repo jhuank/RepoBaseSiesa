@@ -1,0 +1,13 @@
+<div *ngFor="let attribute of attributes">
+    <h6 class="filter-attributes-title">{{attribute.title}}</h6>
+    <ul class="list-unstyled">
+        <li class="filter-attributes-item" *ngFor="let subAttribute of attribute.data">
+            <input type="checkbox"
+            class="filter-attributes-checkbox"
+            (change)="handleChange(subAttribute)"
+            [checked]="isChecked(subAttribute)" 
+            [id]="'checkbox-' + subAttribute.id">
+            <label [for]="'checkbox-' + subAttribute.id" class="m-0">{{subAttribute.value}}</label>
+        </li>
+    </ul>
+</div>

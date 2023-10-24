@@ -1,0 +1,55 @@
+// Accordion
+.accordion {
+  .add-address {
+    cursor: pointer;
+    padding: 1.25em;
+
+    &:after {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f068";
+      position: absolute;
+      right: 1.25em;
+      top: 1.1em;
+    }
+
+    &.collapsed {
+      background: var(--primary);
+      color: white;
+      transition-duration: 0.5s;
+
+      &:after {
+        content: "\f067";
+      }
+    }
+  }
+
+  .edit-address {
+    cursor: pointer;
+    padding: 1.25em;
+    &.collapsed {
+      transition-duration: 0.5s;
+    }
+  }
+}
+
+// Register
+.address-container {
+  // Box Search
+  .box-search-container {
+    top: 100%;
+    z-index: 2;
+
+    .list-group {
+      .list-group-item {
+        cursor: pointer;
+        border-radius: 0;
+
+        &:hover {
+          background: var(--primary);
+          color: white;
+        }
+      }
+    }
+  }
+}

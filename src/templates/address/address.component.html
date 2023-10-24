@@ -1,0 +1,278 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+            <span class="w700">
+              Direcciones
+            </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Address -->
+  <div class="address-container">
+    <div class="container">
+      <!-- Header -->
+      <div class="row">
+        <div class="col-12 mb-3">
+          <h1 class="title-section">Direcciones</h1>
+          <div [innerHTML]="parametersService?.page?.cmsInfo?.DIRECCIONES"></div>
+        </div>
+      </div>
+      <!-- Add Address -->
+      <div class="row">
+        <div class="col-12 mb-5">
+          <!-- Add Address -->
+          <div id="address" class="accordion">
+            <div class="card">
+              <div class="card-header add-address collapsed" data-toggle="collapse" data-target="#collapseAddAddress" (click)="isCollapsedAddAddress = !isCollapsedAddAddress" [attr.aria-expanded]="isCollapsedAddAddress" aria-controls="collapseAddAddress">
+                <h6 class="mb-0 w700">
+                  <a class="card-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Agregar Dirección
+                  </a>
+                </h6>
+              </div>
+              <div id="collapseAddAddress" [ngbCollapse]="!isCollapsedAddAddress"  class="card-body small collapse" data-parent="#address">
+                <div class="form-row">
+                  <!-- Name -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Nombre*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-address-card"></i>
+                        </div>
+                      </div>
+                      <input id="name" class="form-control" type="text" name="name" #nombre="ngModel"
+                        placeholder="Nombre para la Dirección" [(ngModel)]="newDirection.nombre"
+                        [class.is-invalid]="(nombre.invalid && (nombre.dirty || nombre.touched)) && validationsIsReset" maxlength="50"
+                        (change)="resetValidations(true)"
+                        (click)="resetValidations(true)"
+                        required>
+                    </div>
+                    <div *ngIf="nombre.invalid && validationsIsReset">
+                      <small class="mt-1 text-danger" *ngIf="nombre.errors.required && nombre.touched">
+                        Ingresa el nombre de tu Dirección
+                      </small>
+                    </div>
+                  </div>
+                  <!-- City -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Ciudad*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-city"></i>
+                        </div>
+                      </div>
+                      <input id="searchLocationtext" class="form-control" name="searchLocationtext" placeholder="Ciudad"
+                        [(ngModel)]="newDirection.ciudad" #ciudad="ngModel" required
+                        [class.is-invalid]="(!newDirection.ciudadId && (ciudad.dirty || ciudad.touched)) && validationsIsReset"
+                        (keyup)="getLocationsByFastSearch(newDirection)"
+                        (click)="resetValidations(true)"
+                        [required]="newDirection.ciudadId" />
+                      <div class="box-search-container small position-absolute w-100"
+                        *ngIf="newDirection?.locationsByFastSearch">
+                        <ul class="list-group">
+                          <li class="list-group-item"
+                            *ngFor="let locationByFastSearch of newDirection?.locationsByFastSearch"
+                            (click)="setLocationCity(locationByFastSearch, newDirection);">
+                            {{locationByFastSearch.cityName}}, {{locationByFastSearch.stateName}} -
+                            {{locationByFastSearch.countryName}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <small class="mt-1 text-danger" *ngIf="(!newDirection.ciudadId && ciudad.touched) && validationsIsReset">
+                      Ingresa la Ciudad de tu dirección
+                    </small>
+                  </div>
+                  <!-- Address -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Dirección*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                      </div>
+                      <input id="direction" class="form-control" type="text" name="direction" placeholder="Dirección"
+                        [(ngModel)]="newDirection.direccion" #direction="ngModel" maxlength="50"
+                        [class.is-invalid]="(direction.invalid && (direction.dirty || direction.touched)) && validationsIsReset"
+                        (keyup)="resetValidations(true)"
+                        (click)="resetValidations(true)"
+                        required>
+                    </div>
+                    <div *ngIf="direction.invalid && validationsIsReset">
+                      <small class="mt-1 text-danger" *ngIf="direction.errors.required && direction.touched">
+                        Ingresa tu Dirección
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <!-- Checkbox -->
+                  <div class="form-group col-12">
+                    <input type="checkbox" class="form-check-input ml-0" (click)="selectFavorite(newDirection)"
+                      [(ngModel)]="newDirection.principal" />
+                    <label class="form-check-label ml-3">Marcar como Dirección principal</label>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <!-- Actions Desktop -->
+                  <div class="form-group col-12 d-none d-lg-block">
+                    <button class="btn btn-primary" type="button" (click)="addDirection()">
+                      Guardar
+                    </button>
+                  </div>
+                  <!-- Actions Mobile -->
+                  <div class="form-group col-12 d-block d-lg-none">
+                    <button class="btn btn-primary btn-block" type="button" (click)="addDirection()">
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Edit Address -->
+            <div class="card" *ngFor="let direction of directions; let i = index">
+              <div class="card-header edit-address collapsed d-flex justify-content-between">
+                <div class="card-title d-flex flex-column justify-content-center">
+                  <h6 class="w700">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{direction.nombre}} <small *ngIf="direction.principal"> (Principal)</small>
+                  </h6>
+                  <small>
+                    <span class="w700">Ciudad:</span> {{direction.ciudad}}<br>
+                    <span class="w700">Dirección:</span> {{direction.direccion}}<br>
+                  </small>
+                </div>
+                <!-- Edit Actions -->
+                <div class="d-flex align-items-center small">
+                  <a data-toggle="collapse" data-target="#collapseEditAddress{{i}}" (click)="isCollapsedEditAddress = !isCollapsedEditAddress" [attr.aria-expanded]="isCollapsedEditAddress" aria-controls="collapseEditAddress" >
+                    <i class="icon icon-note"></i>Editar
+                  </a>
+                </div>
+              </div>
+              <div id="collapseEditAddress{{i}}" class="card-body small collapse" [ngbCollapse]="!isCollapsedEditAddress" data-parent="#address{{i}}">
+                <div class="form-row">
+                  <!-- Name -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Nombre*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-address-card"></i>
+                        </div>
+                      </div>
+                      <input id="name" class="form-control input-icon__input" type="text" name="name" #dirNombre="ngModel"
+                        placeholder="Ingresa el nombre para tu Dirección" [(ngModel)]="direction.nombre"
+                        [class.is-invalid]="dirNombre.invalid && (dirNombre.dirty || dirNombre.touched)" maxlength="50"
+                        required>
+                    </div>
+                    <div *ngIf="dirNombre.invalid">
+                      <small class="mt-1 text-danger" *ngIf="dirNombre.errors.required && dirNombre.touched">
+                        Ingresa el nombre de tu Dirección
+                      </small>
+                    </div>
+                  </div>
+                  <!-- City -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Ciudad*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-city"></i>
+                        </div>
+                      </div>
+                      <input id="searchLocationtext" class="form-control input-icon__input" name="searchLocationtext"
+                        placeholder="Ingresa la Ciudad" [(ngModel)]="direction.ciudad" #dirCiudad="ngModel"
+                        [class.is-invalid]="dirCiudad.invalid && (dirCiudad.dirty || dirCiudad.touched)" required
+                        (keyup)="getLocationsByFastSearch(direction)">
+                      <div class="box-search-container small position-absolute w-100"
+                        *ngIf="direction?.locationsByFastSearch">
+                        <ul class="list-group">
+                          <li class="list-group-item"
+                            *ngFor="let locationByFastSearch of direction?.locationsByFastSearch"
+                            (click)="setLocationCity(locationByFastSearch, direction);">
+                            {{locationByFastSearch.cityName}}, {{locationByFastSearch.stateName}} -
+                            {{locationByFastSearch.countryName}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <small class="mt-1 text-danger" *ngIf="dirCiudad?.invalid && (dirCiudad.dirty || dirCiudad.touched)">
+                      Ingresa la Ciudad de tu dirección
+                    </small>
+                  </div>
+                  <!-- Address -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Dirección*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                      </div>
+                      <input id="direction" class="form-control input-icon__input" type="text" name="direction"
+                        #dirDirection="ngModel" placeholder="Ingresa tu Dirección" [(ngModel)]="direction.direccion"
+                        maxlength="50"
+                        [class.is-invalid]="dirDirection.invalid && (dirDirection.dirty || dirDirection.touched)"
+                        required>
+                    </div>
+                    <div *ngIf="dirDirection.invalid">
+                      <small class="mt-1 text-danger" *ngIf="dirDirection.errors.required && dirDirection.touched">
+                        Ingresa tu Dirección
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <!-- Checkbox -->
+                  <div class="form-group col-12">
+                    <input type="checkbox" ng-click="$ctrl.selectFavorite(direction)" [(ngModel)]="direction.principal" />
+                    <label class="form-check-label ml-3">Marcar como Dirección principal</label>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <!-- Actions Desktop -->
+                  <div class="form-group col-12 d-none d-lg-block">
+                    <button class="btn btn-primary mr-1" (click)="saveDirection(direction)" type="button">
+                      Guardar
+                    </button>
+                    <button class="btn btn-danger" (click)="deleteDirection(direction)" type="button">
+                      Eliminar
+                    </button>
+                  </div>
+                  <!-- Actions Mobile -->
+                  <div class="form-group col-12 d-block d-lg-none">
+                    <button class="btn btn-primary btn-block" (click)="saveDirection(direction)" type="button">
+                      Guardar
+                    </button>
+                    <button class="btn btn-danger btn-block" (click)="deleteDirection(direction)"
+                      type="button">
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

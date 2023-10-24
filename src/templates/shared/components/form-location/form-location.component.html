@@ -1,0 +1,264 @@
+<ng-template #deliveryFormTemplate>
+  <ng-template #autocomplete let-r="result" let-t="term">
+    <ngb-highlight [result]="r.cityName || r.nombre" [term]="t"></ngb-highlight>
+  </ng-template>
+  <div class="modal-body">
+    <div
+      [ngClass]="{ 'form-row justify-content-md-center': (position === 'horizontal'), 'row ': (position === 'vertical') }">
+      <div class="col col-12 mb-1"
+           *ngIf="(position === 'vertical') && authService.isAuthenticated && parametersService.company?.config?.crearDireccionModalCobertura">
+        <input #locationNameInput="ngModel" type="text" class="form-control" placeholder="Nombre de la dirección"
+               name="name"
+               autocomplete="off" [(ngModel)]="location.name">
+      </div>
+      <div [ngClass]="{ 'col-lg-3 col-12': (position === 'horizontal'), 'col-12 mb-1': (position === 'vertical') }">
+        <!--        <input #cityInput type="text" class="form-control" placeholder="Ciudad" name="city" autocomplete="off"-->
+        <!--               [(ngModel)]="city" [ngbTypeahead]="searchCitiesByQuery" [resultTemplate]="autocomplete"-->
+        <!--               [inputFormatter]="formatter" [class.is-valid]="city?.cityId" (ngModelChange)="clearlocation();">-->
+        <ng-select [items]="listCitys"
+                   bindLabel="cityName"
+                   placeholder="Seleccione una ciudad"
+                   [loading]="cargandoCiudades"
+                   [loadingText]="'Cagando ciudades..'"
+                   [virtualScroll]="true"
+                   (change)="getNeighborhoodByCity()"
+                   (ngModelChange)="clearlocation()"
+                   [(ngModel)]="city">
+        </ng-select>
+      </div>
+      <div *ngIf="parametersService.page?.neighborhoodCoverage"
+           [ngClass]="{ 'col-lg-3 col-12': (position === 'horizontal'), 'col-12 mb-1': (position === 'vertical') }">
+<!--        <input #neighborhoodInput type="text" class="form-control" placeholder="Barrio" name="neighborhood"-->
+<!--               autocomplete="off" [(ngModel)]="neighborhood" [ngbTypeahead]="searchNeighborhoodByQuery"-->
+<!--               [resultTemplate]="autocomplete" [inputFormatter]="formatter" [disabled]="!city?.cityId"-->
+<!--               [class.is-valid]="neighborhood?.id">-->
+
+        <ng-select [items]="listNeighborhood"
+                   bindLabel="nombre"
+                   placeholder="Seleccione un barrio"
+                   [loading]="cargandoBarrios"
+                   [loadingText]="'Cagando barrios..'"
+                   [disabled]="!city?.cityId"
+                   [virtualScroll]="true"
+                   [(ngModel)]="neighborhood">
+        </ng-select>
+      </div>
+      <div *ngIf="parametersService.company?.config?.crearDireccionModalCobertura">
+        <div class="col-12 mb-1">
+          <select #streetname="ngModel" [(ngModel)]="address.streetname" type="text"
+                  [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                  [class.is-valid]="(location.address === (cartService.shoppingCart?.cartLocation?.address))"
+                  [class.is-invalid]="(locationAddressInput.dirty && !location.address)"
+                  (change)="setAddres()"
+                  class="custom-select">
+            <option value="Calle" selected>Calle</option>
+            <option value="Carrera">Carrera</option>
+            <option value="Avenida">Avenida</option>
+            <option value="Avenida Carrera">Avenida Carrera</option>
+            <option value="Circular">Circular</option>
+            <option value="Circunvalar">Circunvalar</option>
+            <option value="Diagonal">Diagonal</option>
+            <option value="Manzana">Manzana</option>
+            <option value="Transversal">Transversal</option>
+            <option value="Vía">Vía</option>
+          </select>
+        </div>
+        <div class="col-12 mb-1">
+          <div class="input-group">
+            <input #street="ngModel" [(ngModel)]="address.street"
+                   placeholder="{{address.streetname}} #"
+                   [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                   [class.is-valid]="(location.address === (cartService.shoppingCart?.cartLocation?.address))"
+                   [class.is-invalid]="(locationAddressInput.dirty && !location.address)"
+                   (change)="setAddres()" type="text" class="form-control">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white">
+                  <i class="fas fa-hashtag"></i>
+                </span>
+            </div>
+            <input #corner="ngModel" [(ngModel)]="address.corner"
+                   [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                   [class.is-valid]="(location.address === (cartService.shoppingCart?.cartLocation?.address))"
+                   [class.is-invalid]="(locationAddressInput.dirty && !location.address)"
+                   (change)="setAddres()" type="text" class="form-control">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white">
+                  <i class="fas fa-minus"></i>
+                </span>
+            </div>
+            <input #number="ngModel" [(ngModel)]="address.number" [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                   [class.is-valid]="(location.address === (cartService.shoppingCart?.cartLocation?.address))"
+                   [class.is-invalid]="(locationAddressInput.dirty && !location.address)"
+                   (keypress)="setAddres()" (blur)="setAddres()" type="text" class="form-control">
+          </div>
+        </div>
+        <div class="col-12 mb-1">
+          <input #street="ngModel" [(ngModel)]="address.description"
+                 placeholder="Detalles adicionales"
+                 [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                 (change)="setAddres()"type="text" class="form-control">
+        </div>
+        <div [ngClass]="{ 'col-lg-4 col-12': (position === 'horizontal'), 'col-12 mb-3': (position === 'vertical') }">
+          <input #locationAddressInput="ngModel" type="hidden" class="form-control" placeholder="Dirección" name="address"
+                 autocomplete="off" [(ngModel)]="location.address"
+                 [disabled]="!(city?.cityId && (neighborhood?.id || !parametersService.page?.neighborhoodCoverage))"
+                 [class.is-valid]="(location.address === (cartService.shoppingCart?.cartLocation?.address))"
+                 [class.is-invalid]="(locationAddressInput.dirty && !location.address)"
+                 (blur)="(position === 'horizontal') ? setCartLocation() : false">
+        </div>
+      </div>
+      <div class="form-group col"
+           [ngClass]="{ 'col-lg-2 col-12': (position === 'horizontal'), 'col-12': (position === 'vertical') }">
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" *ngIf="(position === 'vertical')">
+    <button class="btn btn-danger" *ngIf="previousTemplate" (click)="backTemplate()">
+      Atrás
+    </button>
+    <button class="btn btn-primary" [disabled]="isValid()" (click)="setCartLocation()">
+      Continuar
+    </button>
+  </div>
+</ng-template>
+<ng-template #addressCollectionTemplate>
+  <button class="btn btn-block btn-light"
+          *ngIf="previousTemplate || (parametersService.page?.deliveryParams?.delivery_mode && parametersService.page?.deliveryParams?.store_pickup_mode)"
+          (click)="backTemplate()">
+    Atras
+  </button>
+  <div class="modal-body">
+    <div class="list-group">
+      <a *ngFor="let item of locationService.locations"
+         class="list-group-item list-group-item-action"
+         [class.active]="item.direccion === cartService.shoppingCart?.cartLocation?.address"
+         (click)="changeAddress(item.location)">
+        <strong>{{item.nombre}}</strong>({{item.ciudad}}) {{item.direccion}}
+      </a>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="nextTemplate(deliveryFormTemplate)">
+      Añadir nueva dirección
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #storePickupFormTemplate>
+  <div class="modal-body">
+    <div class="form-group mb-0">
+      <select class="custom-select" id="coverage"
+      (change)="updatePickUpProperty($event.target)"
+      >
+        <option value="" *ngIf="!cartService.shoppingCart?.cartLocation?.storeId">
+          Seleccionar...
+        </option>
+        <option *ngFor="let coverage of locationService.collectionCoverage"
+                [value]="coverage.id"
+                [selected]="coverage.id == cartService.shoppingCart?.cartLocation?.storeId">
+          {{coverage.name}}
+        </option>
+      </select>
+      <!-- seleccionar fecha recogida -->
+      <select class="custom-select col-7" id="dates"
+      (change)="updatePickUpProperty($event.target)">
+        <option value=""
+        *ngIf="!currentFilterPickUp?.dates"
+        >
+          Día de entrega
+        </option>
+        <option *ngFor="let date of dates"
+          [value]="date"
+          [selected]="date == currentFilterPickUp?.dates">
+          {{date | date:'fullDate' }}
+        </option>
+      </select>
+      <!-- /seleccionar fecha recogida -->
+      <!-- seleccionar hora recogida -->
+      <select
+        class="custom-select col-5" id="hours"
+        (change)="updatePickUpProperty($event.target)"
+        >
+        <option value=""
+        *ngIf="!currentFilterPickUp?.hours"
+        >
+          Hora de entrega
+        </option>
+        <option *ngFor="let hour of hours"
+          [value]="hour"
+          [selected]="hour == currentFilterPickUp?.hours">
+          {{ hour }}
+        </option>
+      </select>
+      <!-- /seleccionar hora recogida -->
+    </div>
+  </div>
+  <div class="modal-footer" *ngIf="(position === 'vertical')">
+    <button class="btn btn-danger"
+            *ngIf="previousTemplate || (parametersService.page?.deliveryParams?.delivery_mode && parametersService.page?.deliveryParams?.store_pickup_mode)"
+            (click)="backTemplate()">
+      Atrás
+    </button>
+    <!-- <button class="btn btn-primary" (click)="locationService.closeLocationModal()"> -->
+    <button class="btn btn-primary" (click)="updateCartWithStorePickUpCoverage($event.target.value)">
+      Continuar
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #deliveryOrPickupTemplate>
+  <div class="modal-body">
+    <!--Desktop-->
+    <div class="row d-lg-flex d-none">
+      <div class="col-12 d-flex justify-content-center">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="entrega-domicilio">
+            <button type="button" class="btn btn-primary d-flex align-items-center flex-column py-5"
+                    (click)="nextTemplate(this.authService.isAuthenticated ? addressCollectionTemplate : deliveryFormTemplate)">
+              <i class="fas fa-3x fa-shipping-fast mb-2"></i>
+              Entrega a Domicilio
+            </button>
+          </div>
+          <div class="btn-group mr-2 d-flex align-items-center" role="group" aria-label="separador">
+            <p class="mb-0">ó</p>
+          </div>
+          <div class="btn-group" role="group" aria-label="recoge-tienda">
+            <button type="button" class="btn btn-primary d-flex align-items-center flex-column py-5"
+                    (click)="nextTemplate(storePickupFormTemplate)">
+              <i class="fas fa-3x fa-truck-loading mb-2"></i>
+              Recoger en Tienda
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Mobile-->
+    <div class="row d-lg-none d-flex">
+      <div class="col-12">
+        <button type="button" class="btn btn-block btn-primary btn-block d-flex align-items-center justify-content-center"
+                (click)="nextTemplate(this.authService.isAuthenticated ? addressCollectionTemplate : deliveryFormTemplate)">
+          <i class="fas fa-2x fa-shipping-fast mr-2"></i>
+          Entrega a Domicilio
+        </button>
+      </div>
+      <div class="col-12 d-flex justify-content-between">
+        <span><i class="fas fa-minus"></i></span>
+        <span>ó</span>
+        <span><i class="fas fa-minus"></i></span>
+      </div>
+      <div class="col-12 mb-3">
+        <button type="button" class="btn btn-block btn-primary btn-block d-flex align-items-center justify-content-center"
+                (click)="nextTemplate(storePickupFormTemplate)">
+          <i class="fas fa-2x fa-truck-loading mr-2"></i>
+          Recoger en Tienda
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="principalTemplate">
+  <ng-template [ngTemplateOutlet]="principalTemplate"></ng-template>
+</ng-container>

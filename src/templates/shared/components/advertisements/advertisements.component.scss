@@ -1,0 +1,43 @@
+.carousel-wrapper {
+  width: 100%;
+  height: auto;
+  display: flex;
+
+  .carousel-wrapper--actions {
+    display: flex;
+    align-items: center;
+    font-size: 2em;
+    color: lightgray;
+
+    &:hover {
+      color: var(--gray);
+    }
+
+    &:focus,
+    &.focus {
+      box-shadow: none;
+    }
+  }
+
+  .carousel-wrapper--content {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-wrapper--item {
+      flex: 0 0 auto;
+      margin: .5em;
+      width: auto;
+      max-height: 200px;
+    }
+  }
+}

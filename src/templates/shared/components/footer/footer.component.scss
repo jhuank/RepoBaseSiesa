@@ -1,0 +1,128 @@
+// Footer
+.footer-top {
+  background: var(--gray-200);
+}
+
+// Widget
+.widget {
+  &-list {
+    .widget-link {
+      color: white;
+
+      &:hover {
+        color: var(--gray-100);
+      }
+    }
+  }
+}
+
+// Cookies
+.cookies {
+  padding: 1em;
+  background: rgba(black, 0.9);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  z-index: 999;
+
+  .cookies-link {
+    color: white;
+
+    &:hover {
+      color: var(--gray-100);
+    }
+  }
+}
+
+// Scroll Top
+.scroll-top-link {
+  position: fixed;
+  bottom: 3em;
+  right: 0.75em;
+  display: inline-block;
+  cursor: pointer;
+  z-index: 999;
+  border-radius: 50%;
+  font-size: 2em;
+  line-height: 1;
+  padding: .3em .5em;
+  text-align: center;
+  transition: all .1s ease-in-out;
+  background: var(--secondary);
+  color: white;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+
+  &:hover {
+    box-shadow: 2px 2px 11px rgba(0,0,0,0.7);
+    color: white;
+  }
+}
+
+// Compare Products
+.compare-products {
+  position: fixed;
+  bottom: 10.5em;
+  right: 1.5em;
+  display: inline-block;
+  cursor: pointer;
+  z-index: 999;
+  line-height: 1;
+  padding: .8em;
+  text-align: center;
+  transition: all .1s ease-in-out;
+  background: var(--secondary);
+  color: white;
+  border-radius: 0;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+
+  &:hover {
+    box-shadow: 2px 2px 11px rgba(0,0,0,0.7);
+    color: white;
+  }
+}
+
+// Logo md
+@media (max-width: 991.98px) {
+  // Compare Products
+  .compare-products {
+    bottom: 50%;
+    right: 1.3em;
+    border-radius: 50%;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  }
+  // Scroll Top
+  .scroll-top-link {
+    position: fixed;
+    bottom: 3.5em;
+    right: 0.75em;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 999;
+    border-radius: 50%;
+    font-size: 2em;
+    line-height: 1;
+    padding: .3em .5em;
+    text-align: center;
+    transition: all .1s ease-in-out;
+    background: var(--secondary);
+    color: white;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+
+    &:hover {
+      box-shadow: 2px 2px 11px rgba(0,0,0,0.7);
+      color: white;
+    }
+  }
+}
+
+// Social Networks
+.social-networks {
+  .item {
+    color: white;
+
+    &:hover {
+      color: var(--gray-300);
+    }
+  }
+}

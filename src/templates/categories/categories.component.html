@@ -1,0 +1,88 @@
+<!-- content -->
+<div *ngIf="(category$ | async) as category">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item" *ngFor="let breadcrumbItem of category.breadcrumb.slice(0, -1)">
+              <a [routerLink]="['/', breadcrumbItem?.url.split('/')[2]]" [title]="breadcrumbItem.title">
+                {{breadcrumbItem.name}}
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+              <span>
+                {{category.title}}
+              </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Title -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h1 class="title-section" *ngIf="!category.title">
+          Nuestros productos
+        </h1>
+        <h1 class="title-section" *ngIf="category.title">
+          {{category.title}}
+        </h1>
+        <div *ngIf="!category.title">
+          <p class="text-justify" *ngIf="parametersService?.company.config.data.categories.textOurProducts">
+            {{parametersService?.company.config.data.categories.textOurProducts}}
+          </p>
+        </div>
+        <div *ngIf="category.title">
+          <p class="text-justify" [innerHTML]="category.description"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Categories -->
+  <div class="categories-container">
+    <div class="container">
+      <div class="row">
+        <!-- Content-->
+        <div class="col mb-5">
+          <div class="row">
+            <!-- Section Categories -->
+            <div class="col-6 col-lg-3 pb-3 mb-3"
+                 *ngFor="let subcategory of  (treeCategory$ | async) ">
+              <div class="category-container pb-3">
+                <!-- Images -->
+                <div class="img-category mb-3 d-flex justify-content-center">
+                  <!-- [routerLink]="['/', subcategory.slug, 'categories']" -->
+                  <a [routerLink]="getLink(subcategory)"
+                     [title]="subcategory.nombre">
+                    <img [src]="subcategory.imagen" [alt]="subcategory.imagen_alt_seo"
+                         [title]="subcategory.imagen_title_seo"
+                         class="img-category-product img-fluid">
+                  </a>
+                </div>
+                <!-- Name -->
+                <div class="category-name">
+                  <!-- [routerLink]="['/', subcategory.slug, 'categories']" -->
+                  <a class="category-name-link" [routerLink]="getLink(subcategory)"
+                     [title]="subcategory.nombre">
+                    <p class="category-name-text">
+                      {{ subcategory.nombre }}
+                    </p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

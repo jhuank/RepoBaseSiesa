@@ -1,0 +1,137 @@
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <ol class="breadcrumb small px-0 bg-transparent">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Confirmación de la Compra
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Response -->
+<div class="response-container">
+  <div class="container">
+    <div class="row" *ngIf="paymentInformation$ | async as payInfo">
+      <div class="col-12 offset-lg-2 col-lg-8">
+        <!-- Status: Procesando pago -->
+        <div *ngIf="payInfo.transaccionAprobada == 'Procesando pago'" class="text-center">
+          <h1 class="title-section">¡Tu pago está siendo procesado!</h1>
+          <h4>Cuando el pago se realice te notificaremos por correo o puedes regresar unos minutos más tarde.</h4>
+        </div>
+        <!-- Status: Pagada -->
+        <div *ngIf="payInfo.transaccionAprobada == 'Pagada'" class="text-center">
+          <h1 class="title-section">¡Enhorabuena!</h1>
+          <h4>Tu pago se ha realizado exitosamente</h4>
+        </div>
+        <!-- TODO: Verificar el link AQUÍ -->
+        <!-- Status: Rechazado -->
+        <div *ngIf="payInfo.transaccionAprobada != 'Pagada' && payInfo.transaccionAprobada != 'Pendiente' && payInfo.transaccionAprobada != 'Procesando pago' "
+             class="text-center">
+          <h1 class="title-section">¡Lo sentimos!</h1>
+          <h4>Tu pago no fue exitoso</h4>
+        </div>
+        <!-- Status: Pendiente -->
+        <div *ngIf="payInfo.transaccionAprobada == 'Pendiente'" class="text-center">
+          <h1 class="title-section">¡Apresúrate!</h1>
+          <h4>Tu pago está pendiente por realizarse</h4>
+        </div>
+        <!-- Payment Summary -->
+        <div class="card mb-3">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="w700">N. de Pedido</span>
+              <span>{{payInfo.id}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="w700">Valor {{payInfo.transaccionAprobada == 'Pagada' ? 'Cancelado' :
+                (payInfo.transaccionAprobada == 'Pago pendiente' ? 'Cancelado' : 'a Cancelar')}}</span>
+              <span>$ {{payInfo.total | number : '1.0-0'}}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="w700">Estado de la Transacción</span>
+              <span>{{getOrderStatus(payInfo.transaccionAprobada)}}</span>
+            </li>
+            <li *ngIf="payInfo.numeroTransaccion" class="list-group-item d-flex justify-content-between">
+              <span class="w700">N. de Transacción</span>
+              <span>{{payInfo.numeroTransaccion}}</span>
+            </li>
+            <li *ngIf="payInfo.referenciaTransaccion" class="list-group-item d-flex justify-content-between">
+              <span class="w700">Referencia</span>
+              <span>{{payInfo.referenciaTransaccion}}</span>
+            </li>
+            <li *ngIf="payInfo.transaccionAprobada == 'Pagada'"
+                class="list-group-item d-flex justify-content-between">
+              <span class="w700">Cód. de Autorización</span>
+              <span>{{payInfo.codigoAutorizacion}}</span>
+            </li>
+            <!-- TODO: Verificar esta condición -->
+            <!--<li [hidden]="true" class="list-group-item d-flex justify-content-between">
+              <span class="w700">Método de Pago</span>
+              <span>{{payInfo.nombreMetodo}}</span>
+            </li>-->
+          </ul>
+        </div>
+        <!-- Status: Pagada -->
+        <p class="text-center" *ngIf="payInfo.transaccionAprobada == 'Pagada'">
+          Su pedido será procesado y enviado acorde a nuestras políticas de servicio. Para mayor información puede
+          utilizar nuestros <a [routerLink]="['/contact']">datos de contacto</a>.
+        </p>
+        <!-- Status: Rechazado -->
+        <p class="text-center" *ngIf="payInfo.transaccionAprobada == 'Rechazado'">
+          Para intentar de nuevo el pago de este pedido ingrese a la opcion
+          <!-- TODO: Remplazar con el detalle de la orden -->
+          <a [routerLink]="['home.orders']"><strong>Mis
+            pedidos</strong></a> y haga clic en
+          <!-- TODO: Remplazar con el detalle de la orden -->
+          <a [routerLink]="['home.orderDetail({orderId:payInfo.id})']"><span class="w700">Pagar
+            ahora</span></a>, si desea más información al respecto utilice nuestros datos de contacto.
+        </p>
+        <!-- Status: Pendiente -->
+        <p class="text-center" *ngIf="payInfo.transaccionAprobada == 'Pendiente'">
+          Para observar el estado de tus pedidos, puedes hacer clic en
+          <!-- TODO: Remplazar con el detalle de la orden -->
+          <a [routerLink]="['home.orders']"><span class="w700">Mis
+            pedidos</span></a>, si desea más información al respecto utilice nuestros datos de contacto.
+        </p>
+        <h4 class="text-center">¿Qué desea hacer ahora?</h4>
+        <!-- Actions Mobile -->
+        <div class="btn-group mb-5 d-lg-none d-block">
+          <!-- TODO: Remplazar con el detalle de la orden -->
+          <button [routerLink]="['/order',payInfo.id]" [queryParams]="{client_id: client_id}"
+                  class="btn btn-primary btn-block">
+            Conocer el estado de mi pedido
+          </button>
+          <!-- TODO: Remplazar el listado de categorías -->
+
+          <button [routerLink]="['/categories']" class="btn btn-link btn-block">
+            Ir a la Página Principal
+          </button>
+        </div>
+        <!-- Actions Desktop -->
+        <div class="d-lg-flex d-none justify-content-center mb-3">
+          <button [routerLink]="['/order',payInfo.id]" [queryParams]="{client_id: client_id}"
+                  class="btn btn-primary mr-1">
+            Conocer el Estado de mi Pedido
+          </button>
+          <!-- TODO: Remplazar el listado de categorías -->
+        </div>
+        <div class="btn-group mb-5 d-lg-flex d-none justify-content-center">
+          <button [routerLink]="['/']" class="btn btn-link">
+            Ir a la Página Principal
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+// Images with Link
+.img-ads {
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.footer {
+  &-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 2rem 0;
+  }
+
+  @media (min-width: 992px) {
+    &-title {
+      margin: 5.5rem 0 2rem;
+    }
+  }
+
+  &-list {
+    &-link {
+      color: var(--white);
+
+      &:hover {
+        color: black;
+      }
+    }
+  }
+}

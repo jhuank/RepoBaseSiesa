@@ -1,0 +1,87 @@
+// Background Gradient Utilities
+
+.bg-gradient-primary {
+  background-color: $primary;
+  background-image: linear-gradient(180deg, $primary 10%, darken($primary, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-variant {
+  background-color: $variant;
+  background-image: linear-gradient(180deg, $variant 10%, darken($variant, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-alternative {
+  background-color: $alternative;
+  background-image: linear-gradient(180deg, $alternative 10%, darken($alternative, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-complement {
+  background-color: $complement;
+  background-image: linear-gradient(180deg, $complement 10%, darken($complement, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-success {
+  background-color: $success;
+  background-image: linear-gradient(180deg, $success 10%, darken($success, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-info {
+  background-color: $info;
+  background-image: linear-gradient(180deg, $info 10%, darken($info, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-warning {
+  background-color: $warning;
+  background-image: linear-gradient(180deg, $warning 10%, darken($warning, 15%) 100%);
+  background-size: cover;
+}
+
+.bg-gradient-danger {
+  background-color: $danger;
+  background-image: linear-gradient(180deg, $danger 10%, darken($danger, 15%) 100%);
+  background-size: cover;
+}
+
+// Grayscale Background Utilities
+
+.bg-gray {
+  background-color: $gray !important;
+}
+
+.bg-gray-100 {
+  background-color: $gray-100 !important;
+}
+
+.bg-gray-200 {
+  background-color: $gray-200 !important;
+}
+
+.bg-gray-300 {
+  background-color: $gray-300 !important;
+}
+
+.bg-dark-gray {
+  background-color: $dark-gray;
+  background-size: cover;
+}
+
+.bg-dark-gray-100 {
+  background-color: $dark-gray-100;
+  background-size: cover;
+}
+
+.bg-dark-gray-200 {
+  background-color: $dark-gray-200;
+  background-size: cover;
+}
+
+.bg-dark-gray-300 {
+  background-color: $dark-gray-300;
+  background-size: cover;
+}

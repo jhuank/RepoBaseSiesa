@@ -1,0 +1,71 @@
+<!-- Aside Blog -->
+<!-- Search -->
+<div class="card mb-3" *ngIf="contentPanel">
+  <div class="card-header">
+    <h6 class="card-title mb-0 w700">
+      <i class="fas fa-search"></i>
+      Buscar
+    </h6>
+  </div>
+  <div class="card-body">
+    <input name="search" type="text" class="form-control" placeholder="Buscar artículo"
+           (keyup.enter)="searchBlog( txtSearch.value )" #txtSearch autocomplete="off" required autofocus>
+  </div>
+</div>
+<!-- Recent Posts -->
+<div class="card mb-3" *ngIf="contentPanel">
+  <div class="card-header">
+    <h6 class="card-title mb-0 w700">
+      <i class="fas fa-list-ul"></i>
+      Entradas Recientes
+    </h6>
+  </div>
+  <ul class="list-group list-group-flush small list-unstyled">
+    <li class="list-group-item" *ngFor="let post of contentPanel.recentposts">
+      <a href="#" [routerLink]="['/blog',post.slug]">
+        {{ post.nombre}}
+      </a>
+    <li>
+  </ul>
+</div>
+<!-- ADS -->
+<div *ngIf="cmsData && cmsType=='espacios'" class="mb-3">
+  <app-advertisements
+    *ngIf="cmsData.espacios[cmsPosition]"
+    [typeContent]="'espacios'"
+    [positions]="cmsPosition"
+    [contentData]="cmsData">
+  </app-advertisements>
+</div>
+<!-- Categories -->
+<div class="card mb-3" *ngIf="contentPanel">
+  <div class="card-header">
+    <h6 class="card-title mb-0 w700">
+      <i class="fas fa-tag"></i>
+      Categorías
+    </h6>
+  </div>
+  <ul class="list-group list-group-flush small list-unstyled">
+    <li class="list-group-item" *ngFor="let category of contentPanel.categories">
+      <a href="#" [routerLink]="['/blog/category/',category.slug]">
+        {{ category.nombre}}
+      </a>
+    <li>
+  </ul>
+</div>
+<!-- Tags -->
+<div class="card mb-5" *ngIf="contentPanel">
+  <div class="card-header">
+    <h6 class="card-title mb-0 w700">
+      <i class="fas fa-tags"></i>
+      Etiquetas
+    </h6>
+  </div>
+  <div class="card-body">
+    <div class="badge" *ngFor="let tag of contentPanel.tags">
+      <a class="btn btn-sm btn-secondary" href="#" [routerLink]="['/blog/tag/',tag.slug]">
+        {{ tag.nombre}}
+      </a>
+    </div>
+  </div>
+</div>

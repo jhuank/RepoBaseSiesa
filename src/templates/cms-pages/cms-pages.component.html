@@ -1,0 +1,28 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              {{slug}}
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container mb-5">
+  <app-advertisements *ngIf="cms$ | async as cmsData"
+    [typeContent]="'espacios'"
+    [positions]="1"
+    [contentData]="cmsData">
+  </app-advertisements>
+</div>

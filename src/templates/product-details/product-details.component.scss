@@ -1,0 +1,209 @@
+@import "src/templates/scss/config/variables";
+
+// Product Detail
+.product-details-container {
+  #product-image-container {
+    position: sticky;
+    top: 120px;
+
+    // Badges
+    .badges {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      width: 5rem;
+      z-index: 2;
+      left: .5rem;
+      top: .5rem;
+
+      .badge {
+        padding: .5rem;
+      }
+    }
+
+    // Slider Images
+    .img-product{
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--light);
+      border-radius: .5rem;
+    }
+  }
+
+  //Product Description
+  .item-description-content {
+    margin-bottom: 1rem;
+
+    .item-name {
+      margin-bottom: 0;
+    }
+  }
+
+  .rate-product-container {
+    display: flex;
+    align-items: center;
+    background: var(--light);
+    border-radius: .5rem;
+    padding: .25rem .75rem;
+    margin-bottom: 1rem;
+
+    .reviews {
+      display: flex;
+      align-items: center;
+
+      .rate-product {
+        border-left: 1px solid var(--gray-300);
+        margin-left: 1rem;
+      }
+    }
+  }
+
+  .item-price-container {
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+
+    .item-price-content {
+      display: flex;
+      align-items: center;
+    }
+
+    .item-other-content {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+
+  .gift-container {
+    .img-gift {
+      border-radius: .25rem;
+      border: 1px solid var(--light);
+    }
+  }
+
+  .more-information-container {
+    background: var(--light);
+    border-radius: .5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .gift-container {
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .product-actions-container {
+    border-bottom: 1px solid var(--light);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Let's get this party started */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 6px;
+    border-radius: 2px;
+    background: var(--primary);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  // Featured Product Icon
+  .featured-product {
+    z-index: 2;
+    left: 2rem;
+    top: 1rem;
+    color: var(--yellow);
+    font-size: 2rem;
+  }
+
+
+  // Social Colors
+  $colores-social: (
+    facebook: #3b5998,
+    googleplus: #dd4b39,
+    instagram: #D62976,
+    linkedin: #007bb6,
+    pinterest: #cb2027,
+    twitter: #00aced,
+    youtube: #b00,
+    soundcloud: #f60,
+    whatsapp: #25d366,
+    recommend: var(--gray-700)
+  );
+
+  .share-product {
+    display: flex;
+    align-items: center;
+    @each $colores-social, $bgcolor in $colores-social {
+      .#{$colores-social} {
+        background: $bgcolor;
+        color: white;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          opacity: .5;
+        }
+      }
+    }
+  }
+
+  .list-group {
+    .list-group-item {
+      cursor: pointer;
+    }
+  }
+
+  // Long Description
+  .long-description-container {
+    padding: .75rem;
+    border: 1px solid var(--light);
+    border-radius: .25rem;
+  }
+
+  .ratings-container {
+    padding: 1rem 1rem 0 1rem;
+    border: 1px solid var(--light);
+    border-radius: .25rem;
+
+    .rates-product-container {
+      display: flex;
+      align-items: center;
+
+      .reviews {
+        display: flex;
+        align-items: center;
+
+        .rate-product {
+          border-left: 1px solid var(--gray-300);
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Options Text
+.line-through {
+  text-decoration: line-through;
+}

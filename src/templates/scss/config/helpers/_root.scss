@@ -1,0 +1,15 @@
+// Grays Colors
+:root {
+  @each $color, $value in $grays {
+    --#{$color}: #{$value};
+  }
+}
+// Social Colors
+@each $colores-social, $bgcolor in $colores-social {
+  .#{$colores-social} {
+    color: $bgcolor;
+    &:hover {
+      opacity: .5;
+    }
+  }
+}

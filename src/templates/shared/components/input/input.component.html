@@ -1,0 +1,63 @@
+<div class="input-group">
+
+  <div *ngIf="icon && iconPosition === 'start'" class="input-group-prepend">
+    <div class="input-group-text">
+      <i [class]="icon"></i>
+    </div>
+  </div>
+  <ng-content select="[icon]"></ng-content>
+
+  <ng-container [ngSwitch]="type">
+    
+    <!-- Select -->
+    <ng-container *ngSwitchCase="'select'">
+      <select class="custom-select"
+        [class.is-invalid]="isInvalid"
+        [formControl]="inputControl"
+        (change)="onChange($event)">
+        <ng-content select="[options]"></ng-content>
+      </select>
+    </ng-container>
+
+    <!-- letter -->
+    <ng-container *ngSwitchCase="'letter'">
+      <input type="text" [maxlength]="maxLength"
+        class="form-control" 
+        [class.is-invalid]="isInvalid"
+        [formControl]="inputControl" 
+        [placeholder]="placeholder"
+        (change)="onChange($event)"
+        appOnlyLetters />
+    </ng-container>
+
+    <!-- number -->
+    <ng-container *ngSwitchCase="'number'">
+      <input type="text" [formControl]="inputControl" 
+        [maxlength]="maxLength"
+        class="form-control" 
+        [class.is-invalid]="isInvalid"
+        [placeholder]="placeholder"
+        (change)="onChange($event)" 
+        appOnlyNumbers/>
+    </ng-container>
+
+    <!-- Input -->
+    <ng-container *ngSwitchDefault>
+      <input [type]="type" [maxlength]="maxLength"
+        class="form-control"
+        [class.is-invalid]="isInvalid"
+        [formControl]="inputControl"
+        [placeholder]="placeholder"
+        (change)="onChange($event)" />
+    </ng-container>
+  </ng-container>
+  <div class="invalid-feedback">
+    {{ getFeedbackMessage() }}
+  </div>
+
+  <div *ngIf="icon && iconPosition === 'end'" class="input-group-append">
+    <div class="input-group-text">
+      <i [class]="icon"></i>
+    </div>
+  </div>
+</div>

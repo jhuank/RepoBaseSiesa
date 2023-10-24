@@ -1,0 +1,53 @@
+<ng-container >
+  <nav aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <ol class="breadcrumb small px-0 bg-transparent">
+            <li class="breadcrumb-item"><a [routerLink]="['/']"><i class="icon icon-home"></i></a></li>
+            <li class="breadcrumb-item active">
+              <span class="w700">
+                Diagnostico
+              </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+<div class="container">
+  <!-- Header -->
+  <div class="row">
+    <div class="col-12">
+      <h1 class="w700">
+        <i class="icon icon-docs"></i>
+        Variables de entorno
+      </h1>
+      <hr>
+    </div>
+  </div>
+  <!-- Content -->
+  <div class="row d-none d-lg-flex mb-5">
+    <div class="col-lg-12">
+      <div class="m-20">
+        <h5>Configuración de la Canasta</h5>
+        <div [innerHTML]="cartService.shoppingCart | prettyjson"></div>
+      </div>
+      <div class="m-20">
+        <h5>Configuración del Usuario</h5>
+        <div [innerHTML]="auth.currentUser$ | prettyjson"></div>
+      </div>
+      <div class="m-20">
+        <h5>Configuración de la compañia</h5>
+        <div [innerHTML]="parametersService.company | prettyjson"></div>
+      </div>
+      <div class="m-20">
+        <h5>Configuración de la Pagina</h5>
+        <div [innerHTML]="parametersService.page | prettyjson"></div>
+      </div>
+      <!-- Alert: Search not Found -->
+
+    </div>
+  </div>
+</div>
+</ng-container>

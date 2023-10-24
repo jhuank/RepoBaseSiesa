@@ -1,0 +1,11 @@
+<div class="btn-group btn-group-toggle d-flex align-items-center" data-toggle="buttons">
+  <label class="mr-2 mb-0 d-none d-lg-inline-block">Ver</label>
+  <div *ngFor="let option of options; index as i"
+         class="btn btn-sm btn-primary"
+         [ngClass]="{ 'active': isActive(i) }"
+         (click)="setActiveOption(i)">
+    <input type="radio" name="options" [checked]="isActive(i)">
+    {{option}}
+  </div>
+  <label class="ml-2 mb-0 d-none d-lg-inline-block">Productos</label>
+</div>

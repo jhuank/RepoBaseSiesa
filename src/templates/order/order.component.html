@@ -1,0 +1,605 @@
+<!-- Modal: Remover producto de canasta -->
+<ng-template #removeItemModal let-product='data' xmlns="http://www.w3.org/1999/html">
+  <p class="mb-0">¿Deseas eliminar el producto: <span class="w700">{{product.name}}</span>?</p>
+</ng-template>
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+            <span class="w700">
+              Carrito
+            </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!--Shopping Cart-->
+  <div class="shopping-cart-container">
+    <div class="container">
+      <!-- shopping Cart Empty --->
+      <ng-template #emptyShoppingCart>
+        <div class="row">
+          <div class="col-12 d-flex flex-column align-items-center">
+            <div class="mb-5">
+              <i class="icon-bag icon-lg"></i>
+            </div>
+            <h1 class="title-section">
+              Carrito vacío
+            </h1>
+            <p>Lo invitamos a ver nuestro catálogo que cuenta con productos de excelente calidad.</p>
+            <a class="btn btn-primary" [routerLink]="['/']">Ir al inicio</a>
+          </div>
+        </div>
+      </ng-template>
+      <!-- shopping Cart Full --->
+      <div *ngIf="(cartService.shoppingCart$ | async) as shoppingCart; else emptyShoppingCart">
+        <div class="row"
+             *ngIf="(shoppingCart.itemsCanastaUsuario && shoppingCart.itemsCanastaUsuario.length); else emptyShoppingCart">
+          <div class="col-12 mb-3">
+            <h1 class="title-section">
+              Carrito
+            </h1>
+          </div>
+          <app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="3"
+                              [contentData]="cmsData"></app-advertisements>
+          <div class="col-12 col-lg-9">
+            <!-- Order Mobile-->
+            <section class="order-mobile d-block d-lg-none">
+              <div class="card mb-3" *ngFor="let item of (shoppingCart.itemsCanastaUsuario || [])">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-5">
+                      <div class="item-image">
+                        <img class="img-fluid" [src]="item.image" [alt]="item.name">
+                      </div>
+                    </div>
+                    <div class="col-7">
+                      <div class="delete-item">
+                        <button type="button" class="close"
+                                (click)="showModalRemoveItemToShoppingCart(removeItemModal, item)">
+                          <i class="material-icons-outlined" aria-hidden="true">
+                            close
+                          </i>
+                        </button>
+                      </div>
+                      <div class="item-name">
+                        <a class="item-name-link" [routerLink]="['/', item.category.slug, item.slug]">
+                          <p class="item-name-text w700">{{item.name}}</p>
+                        </a>
+                      </div>
+                      <div class="item-quantity mb-2">
+                        <app-quantity
+                          [quantity]="item.quantity"
+                          [min]="item.minQuantity &&  item.minQuantity > 0 ? item.minQuantity : 1"
+                          [factor]="item.factorQuantity &&  item.factorQuantity > 0 ? item.factorQuantity : 1"
+                          (changeQuantity)="setQuantityToItem(item, $event)"
+                          [updatingQuantity]="updatingQuantity"
+                          [idItem]="item.id"
+                          [updatingQuantityIdItem]="updatingQuantityIdItem">
+                        </app-quantity>
+                      </div>
+                      <div class="item-resume">
+                        <small>
+                          <span class="w700">Ref.:</span> {{item.reference}}<br>
+                          <span class="w700">Vr. Unit.:</span> $ {{item.price | number : '1.0-0'}}<br>
+                          <div *ngFor="let atributoClon of (item.attributesDetail || [])">
+                            <span class="w700">{{ atributoClon.title}}: </span> {{ atributoClon.value[0] }}
+                          </div>
+                          <span class="w700">Dscto.:</span> $ {{item.discount | number: '1.0-0'}}<br>
+                          <span class="w700">Imp IVA:</span> {{item.iva | number: '1.0-2'}} % <br>
+                          <span class="w700"
+                                *ngIf="shoppingCart.cartWithImpoConsumoTax">Impoconsumo</span> {{item.taxImpConsumoValue | number: '1.0-2'}}
+                          % <br>
+                          <span class="w700">Subtotal:</span> $ {{item.total | number : '1.0-0'}}
+                          <div style="font-size: 0.66rem;" class="rounded-0 mb-1" [hidden]="!item.flagMedioPago">
+                            <img src="/assets/images/card-colpatria-2.png" class="mr-2">
+                          </div>
+                          <div *ngIf="item.comment">
+                            <span class="w700">Nota:</span> {{item.comment}}
+                          </div>
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--obsequios-->
+              <div *ngIf="obsequios?.length">
+                <h5 class="font-weight-bold mb-3">Obsequios en esta Compra</h5>
+                <div class="card mb-3" *ngFor="let item of cartService?.obsequios">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="item-image">
+                          <img class="img-fluid " [src]="item.imagen">
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="item-name">
+                          <a class="item-name-link" href="#">
+                            <p class="item-name-text w700 m-0">{{item.nombre_corto}}</p>
+                          </a>
+                        </div>
+                        <div class="item-resume m-0">
+                          <small>
+                            <span class="w700">Ref.:</span> {{item.codigo}}<br>
+                            <span class="w700">Vr. Unit.:</span> $ 0<br>
+                            <span class="w700">Impuesto:</span> {{item.total_impuesto | number: '1.0-2'}}  <br>
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- Order Desktop-->
+            <section class="table-responsive table-custom small d-none d-lg-block">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col" width="18%">Producto</th>
+                  <th scope="col" width="19%">Cantidad</th>
+                  <th scope="col" class="text-center">Vr. Unit.</th>
+                  <th scope="col" class="text-center">Dscto</th>
+                  <th scope="col" class="text-center"
+                      *ngIf="parametersService.company?.config?.data?.cart?.showDiscountCoupon">D. x cupón
+                  </th>
+                  <th scope="col" class="text-center">IMP. IVA</th>
+                  <th scope="col" class="text-center" *ngIf="shoppingCart.cartWithImpoConsumoTax">Impoconsumo</th>
+                  <th scope="col" class="text-center">Subtotal</th>
+                  <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of (shoppingCart.itemsCanastaUsuario || [])">
+                  <td class="pr-0">
+                    <a [routerLink]="['/', item.category.slug, item.slug]" class="cart-product-image">
+                      <img [src]="item.image" width="64" [alt]="item.name">
+                    </a>
+                  </td>
+                  <td>
+                    <p class="item-text">
+                      <a [routerLink]="['/', item.category.slug, item.slug]" class="cart-product-name w700">
+                        {{item.name}}
+                      </a>
+                    </p>
+                    <p class="item-text"><span class="w700">Ref: </span>{{item.reference}}</p>
+                    <p class="item-text" *ngIf="parametersService.page?.mostrarUnidadMedidaItemCanasta">
+                      <span class="w700">U. Medida: </span>{{item.measureUnit}}
+                    </p>
+                    <div *ngFor="let atributoClon of (item.attributesDetail || [])">
+                      <span class="w700">{{ atributoClon.title}}: </span> {{ atributoClon.value[0] }}
+                    </div>
+                    <!-- dicount target -->
+                    <div class="rounded-0 mb-1" [hidden]="!item.flagMedioPago">
+                      <span class="icon fas fa-tags fa-2x"></span>
+                      <span class="icon fas fa-credit-card fa-2x"></span>
+                    </div>
+                    <div *ngIf="item.comment">
+                      <span class="w700">Nota: </span>{{item.comment}}
+                    </div>
+                  </td>
+                  <td>
+                    <app-quantity
+                      [quantity]="item.quantity"
+                      [min]="item.minQuantity &&  item.minQuantity > 0 ? item.minQuantity : 1"
+                      [factor]="item.factorQuantity &&  item.factorQuantity > 0 ? item.factorQuantity : 1"
+                      (changeQuantity)="setQuantityToItem(item, $event)"
+                      [updatingQuantity]="updatingQuantity"
+                      [idItem]="item.id"
+                      [updatingQuantityIdItem]="updatingQuantityIdItem">
+                    </app-quantity>
+                  </td>
+                  <td class="text-center">${{item.price | number : '1.0-0'}}</td>
+                  <td class="text-center">${{item?.cuponCode ? '0' : item.discount | number: '1.0-0' }}</td>
+                  <td class="text-center" *ngIf="parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                    ${{!item?.cuponCode ? '0' : item.discount | number: '1.0-0' }}</td>
+                  <td class="text-center">{{item.iva}} %</td>
+                  <td class="text-center" *ngIf="shoppingCart.cartWithImpoConsumoTax">
+                    ${{item.taxImpConsumoValue  | number : '1.0-0'}}</td>
+                  <td class="text-center">$ {{item.total | number : '1.0-0'}}</td>
+                  <!-- remove item action -->
+                  <td>
+                    <button type="button"
+                            class="close text-secondary"
+                            placement="top"
+                            ngbTooltip="Eliminar ítem del Carrito"
+                            (click)="showModalRemoveItemToShoppingCart(removeItemModal, item)">
+                      <i class="material-icons-outlined" aria-hidden="true">close</i>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </section>
+            <!-- Gift -->
+            <div class="d-none d-lg-block" *ngIf="obsequios.length">
+              <h5 class="font-weight-bold mb-3">Obsequios en esta Compra</h5>
+              <section class="table-responsive table-custom small">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th scope="col" width="15%"></th>
+                    <th scope="col" width="30%" class="text-center">Producto</th>
+                    <th scope="col" width="19%" class="text-center">Referencia</th>
+                    <th scope="col" class="text-center">Cantidad</th>
+                    <th scope="col" class="text-center">Impuesto</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of cartService?.obsequios">
+                    <td class="text-center">
+                      <img [src]="item.imagen" class="img-fluid" width="64">
+                    </td>
+                    <td>
+                      <p class="item-text-large">
+                        {{item.nombre_corto}}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="text-center item-text-large">
+                        <span class="w700"></span>{{item.codigo}}
+                      </p>
+                    </td>
+                    <td>
+                      <p class="text-center">
+                        <span class="w700"></span>{{item.cantidad_obsequio}}
+                      </p>
+                    </td>
+                    <td class="text-center">
+                      ${{!item?.total_impuesto ? '0' : item.total_impuesto | number: '1.0-0' }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </section>
+            </div>
+            <!-- Order comment -->
+            <section class="order-comment">
+              <blockquote class="blockquote p-2" *ngIf="shoppingCart?.cartOrderData?.comment">
+                <p class="small mb-0"><span class="w700">Comentario:</span> "{{shoppingCart.cartOrderData.comment}}"</p>
+              </blockquote>
+              <div class="row">
+                <div class="col-lg-auto col-12 mb-lg-0 mb-3">
+                  <!-- Formulario de cupon -->
+                  <form #discountCupon="ngForm" (ngSubmit)="saveDiscountCoupon(couponCode)"
+                        id="discountCupon-form"
+                        novalidate>
+                    <div class="row no-gutters">
+                      <div class="form-group col-auto mb-0 mr-2"
+                           *ngIf="parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                        <p *ngIf="savingCoupon" class="mb-0 ng-hide">
+                          <i ng-class="{'fa fa-history load-animation': savingCoupon, 'fa fa-history': !savingCoupon}"
+                             class="fa fa-history"></i>
+                        </p>
+                        <input type="text" id="couponCode"
+                               *ngIf="!validCoupon && !shoppingCart.cartCoupons"
+                               class="form-control form-tall" name="couponCode"
+                               [disabled]="savingCoupon"
+                               #couponDiscounCode name="couponCode" placeholder="Cupón de descuento"
+                               [(ngModel)]="couponCode">
+                      </div>
+                      <div class="form-group col mb-0"
+                           *ngIf="parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                        <button type="button" class="btn btn-block btn-primary"
+                                *ngIf="!validCoupon && !shoppingCart.cartCoupons"
+                                [disabled]="savingCoupon"
+                                (click)="saveDiscountCoupon(couponCode)">
+                          Aplicar
+                        </button>
+                      </div>
+                      <div class="form-group mb-0 col-12"
+                           *ngIf="validCoupon || couponSaved && !validCoupon || shoppingCart.cartCoupons">
+                        <div class="alert alert-success" *ngIf="validCoupon">
+                          <div ng-repeat="itemDescuento in couponResponse['respuestaItem']">
+                            <div ng-bind-html="itemDescuento.mensaje | toTrusted"></div>
+                          </div>
+                          {{couponResponse['message']}}
+                        </div>
+                        <div class="alert alert-danger" *ngIf="couponSaved && !validCoupon">
+                          <div ng-repeat="itemDescuento in couponResponse['respuestaItem']">
+                            <div ng-bind-html="itemDescuento.mensaje | toTrusted"></div>
+                          </div>
+                          {{couponResponse['message']}}
+                        </div>
+                        <div class="listado-cupones ng-scope" *ngIf="shoppingCart.cartCoupons">
+                        <span class="ng-binding ng-scope">
+                          {{shoppingCart?.cartCoupons}}
+                          <i class="fas fa-trash" title="Eliminar Cupón de descuento"
+                             (click)="deleteCoupon(shoppingCart?.cartCoupons);"></i>
+                        </span>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-lg col-12 d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary mr-1"
+                          [hidden]="inputOrderComment.value === shoppingCart?.cartOrderData?.comment"
+                          (click)="setOrderComment(inputOrderComment.value)"
+                          *ngIf="toggleOrderComment">
+                    <i class="fas fa-save"></i>
+                    Guardar
+                  </button>
+                  <button type="button" class="btn"
+                          [ngClass]="{ 'btn-primary': !toggleOrderComment, 'btn-danger': toggleOrderComment }"
+                          (click)="toggleOrderComment = !toggleOrderComment">
+                    {{ toggleOrderComment ? 'Cancelar' : 'Editar Comentario'}}
+                  </button>
+                </div>
+              </div>
+              <div class="form-group my-3" [hidden]="!toggleOrderComment">
+                <small class="form-text text-muted mb-3">
+                  En el siguiente recuadro puedes ingresar un comentario abierto para tu pedido: (Máximo 150 caracteres)
+                </small>
+                <textarea #inputOrderComment [value]="shoppingCart?.cartOrderData?.comment"
+                          (blur)="setOrderComment(inputOrderComment.value)"
+                          class="form-control mb-3" placeholder="Escriba aquí su comentario..."
+                          maxlength="150"
+                          rows="4"></textarea>
+                <small class="d-block text-right" [ngClass]="{
+                    'text-muted': inputOrderComment.value.length === 0,
+                    'text-success': (inputOrderComment.value.length > 0 && inputOrderComment.value.length < 100),
+                    'text-warning': inputOrderComment.value.length >= 100 && inputOrderComment.value.length < 150,
+                    'text-danger': inputOrderComment.value.length === 150}">
+                  {{ inputOrderComment.value.length }} / 150
+                </small>
+              </div>
+              <!-- End Código de Descuento -->
+              <hr>
+              <!-- CMS items sin precio -->
+              <div
+                *ngIf="parametersService?.page?.showProductNotFound && showItemsCheckPriceCms"
+                [innerHTML]="parametersService.page?.cmsInfo?.items_precio_cero_canasta_b2c">
+              </div>
+              <hr *ngIf="parametersService?.page?.showProductNotFound && showItemsCheckPriceCms">
+              <!-- ADS -->
+              <div class="mt-4" [innerHTML]="parametersService.page?.cmsInfo?.CANASTA_INFO_INFERIOR"></div>
+            </section>
+          </div>
+          <!-- Order details -->
+          <div class="col-12 col-lg-3">
+            <section class="position-sticky">
+              <!-- Shopping Cart Information section -->
+              <div class="card filters mb-3">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">
+                    Resumen
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-unstyled mb-0 small">
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Subtotal:</span>
+                      <span>${{shoppingCart.cartSubtotal | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Descuentos:</span>
+                      <span>${{shoppingCart.cartDiscounts | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3"
+                        *ngIf="shoppingCart?.cartCoupons && parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                      <span class="w700">Dcto. x cupón:</span>
+                      <span>${{shoppingCart.cartCouponDiscounts | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Impuestos:</span>
+                      <span>${{shoppingCart.cartTaxes | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3"
+                        *ngIf="shoppingCart.valueTaxBag > 0 && shoppingCart.useBagTax">
+                      <span class="w700">Impuesto a la bolsa:</span>
+                      <span>
+                        ${{shoppingCart.valueTaxBag | number : '1.0-0'}}
+                      </span>
+                    </li>
+                    <li class="d-flex justify-content-center align-items-center mb-3"
+                        *ngIf="shoppingCart.valueTaxBag > 0 && shoppingCart.useBagTax && shoppingCart.mensaje_impuesto_bolsa !=''">
+                      <p class="mb-0 small text-center">{{shoppingCart.mensaje_impuesto_bolsa}}</p>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="w700">Subtotal Neto:</span>
+                      <span>${{((shoppingCart.cartSubtotal - shoppingCart.cartDiscounts - shoppingCart.cartCouponDiscounts) + shoppingCart.cartTaxes + shoppingCart.valueTaxBag) | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center mb-3"
+                        *ngIf="(parametersService.company?.config?.data?.cart?.showTransportPrice || parametersService?.company?.config?.debug) && shoppingCart?.cartTransports">
+                      <span class="w700">Transporte:</span>
+                      <span>${{shoppingCart.cartTransports | number : '1.0-0'}}</span>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center text-secondary">
+                      <span class="w700">TOTAL A PAGAR:</span>
+                      <span class="w700">${{shoppingCart.cartTotal | number: '1.0-0' }}</span>
+                    </li>
+                    <li *ngIf="shoppingCart.showTransportMessage == 1 && shoppingCart.cartTransports <= 0"
+                        class="d-flex justify-content-between align-items-center mt-3 small text-danger">
+                      {{ shoppingCart.transportMessage }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- gift Form -->
+              <div class="card filters mb-3" *ngIf="parametersService?.page?.showGiftForm">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">
+                    {{ parametersService?.page?.giftFormLabel }}
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex flex-column"
+                       *ngIf="(parametersService.custom$ | async) as customParameters; else emptyCustomParam">
+                    <div
+                      *ngIf="customParameters?.de"
+                      class="">
+                      <span class="w700">De: </span>
+                      <span>{{ customParameters?.de | ellipsis:30 }}</span>
+                    </div>
+                    <div
+                      *ngIf="customParameters?.para"
+                      class="">
+                      <span class="w700">Para: </span>
+                      <span>{{ customParameters?.para | ellipsis:30 }}</span>
+                    </div>
+                    <div
+                      *ngIf="customParameters?.mensaje"
+                      class="">
+                      <span class="w700">Mensaje: </span>
+                      <span>{{ customParameters?.mensaje | ellipsis:45 }}</span>
+                    </div>
+                  </div>
+                  <ng-template #emptyCustomParam>
+                    <div
+                      class="" style="display:flex;flex-direction:column;"
+                      *ngIf="customProperties">
+                      <div
+                        *ngIf="customProperties?.de"
+                        class="">
+                        <span class="w700">De: </span>
+                        <span>{{ customProperties?.de | ellipsis:30 }}</span>
+                      </div>
+                      <div
+                        *ngIf="customProperties?.para"
+                        class="">
+                        <span class="w700">Para: </span>
+                        <span>{{ customProperties?.para | ellipsis:30 }}</span>
+                      </div>
+                      <div
+                        *ngIf="customProperties?.mensaje"
+                        class="">
+                        <span class="w700">Mensaje: </span>
+                        <span>{{ customProperties?.mensaje | ellipsis:45 }}</span>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <div
+                    class="mt-1">
+                    <button type="button" class="btn btn-block btn-primary"
+                            (click)="locationService.openCustomModal()">
+                      Editar Información
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Location section -->
+              <div class="card filters mb-3">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">
+                    Destino
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center pb-3" *ngIf="(
+                    parametersService.page?.showLocationQuestion ||
+                    (parametersService.page?.deliveryParams?.delivery_mode || parametersService.page?.deliveryParams?.store_pickup_mode)
+                    ); else searchLocation">
+                    <p class="text-center" [innerHTML]="locationInformation()"></p>
+                    <button type="button" class="btn btn-primary"
+                            (click)="ngxSmartModalService.getModal(locationService.modalReference).toggle()">
+                      {{shoppingCart.cartLocation.cityId ? 'Cambiar' : 'Seleccione'}} Ubicación
+                    </button>
+                  </div>
+                  <ng-template #searchLocation>
+                    <div class="form-group small">
+                      <label>Digita la ciudad de destino</label>
+                      <app-box-search
+                        [results$]="locations$"
+                        [searching]="searching"
+                        [placeholder]="shoppingCart?.cartOrderData?.location?.fullname"
+                        (handleInput)="searchLocations($event)"
+                        (handleSelect)="selectLocation($event)">
+                      </app-box-search>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+              <!--total weight of the basket -->
+              <div class="card filters mb-3" *ngIf="parametersService.company?.config?.data?.cart?.showCartWeight">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">
+                    Peso
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between align-items-center">
+                      <span class="w700">Peso Total:</span>
+                      <span>{{shoppingCart.cartWeight}} kg</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Payment Means Section -->
+              <div class="card filters mb-3" *ngIf="paymentMethods">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">
+                    Medio de pago
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <label for="means-of-payment"
+                         [ngClass]="{ 'text-danger': shoppingCart?.cartOrderData?.payment?.id === null }">
+                    Seleccione su medio de pago
+                  </label>
+                  <select #inputPaymentMethods class="custom-select payment-control" id="means-of-payment"
+                          [value]="shoppingCart?.cartOrderData?.payment.id"
+                          (change)="setPaymentMethod(+inputPaymentMethods.value)">
+                    <option value="" *ngIf="shoppingCart?.cartOrderData?.payment?.id === null">Seleccione...</option>
+                    <option *ngFor="let payment of paymentMethods" [value]="payment.id"
+                            [selected]="shoppingCart?.cartOrderData?.payment?.id === payment.id">
+                      {{payment.nombre}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!-- Actions Section -->
+              <div class="form-group d-none d-lg-block mb-5">
+                <button class="confirm-order btn btn-block btn-primary" (click)="saveOrder()">
+                  {{parametersService.company?.config?.data?.cart?.cartBuyText}}
+                </button>
+                <button class="btn btn-block btn-danger" (click)="discardShoppingCart()">
+                  Descartar Pedido
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-order w-100 d-block d-lg-none"
+       *ngIf="(cartService.shoppingCart$ | async)?.itemsCanastaUsuario?.length > 0">
+    <div class="row no-gutters">
+      <div class="col-6">
+        <button class="btn btn-block btn-danger py-3" (click)="discardShoppingCart()">
+          Descartar Pedido
+        </button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-block btn-primary text-capitalize py-3"
+                (click)="saveOrder()">
+          {{parametersService.company?.config?.data?.cart?.cartBuyText}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Carousel Marcas -->
+  <app-advertisements class="carrousel-adv" *ngIf="cmsData" [typeContent]="'carrusel'" [positions]="2"
+                      [contentData]="cmsData">sss
+  </app-advertisements>
+
+  <!--<app-list-products itemName="destacados"></app-list-products>-->
+
+</ng-container>
+<!-- List Products -->
+<app-list-products itemName="sugeridos" productsLimit="7" withTitle="true"></app-list-products>

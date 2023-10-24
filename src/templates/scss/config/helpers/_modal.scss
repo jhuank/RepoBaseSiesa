@@ -1,0 +1,24 @@
+// Modal
+.overlay {
+  z-index: 99999 !important;
+  .nsm-content {
+    padding: 0;
+    /* The Close Button */
+    .nsm-dialog-btn-close {
+      position: absolute;
+      top: .5em;
+      right: .5em;
+      display: block;
+      color: var(--gray-300);
+      font-weight: bold;
+      z-index: 2;
+    }
+
+    .nsm-dialog-btn-close:hover,
+    .nsm-dialog-btn-close:focus {
+      color: var(--gray-500);
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+}

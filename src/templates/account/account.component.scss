@@ -1,0 +1,19 @@
+// My Account
+.my-account-container {
+  // Box Search
+  .box-search-container {
+    top: 100%;
+    z-index: 2;
+
+    .list-group {
+      .list-group-item {
+        cursor: pointer;
+        border-radius: 0;
+        &:hover {
+          background: var(--primary);
+          color: white;
+        }
+      }
+    }
+  }
+}

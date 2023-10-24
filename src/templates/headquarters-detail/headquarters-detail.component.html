@@ -1,0 +1,85 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/','headquarters']">
+              Nuestras Sedes
+            </a>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              {{operatingCenterData?.name}}
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Headquarters -->
+<div class="headquartes-detail-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h1 class="title-section">{{operatingCenterData?.name}}</h1>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Headquarters Image -->
+      <div class="col-12 col-lg-9 mb-3">
+        <img id="imgContact" class="img-fluid w-100 mb-3" alt="{{operatingCenterData?.name}}"
+             [src]="operatingCenterData?.image">
+        <div [innerHTML]="operatingCenterData?.description"></div>
+        <div class="w-100">
+          <!-- Headquarters Location -->
+          <agm-map [latitude]='map.latitude' [longitude]='map.longitude' [mapTypeId]='map.mapType'>
+            <agm-marker [latitude]="map.latitude" [longitude]="map.longitude"
+                        [markerDraggable]="false">
+            </agm-marker>
+          </agm-map>
+        </div>
+      </div>
+      <div class="col-12 col-lg-3">
+        <div class="headquarters-info mb-3">
+          <!-- Headquarters Info -->
+          <ul class="list-group mb-3">
+            <li class="list-group-item active text-uppercase w700">
+              Información
+            </li>
+            <li class="list-group-item" *ngIf="operatingCenterData?.PBX">
+              <i class="icon icon-phone"></i> {{operatingCenterData?.PBX}}
+            </li>
+            <li class="list-group-item" *ngIf="operatingCenterData?.address">
+              <i class="icon icon-location-pin"></i> {{operatingCenterData?.address}}
+            </li>
+            <li class="list-group-item" *ngIf="operatingCenterData?.city">
+              <i class="icon icon-home"></i> {{operatingCenterData?.city}}
+            </li>
+            <li class="list-group-item" *ngIf="operatingCenterData?.schedules">
+              <i class="icon icon-clock"></i> {{operatingCenterData?.schedules}}
+            </li>
+          </ul>
+          <!-- Headquarters Services -->
+          <ul class="list-group" *ngIf="operatingCenterData && operatingCenterData?.services">
+            <li class="list-group-item active w700 text-uppercase">
+              Servicios
+            </li>
+            <li class="list-group-item" *ngFor="let service of operatingCenterData?.services">
+              <i class="icon icon-check"></i> {{service.descripcion}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ADS -->
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                    [contentData]="cmsData"></app-advertisements>

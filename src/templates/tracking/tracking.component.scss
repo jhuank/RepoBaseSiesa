@@ -1,0 +1,74 @@
+//Order
+.shopping-cart-container {
+  .icon-lg {
+    font-size: 15em;
+  }
+}
+
+.order {
+  .item-text {
+    margin-bottom: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 124px;
+  }
+}
+
+.order-mobile {
+  .item-name {
+    &-link {
+      .item-name-text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .item-resume {
+    line-height: 1.3;
+  }
+}
+
+// Card
+.card {
+  .card-header {
+    padding: 1.25em;
+  }
+}
+
+blockquote {
+  background: var(--gray-200);
+}
+
+.payment-control {
+  font-size: .8rem;
+}
+
+.confirm-order {
+  position: sticky;
+  left: 0;
+  bottom: 0;
+  z-index: 3;
+}
+
+.btn-primary {
+  &.disabled {
+    opacity: .8;
+  }
+
+  &:disabled {
+    opacity: .8;
+  }
+}
+
+.tracking__icon--no-status {
+  background-color: #b3a579;
+}
+
+.tracking__icon--line-status {
+  background-color: #666;
+}
+
+

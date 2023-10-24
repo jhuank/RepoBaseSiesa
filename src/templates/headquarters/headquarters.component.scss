@@ -1,0 +1,18 @@
+//Headquarters
+.headquarters-container {
+  .headquarters {
+    .headquarters-title {
+      background: var(--light);
+      color: var(--text);
+      border-radius: .25rem;
+    }
+
+    .card {
+      .card-body {
+        &.card-custom {
+          background: var(--gray-200);
+        }
+      }
+    }
+  }
+}

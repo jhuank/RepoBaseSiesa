@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <base href="/">
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+  <link rel="icon" type="image/x-icon" href="" app-favicon>
+
+  <!-- Generales -->
+  <meta name="description" content="" />
+  <meta name="image" content="" />
+  <meta name="author" content="" />
+  <meta name="keywords" content="" />
+
+  <!-- facebook y otras redes -->
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content="" />
+
+  <title>Surtifamiliar</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bowser/1.9.4/bowser.min.js"></script>
+
+  <script>
+    window.onload = function () {
+      var html =
+        '<div class="container py-3">\n' +
+        '    <!-- 404 Error Text -->\n' +
+        '    <div class="text-center mt-3">\n' +
+        '      <img class="mb-4" src="../../assets/images/navegador.svg" alt="" width="175" height="auto">\n' +
+        '      <!-- <div class="error mx-auto" data-text="500">500</div> -->\n' +
+        '      <h4 class="mb-3">Navegador no Compatible</h4>\n' +
+        '      <p class="mb-5 p20">Su navegador web no es compatible,' +
+        ' para visualizar la página web debes utilizar un moderno navegador que sea totalmente compatible.\n' +
+        'Te invitamos a actualizar la versión de tu navegador.</p>\n' +
+        '      <div class="browsers">\n' +
+        '        <a class="text-white" href="https://www.google.com/intl/es_ALL/chrome/" target="_blank">\n' +
+        '          <img src="../../assets/images/chrome-logo.png">\n' +
+        '          <span>Chrome</span>\n' +
+        '        </a>\n' +
+        '        <a class="text-white" href="https://support.apple.com/kb/DL1569?viewlocale=es_ES&locale=es_ES" target="_blank">\n' +
+        '          <img src="../../assets/images/safari-logo.png">\n' +
+        '          <span>Safari</span>\n' +
+        '        </a>\n' +
+        '        <a class="text-white" href="https://www.mozilla.org/es-ES/firefox/new/" target="_blank">\n' +
+        '          <img src="../../assets/images/firefox-logo.png">\n' +
+        '          <span>Firefox</span>\n' +
+        '        </a>\n' +
+        '        <a class="text-white" href="https://www.microsoft.com/es-co/windows/microsoft-edge" target="_blank">\n' +
+        '          <img src="../../assets/images/edge-logo.png">\n' +
+        '          <span>Edge</span>\n' +
+        '        </a>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>';
+
+      var incompatibleBrowser = false;
+
+      if (bowser.name == 'Chrome' && bowser.version <= 60.0) {
+        incompatibleBrowser = true
+      } else if (bowser.name == 'Internet Explorer' && bowser.version <= 11.0) {
+        incompatibleBrowser = true
+      } else if (bowser.name == 'Firefox' && bowser.version <= 60.0) {
+        incompatibleBrowser = true
+      } else if (bowser.name == 'Opera' && bowser.version <= 50.0) {
+        incompatibleBrowser = true;
+      } else if (bowser.name == 'Safari' && bowser.version <= 11.0) {
+        incompatibleBrowser = true
+      } else if (bowser.name == 'Microsoft Edge' && bowser.version <= 13.0) {
+        incompatibleBrowser = true
+      }
+
+
+      if (incompatibleBrowser) {
+        document.getElementById("div_body").innerHTML = html;
+      }
+
+    };
+  </script>
+  <!-- <script src="env.js"></script> -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
+  <script defer src="assets/js/brands.min.js"></script>
+  <script defer src="assets/js/solid.min.js"></script>
+  <script defer src="assets/js/fontawesome.min.js"></script>
+
+  <!-- Zoom Image -->
+  <style>
+    .ngxImageZoomContainer,
+    .ngxImageZoomThumbnail {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>
+</head>
+
+<body id="div_body">
+  <app-root>
+    <div
+      style="height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+      <img src="assets/images/logo-siesa.png" alt="Siesa e-commerce">
+      <h6 style="font-size: larger;">Cargando...</h6>
+    </div>
+  </app-root>
+  <script src="assets/js/jquery.min.js" charset="utf-8"></script>
+  <script src="assets/js/popper.min.js" charset="utf-8"></script>
+  <script src="assets/js/bootstrap.min.js" charset="utf-8"></script>
+  <script src="assets/js/jquery.countdown.min.js" charset="utf-8"></script>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+  <!-- Mobile JS -->
+  <script>
+    var toggleSearchBar = false;
+
+    // Search Mobile
+    function openSearch() {
+      toggleSearchBar = !toggleSearchBar;
+      if (toggleSearchBar) {
+        document.getElementById("mobileSearch").style.display = "block";
+      } else {
+        document.getElementById("mobileSearch").style.display = "none";
+      }
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbp3QS4clp9tPZWRcLkc21Plv1dVgRQ7M"
+    type="text/javascript"></script>
+</body>
+
+</html>

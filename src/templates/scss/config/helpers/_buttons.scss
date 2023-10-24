@@ -1,0 +1,17 @@
+.btn-favorites {
+  background: transparent;
+  color: white;
+  background: var(--gray-600);
+
+  &:hover {
+    background: var(--red);
+    color: white;
+    border: 1px solid var(--red);
+  }
+
+  &.selected {
+    background: var(--red);
+    color: white;
+    border: 1px solid var(--red);
+  }
+}

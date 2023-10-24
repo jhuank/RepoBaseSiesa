@@ -1,0 +1,274 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Producto no Encontrado
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Header -->
+<div class="container">
+  <div clasS="row">
+    <div class="col-12 mb-3">
+      <h1 class="title-section">
+        Producto no Encontrado
+      </h1>
+      <p class="text-justify">No se encontraron ítems relacionados con la(s) palabra(s) <span
+        class="text-danger">"{{productFormNotFound.get('productSearchText').value}}".</span> Es posible que lo que busca
+        esté en nuestra base de datos con otro nombre. Por favor diligencie el siguiente
+        formulario y pronto estaremos en contacto.</p>
+    </div>
+  </div>
+</div>
+<!-- Product not Found -->
+<div class="product-not-found-container">
+  <div class="container">
+    <div class="row">
+      <!-- form -->
+      <div class="col-12 col-lg-7 mb-3">
+        <!-- Form -->
+        <form autocomplete="off"
+              (ngSubmit)="send()"
+              [formGroup]="productFormNotFound"
+              [hidden]="(loading || feedback)">
+          <div class="form-row">
+            <!-- Name -->
+            <div class="form-group col-12 col-lg-6">
+              <label>Nombre(s)*</label>
+              <app-input [inputControl]="productFormNotFound.get('name')"
+                placeholder="Nombre"
+                maxlength="50"
+                [feedback]="{ required: 'Se necesita un nombre' }">
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+            <!-- Lastname -->
+            <div class="form-group col-12 col-lg-6">
+              <label>Apellido(s)*</label>
+              <app-input placeholder="Apellidos"
+                maxlength="50"
+                [inputControl]="productFormNotFound.get('lastName')"
+                [feedback]="{
+                  required: 'El apellido es requerido'
+                }">
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+          </div>
+          <div class="form-row">
+            <!-- Gender -->
+            <div class="form-group col-12 col-lg-6">
+              <label>Género*</label>
+              <app-input type="select"
+                [inputControl]="productFormNotFound.get('gender')"
+                [feedback]="{
+                  required: 'El género es requerido'
+                }">
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-venus-mars"></i>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container options>
+                  <option value="">Seleccione el género</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Masculino">Masculino</option>
+                </ng-container>
+              </app-input>
+            </div>
+            <!-- City -->
+            <div class="form-group col-12 col-lg-6">
+              <label>Ciudad*</label>
+              <app-input placeholder="Ciudad"
+                maxlength="50"
+                [inputControl]="productFormNotFound.get('city')"
+                [feedback]="{
+                  required: 'La ciudad de residencia es requerido'
+                }">
+                <!-- Icon -->
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+          </div>
+          <!-- Email -->
+          <div class="form-group">
+            <label>Correo Electrónico*</label>
+            <app-input placeholder="Correo Electrónico"
+              maxlength="50"
+              [inputControl]="productFormNotFound.get('email')"
+              [feedback]="{
+                required: 'El correo electrónico es requerido',
+                pattern: 'El correo electrónico es invalido'
+              }">
+              <!-- Icon -->
+              <ng-container icon>
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </div>
+                </div>
+              </ng-container>
+            </app-input>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-12 col-lg-3">
+              <label>Indicativo del país*</label>
+              <app-input type="number" placeholder="Indicativo"
+                maxlength="4"
+                [inputControl]="productFormNotFound.get('indicative')"
+                [feedback]="{
+                  required: 'El indicativo telefónico del país es requerido',
+                  pattern: 'El indicativo debe ser un numérico',
+                  maxlength: 'El indicativo es de uno a tres dígitos',
+                  min: 'El indicativo no puede ser menor a 1'
+                }">
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+            <!-- Celular -->
+            <div class="form-group col-12 col-lg-5">
+              <label>Celular*</label>
+              <app-input type="number" placeholder="Celular" [inputControl]="productFormNotFound.get('movil')"
+                maxlength="10"
+                [feedback]="{
+                  required: 'El celular es requerido',
+                  maxlength: 'El celular debe contener máximo 10 dígitos',
+                  minlength: 'El celular debe contener mínimo 10 dígitos',
+                  min: 'El celular es invalido',
+                  pattern: 'El teléfono debe ser un numérico'
+                }">
+                <!-- Icon -->
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-mobile-alt"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+            <!-- Teléfono-->
+            <div class="form-group col-12 col-lg-4">
+              <label>Teléfono</label>
+              <app-input type="number" placeholder="Teléfono"
+                maxlength="7"
+                [inputControl]="productFormNotFound.get('phone')"
+                [feedback]="{
+                  maxlength: 'El teléfono debe contener máximo 7 dígitos',
+                  minlength: 'El teléfono debe contener mínimo 7 dígitos',
+                  min: 'El teléfono es invalido',
+                  pattern: 'El teléfono debe ser un numérico'
+                }">
+                <!-- Icon -->
+                <ng-container icon>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-phone-alt"></i>
+                    </div>
+                  </div>
+                </ng-container>
+              </app-input>
+            </div>
+          </div>
+          <!-- Response -->
+          <div class="form-group">
+            <label>¿Cómo desea ser contactado?*</label>
+            <app-input type="select"
+              [inputControl]="productFormNotFound.get('replyOption')"
+              [feedback]="{
+                required: 'Selecciona una opción para contactarte'
+              }">
+              <ng-container icon>
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-bell"></i>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container options>
+                <option value="">¿Cómo desea ser contactado?</option>
+                <option value="Email">Vía email</option>
+                <option value="Telefono">Vía telefónica</option>
+                <option value="Visita Presencial">Visita Presencial</option>
+              </ng-container>
+            </app-input>
+          </div>
+          <!-- Message -->
+          <div class="form-group">
+            <label>Mensaje*</label>
+            <textarea class="form-control" id="comment" rows="9" formControlName="message"
+                      placeholder="Escríba aquí su mensaje" required></textarea>
+          </div>
+          <!-- Re-Captcha -->
+          <div class="form-group">
+            <re-captcha formControlName="captcha"></re-captcha>
+          </div>
+          <!-- Action -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+              Enviar
+            </button>
+          </div>
+        </form>
+        <!-- Feedback -->
+        <div class="alert alert-success" role="alert" [hidden]="!feedback">
+          <h4 class="alert-heading">PRONTO ESTAREMOS EN CONTACTO</h4>
+          <small class="text-justify">Su mensaje ha sido enviado exitosamente. Pronto uno de nuestros representantes
+            comerciales se contactará con
+            usted.</small>
+        </div>
+      </div>
+      <!-- ADS -->
+      <ng-container *ngIf="cms$ | async as cmsData">
+        <aside class="col-12 col-lg-5 mb-5 d-lg-block d-none">
+          <app-advertisements
+            typeContent="espacios"
+            positions="1"
+            [contentData]="cmsData">
+          </app-advertisements>
+        </aside>
+      </ng-container>
+    </div>
+  </div>
+</div>

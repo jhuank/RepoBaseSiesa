@@ -1,0 +1,20 @@
+// Order Detail
+
+// Add Comment
+.add-comment-link {
+  color: var(--primary);
+  cursor: pointer;
+  &:hover {
+    color: var(--secondary);
+  }
+}
+
+.gift-item-one {
+  flex: 1;
+}
+
+.gift-item-two {
+  flex: 1.37;
+  width: 1em;
+  word-wrap: break-word;
+}

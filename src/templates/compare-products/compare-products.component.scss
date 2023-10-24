@@ -1,0 +1,40 @@
+.box-product-container {
+  .item-product {
+    .item-image {
+      object-fit: contain;
+      border-radius: .25rem;
+      border: 1px solid var(--light);
+      margin-bottom: 1rem;
+    }
+
+    .item-name-container {
+      @media (min-width: 992px) {
+        min-height: 3.1rem;
+      }
+
+      .item-name-link {
+        color: var(--primary);
+        font-weight: bold;
+
+        &:hover {
+          color: var(--secondary);
+        }
+      }
+    }
+
+    .item-description-container {
+      @media (min-width: 992px) {
+        min-height: 7.5rem;
+      }
+    }
+  }
+}
+
+.back-container {
+  display: flex;
+  justify-content: flex-end;
+  border-radius: .25rem;
+  background: var(--light);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}

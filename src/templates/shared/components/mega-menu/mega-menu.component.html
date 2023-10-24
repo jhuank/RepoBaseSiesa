@@ -1,0 +1,59 @@
+<!-- Megamenu Desktop -->
+<li class="nav-item d-lg-block d-none">
+  <a class="nav-link" title="{{menu?.nombre}}" [routerLink]="navigate(menu)"  #mainCattegoryName>
+    {{menu?.nombre}}
+  </a>
+  <div class="dropdown-menu">
+    <div class="dropdown-item animate slideIn" *ngFor="let item of menu?.hijas">
+      <a class="dropdown-link" title="{{menu?.nombre}}" [routerLink]="navigate(item)" #menuItem>
+        {{item?.nombre}}
+      </a>
+      <div class="dropdown-menu-child">
+        <div class="dropdown-item-child" *ngFor="let itemSecondLevel of item?.hijas">
+          <a class="dropdown-link-child" title="{{itemSecondLevel?.nombre}}" [routerLink]="navigate(itemSecondLevel)" #menuItem>
+            {{itemSecondLevel?.nombre}}
+          </a>
+          <div class="dropdown-menu-grandchild">
+            <div class="dropdown-item-grandchild" *ngFor="let itemThirdLevel of itemSecondLevel?.hijas">
+              <a class="dropdown-link-grandchild" title="{{itemThirdLevel?.nombre}}" [routerLink]="navigate(itemThirdLevel)" #menuItem>
+                {{itemThirdLevel?.nombre}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
+
+<!-- MegaMenu Mobile -->
+<nav class="menu-mobile d-block d-lg-none" role="navigation">
+  <ng-template #recursiveMobileList let-list>
+    <div *ngFor="let item of list">
+      <a
+        *ngIf="item?.url_destino; else movilSlugRoute"
+        class="btn-menu d-block text-left ancla-decoration"
+        role="button"
+        [href]="item.url_destino" [ngClass]="{'text-capitalize':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 1,
+        'text-lowercase':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 2,
+        'text-uppercase':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 3}">
+        <i class="icon-bag"></i> {{item.nombre}}
+      </a>
+      <ng-template #movilSlugRoute>
+        <a [ngClass]="{'collapse-item':item.expanded && item.hijas, 'collapse-show':!item.expanded && item.hijas, 'text-capitalize':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 1,
+           'text-lowercase':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 2,
+           'text-uppercase':parametersService?.company?.config?.menu?.presentacionNombresCategoriasMenu == 3 }"
+           class="btn-menu d-block text-left"
+           role="button"
+           (click)="menuAction(item)">
+          <i class="icon-bag"></i> {{item.nombre}}
+        </a>
+      </ng-template>
+      <div [ngClass]="{'collapsing-1':item.expanded, 'collapsing-2':!item.expanded}"
+           [hidden]="!item.expanded">
+        <ng-container *ngTemplateOutlet="recursiveMobileList; context:{ $implicit: item.hijas }"></ng-container>
+      </div>
+    </div>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="recursiveMobileList; context:{ $implicit: menu.hijas }"></ng-container>
+</nav>

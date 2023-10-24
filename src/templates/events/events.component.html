@@ -1,0 +1,103 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+            <span class="w700">
+              Eventos
+            </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Title -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h1 class="title-section">Eventos</h1>
+      </div>
+    </div>
+  </div>
+  <!-- ADS -->
+  <app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1" [contentData]="cmsData"></app-advertisements>
+  <!-- Content Events -->
+  <div class="container">
+    <div id="accordion">
+      <div class="card filter-options position-relative">
+        <div class="card-header">
+          <div class="row no-gutters align-items-center">
+            <div class="col align-self-end d-flex justify-content-end">
+              <!-- Quantity in View -->
+              <div class="col-auto">
+                <div class="form-inline">
+                  <label class="mr-2 d-none d-lg-inline-flex">Ver:</label>
+                  <select class="custom-select custom-select-sm"
+                          (change)="updateListByPageSize($event.target.value)">
+                    <option value="">Ver</option>
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Events Container -->
+  <div class="events-container">
+    <div class="container my-5">
+      <div class="row" *ngFor="let event of events">
+        <div class="col-4 col-lg-2 mb-3">
+          <div class="d-flex justify-content-center align-items-center w-100 h-100 bg-primary text-white">
+            <h2 class="text-center w700">{{event.dia}}<br>{{getMonth(event.mes)}}</h2>
+          </div>
+        </div>
+        <div class="col-8 col-lg-10 mb-3">
+          <a [routerLink]="['/events-detail/', event.id]">
+            <h5 class="w700">{{event.nombre}}</h5>
+          </a>
+          <div [innerHtml]="event.descripcion"></div>
+          <p>
+            <i class="icon-location-pin"></i> {{event.lugar}}<br>
+            <i class="icon-clock"></i> {{event.hora}}
+          </p>
+          <button class="btn btn-primary" [routerLink]="['/events-detail/', event.id]">Ver Evento
+          </button>
+        </div>
+      </div>
+      <div class="row" *ngIf="!events">
+        <div class="col-12 mb-5">
+          <p class="mb-0">Actualmente no se encuentran eventos disponibles.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <!-- pagination -->
+          <section class="paginator">
+            <label class="mb-2 mb-lg-0">
+              Mostrando {{ pagination.page }} a {{ pagination.pageSize }} de {{ pagination.total }} productos
+            </label>
+            <ngb-pagination [(page)]="pagination.page" [pageSize]="pagination.pageSize" [maxSize]="3"
+                            [collectionSize]="pagination.total"
+                            (pageChange)="handlePageChange($event)"></ngb-pagination>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ADS -->
+  <app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="2"
+                      [contentData]="cmsData"></app-advertisements>
+</ng-container>

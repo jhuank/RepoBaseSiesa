@@ -1,0 +1,85 @@
+// ==========================================================================
+// COLORES DURATEX : THEME BASE
+// ==========================================================================
+
+$primary: #004f91;
+$primary-darken: darken($primary, 5%);
+$primary-lighten: lighten($primary, 5%);
+$variant: #30B7D2;
+$alternative: #F15A24;
+$complement: complement($primary);
+
+.primary {
+  color: $primary;
+}
+
+.primary-darken {
+  color: $primary-darken;
+}
+
+.primary-lighten {
+  color: $primary-lighten;
+}
+
+.variant {
+  color: $variant;
+}
+
+.alternative {
+  color: $alternative;
+}
+
+.complement {
+  color: $complement;
+}
+
+// ==========================================================================
+// COLORES TEXTO
+// ==========================================================================
+
+$text-color: #424242;
+$text-login: white;
+$text-validation: $variant;
+
+// ==========================================================================
+// COLORES BASE
+// ==========================================================================
+
+$success: $teal;
+$info: $cyan;
+$warning: $yellow;
+$danger: #e74a3b;
+
+.success {
+  color: $success;
+}
+
+.info {
+  color: $info;
+}
+
+.warning {
+  color: $warning;
+}
+
+.danger {
+  color: $danger;
+}
+
+// ==========================================================================
+// COLORES TEXTO
+// ==========================================================================
+
+$text-color: #424242;
+$text-primary: $primary;
+$text-btn-login: white;
+
+// ==========================================================================
+// COLORES FOOTER
+// ==========================================================================
+
+$text-footer: white;
+$footer-bottom-text: white;
+$footer-bottom-bg: $gray-900;
+$main-footer-text: white;
+$main-footer-bg: $gray-800;

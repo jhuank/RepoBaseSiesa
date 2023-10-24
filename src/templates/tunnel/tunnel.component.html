@@ -1,0 +1,750 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Finalizar Compra
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Tunnel -->
+<div class="tunnel-container">
+  <div class="container" *ngIf="!orderSaved">
+    <!-- Loading -->
+    <div class="wrapper-loading-animation" *ngIf="loadingCartInfo">
+      <div class="d-flex align-items-center flex-column py-5">
+        <i class="fas fa-spinner fa-pulse fa-3x"></i>
+        <p class="mt-1 w700">
+          Cargando...
+        </p>
+      </div>
+    </div>
+    <!-- Tunnel Title -->
+    <form id="tunel-step2-form" #forma="ngForm" novalidate *ngIf="!parametersService.page?.solicitarInfoTransporte">
+      <div class="row" *ngIf="loadedCartInfo">
+        <div class="col-12 col-lg-9 mb-3" *ngIf="auth.isAuthenticated">
+          <!-- Tunnel Shopping Cart -->
+          <header *ngIf="!orderIdInsideTunnel">
+            <h1 class="title-section">
+              Finalizar compra
+            </h1>
+            <p class="text-justify">
+              Hola <span class="w700">{{auth.currentUserValue.firstname}}</span>, esta es la información de tu pedido:
+            </p>
+          </header>
+          <!--  Tunnel Order -->
+          <header *ngIf="orderIdInsideTunnel">
+            <h1 class="w700">
+              Dirección de Entrega
+            </h1>
+            <p class="text-justify">
+              Hola <span class="w700">{{auth.currentUserValue.fullname}}</span>, esta es su confirmación de pedido No.
+              para el cual no se ha finalizado el proceso de compra. Confirme la información de los siguientes pasos
+              para continuar con el proceso de finalizacíón de la compra:
+            </p>
+          </header>
+          <!-- Shipping Information -->
+          <section class="shipping">
+            <div id="shippingInfo" class="accordion shipping-info mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0" *ngIf="cart.isCollectedInStore">
+                    Información de Tienda
+                  </h5>
+                  <h5 class="font-weight-bold mb-0" *ngIf="!cart.isCollectedInStore">
+                    Información de Destino
+                  </h5>
+                </div>
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col-12 col-lg-4 mb-3 mb-lg-0"
+                         *ngIf="(!parametersService.page?.deliveryParams?.delivery_mode && !parametersService.page?.deliveryParams?.store_pickup_mode) || !parametersService.company?.config?.crearDireccionModalCobertura">
+                      <!-- Location Name -->
+                      <label class="control-label w700">Ubicación:</label>
+                      <select class="custom-select custom-select-sm mb-1"
+                              (change)="setDestinationLocation($event.target.value)">
+                        <option value="">Seleccionar</option>
+                        <option *ngFor="let operatingCenter of locationService.locations"
+                                [selected]="(
+                                  parametersService.page?.deliveryParams?.delivery_mode && parametersService.company?.config?.crearDireccionModalCobertura ?
+                                  (operatingCenter.direccion === cartService.shoppingCart?.cartLocation?.address) :
+                                  (tunnelStep2FormData.contactAddressDeliveryId ? tunnelStep2FormData.contactAddressDeliveryId === operatingCenter.id: operatingCenter.id == selectLocation.id)
+                                )"
+                                [value]="operatingCenter.location | json">{{operatingCenter.nombre}}</option>
+                      </select>
+                    </div>
+                    <div class="col-12 mb-3 mb-lg-0"
+                         [ngClass]="{'col-lg-9': parametersService.company?.config?.crearDireccionModalCobertura, 'col-lg-5':!parametersService.company?.config?.crearDireccionModalCobertura}">
+                      <!-- Location Info -->
+                      <small class="mb-0">
+                        <span
+                          class="w700">Dirección:</span> {{parametersService.page?.deliveryParams?.delivery_mode && parametersService.company?.config?.crearDireccionModalCobertura ? cartService.shoppingCart?.cartLocation?.address : tunnelStep2FormData.contactAddressDelivery}}
+                        <br>
+                        <span class="w700">Ciudad:</span> {{cartService.shoppingCart?.cartLocation?.cityName}}<br>
+                        <span *ngIf="cartService.shoppingCart?.cartLocation?.neighborhoodName"
+                              class="w700">Barrio:</span> {{cartService.shoppingCart?.cartLocation?.neighborhoodName}}
+                        <br>
+                        <span *ngIf="cartService.shoppingCart?.isCollectedInStore"
+                              class="w700">Fecha entrega programada:</span> {{cartService.shoppingCart?.cartOrderData?.deliveryDay}}
+                        <br>
+                        <span class="w700">Departamento:</span> {{cartService.shoppingCart?.cartLocation?.stateName}}
+                        <br>
+                        <span class="w700">País:</span> {{cartService.shoppingCart?.cartLocation?.countryName}}
+                      </small>
+                    </div>
+                    <div class="col-12 col-lg-3"
+                         *ngIf="(!parametersService.page?.deliveryParams?.delivery_mode && !parametersService.page?.deliveryParams?.store_pickup_mode) || !parametersService.company?.config?.crearDireccionModalCobertura">
+                      <!-- Actions -->
+                      <div class="d-flex justify-content-end flex-column small"
+                           *ngIf="auth.isAuthenticated">
+                        <a class="link-card" data-toggle="collapse" data-target="#collapseShippingInfo"
+                           (click)="isCollapsedShippingInfo = !isCollapsedShippingInfo"
+                           [attr.aria-expanded]="isCollapsedShippingInfo" aria-controls="collapseShippingInfo">
+                          Crear Dirección
+                        </a>
+                        <a [routerLink]="['/','order']">
+                          Cambiar Ciudad Destino
+                        </a>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3"
+                         *ngIf="parametersService.company?.config?.crearDireccionModalCobertura">
+                      <!-- Actions -->
+                      <div class="d-flex justify-content-end flex-column small"
+                           *ngIf="auth.isAuthenticated">
+                        <a class="link-card"
+                           (click)="ngxSmartModalService.getModal(locationService.modalReference).toggle()">
+                          Cambiar Destino
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="collapseShippingInfo" [ngbCollapse]="!isCollapsedShippingInfo" class="card-body small collapse"
+                     data-parent="#shippingInfo">
+                  <!-- New Address-->
+                  <section class="contact-information" ng-if="!$ctrl.allowGuestInTunnel">
+                    <h6 class="w700">
+                      <a class="card-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Nueva Dirección ({{contactCityDelivery}})
+                      </a>
+                    </h6>
+                    <hr>
+                    <div class="form-row" ng-if="!$ctrl.allowGuestInTunnel">
+                      <!-- Name -->
+                      <div class="form-group col-12 col-lg-6">
+                        <label class="control-label w700"></label>
+                        <label>Nombre de la dirección*</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">
+                              <i class="fas fa-address-card"></i>
+                            </div>
+                          </div>
+                          <input
+                            type="text"
+                            title="Ingrese el nombre de la dirección"
+                            placeholder="Nombre de la Dirección"
+                            class="form-control"
+                            maxlength="40"
+                            [(ngModel)]="newDirection.nombre"
+                            [ngModelOptions]="{standalone: true}">
+                        </div>
+                      </div>
+                      <!-- Address -->
+                      <div class="form-group col-12 col-lg-6">
+                        <label>Dirección*</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">
+                              <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                          </div>
+                          <input type="text"
+                                 title="Por favor ingrese la dirección"
+                                 placeholder="Dirección"
+                                 class="form-control"
+                                 maxlength="40"
+                                 [(ngModel)]="newDirection.direccion"
+                                 [ngModelOptions]="{standalone: true}"
+                                 restrict-type="email">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <!-- Actions Desktop -->
+                      <div class="form-group col-12 d-none d-lg-block">
+                        <button class="btn btn-primary" type="button"
+                                (click)="saveDirection(newDirection)">
+                          Guardar
+                        </button>
+                      </div>
+                      <!-- Actions Mobile -->
+                      <div class="form-group col-12 d-block d-lg-none">
+                        <button class="btn btn-primary btn-block" type="button"
+                                (click)="saveDirection(newDirection)">
+                          Guardar
+                        </button>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="font-weight-bold mb-0">Información de Contacto</h5>
+                </div>
+                <div class="card-body p-4">
+                  <div class="row">
+                    <div class="col-12 col-lg-9 mb-3 mb-lg-0">
+                      <!-- Location Info -->
+                      <small class="mb-0">
+                        <span class="w700">Nombre: </span> <span>{{tunnelStep2FormData.contactName}}</span> <br>
+                        <span class="w700">Correo Electrónico: </span> <span>{{tunnelStep2FormData.contactMail}}</span>
+                        <br>
+                        <span
+                          class="w700">Teléfono: </span><span>{{tunnelStep2FormData.contactPhoneIndicativeCountry}} {{ tunnelStep2FormData.contactPhoneIndicativeCity }} {{tunnelStep2FormData.contactPhone}}</span>
+                        <br>
+                        <span
+                          class="w700">Celular: </span><span>{{tunnelStep2FormData.contactMovilIndicative}} {{tunnelStep2FormData.contactMovil}}</span>
+                      </small>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <!-- Actions -->
+                      <div class="d-flex justify-content-end flex-column small"
+                           *ngIf="auth.isAuthenticated">
+                        <a class="link-card" data-toggle="collapse" data-target="#collapseContactInfo"
+                           (click)="isCollapsedContactInfo = !isCollapsedContactInfo"
+                           [attr.aria-expanded]="isCollapsedContactInfo" aria-controls="collapseContactInfo">
+                          Modificar Datos
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="collapseContactInfo" [ngbCollapse]="!isCollapsedContactInfo" class="card-body small collapse"
+                     data-parent="#shippingInfo">
+                  <!-- New Address-->
+                  <section class="contact-information">
+                    <div class="form-row">
+                      <!-- Name -->
+                      <div class="form-group col-12 col-lg-6">
+                        <label>Nombre*</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">
+                              <i class="fas fa-address-card"></i>
+                            </div>
+                          </div>
+                          <input appOnlyLetters
+                                 type="text"
+                                 title="Por favor ingrese el nombre de la persona de contacto"
+                                 name="contactName"
+                                 #contactName="ngModel"
+                                 placeholder="Nombre"
+                                 maxlength="50"
+                                 class="form-control"
+                                 [(ngModel)]="tunnelStep2FormData.contactName"
+                                 ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                 required mvalid="Nombre de persona de contacto">
+                        </div>
+                        <small class="mt-1 text-danger" *ngIf="contactName.invalid && contactName.touched">
+                          Ingrese el nombre de la persona de contacto.
+                        </small>
+                      </div>
+                      <!-- Email -->
+                      <div class="form-group col-12 col-lg-6">
+                        <label>Correo Electrónico*</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text">
+                              <i class="fas fa-envelope"></i>
+                            </div>
+                          </div>
+                          <input type="email"
+                                 title="Por favor ingrese el correo del contacto"
+                                 name="contactMail"
+                                 #contactMail="ngModel"
+                                 placeholder="Correo Electrónico"
+                                 class="form-control"
+                                 [(ngModel)]="tunnelStep2FormData.contactMail"
+                                 ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                 required mvalid="Correo electronico"
+                                 maxlength="50"
+                                 [class.is-invalid]="contactMail.invalid && contactMail.dirty"
+                                 pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                                 restrict-type="email">
+                        </div>
+                        <small class="mt-1 text-danger" *ngIf="contactMail.invalid">
+                          Ingrese un email de contacto válido.
+                        </small>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-12 col-lg-6">
+                        <div class="form-row">
+                          <!-- Telephone Number -->
+                          <label class="col-12">Teléfono</label>
+                          <div class="form-group col-4 col-lg-3">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                  <i class="fas fa-phone-alt"></i>
+                                </div>
+                              </div>
+                              <input appOnlyNumbers
+                                     type="tel"
+                                     title="Indicativo país teléfono de contacto"
+                                     name="contactPhoneIndicativeCountry"
+                                     placeholder="57"
+                                     class="form-control"
+                                     [(ngModel)]="tunnelStep2FormData.contactPhoneIndicativeCountry"
+                                     ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                     maxlength="4"
+                                     restrict-type="num">
+                            </div>
+                          </div>
+                          <div class="form-group col-3 col-lg-2">
+                            <input appOnlyNumbers
+                                   type="tel"
+                                   title="Indicativo ciudad teléfono de contacto"
+                                   name="contactPhoneIndicativeCity"
+                                   placeholder="2"
+                                   class="form-control"
+                                   [(ngModel)]="tunnelStep2FormData.contactPhoneIndicativeCity"
+                                   ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                   maxlength="2"
+                                   restrict-type="num">
+                          </div>
+                          <div class="form-group col-5 col-lg-7">
+                            <input appOnlyNumbers
+                                   type="tel"
+                                   title="teléfono de contacto"
+                                   name="contactPhone"
+                                   #contactPhone="ngModel"
+                                   placeholder="1234567"
+                                   class="form-control input-sm"
+                                   [(ngModel)]="tunnelStep2FormData.contactPhone"
+                                   ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                   minlength="7" mvalid="Télefono fijo"
+                                   maxlength="7">
+                          </div>
+                          <small class="mt-1 mr-1 text-danger" *ngIf="contactPhone.invalid">
+                            Debe ingresar 7 dígitos.
+                          </small>
+                        </div>
+                      </div>
+                      <div class="col-12 col-lg-6">
+                        <div class="form-row">
+                          <!-- Cell Phone Number -->
+                          <label class="col-12">Celular*</label>
+                          <div class="form-group col-4 col-lg-3">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                  <i class="fas fa-mobile-alt"></i>
+                                </div>
+                              </div>
+                              <input appOnlyNumbers
+                                     type="tel"
+                                     title="Indicativo teléfono móvil de contacto"
+                                     name="contactMovilIndicative"
+                                     #contactMovilIndicative="ngModel"
+                                     placeholder="57"
+                                     class="form-control"
+                                     [(ngModel)]="tunnelStep2FormData.contactMovilIndicative"
+                                     ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                     restrict-type="num"
+                                     maxlength="4"
+                                     required mvalid="Indicativo">
+                            </div>
+                          </div>
+                          <div class="form-group col-8 col-lg-9">
+                            <input appOnlyNumbers
+                                   type="tel"
+                                   title="teléfono móvil de contacto"
+                                   name="contactMovil"
+                                   #contactMovil="ngModel"
+                                   placeholder="1234567890"
+                                   class="form-control"
+                                   [(ngModel)]="tunnelStep2FormData.contactMovil"
+                                   ng-disabled="$ctrl.orderIdInsideTunnel || $ctrl.loadingSavingOrder || $ctrl.savingTunnelData"
+                                   minlength="10"
+                                   maxlength="10" required mvalid="Móvil">
+                          </div>
+                          <small class="mt-1 mr-1 text-danger" *ngIf="contactMovil.invalid && contactMovil.touched">
+                            Ingresa el indicativo.Ingresa el número móvil, debes ingresar 10 digitos.
+                          </small>
+                          <small class="mt-1 text-danger"
+                                 *ngIf="contactMovilIndicative.invalid && contactMovilIndicative.touched">
+                            Ingrese el Indicativo.
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Checkbox -->
+                    <div class="form-group">
+                      <input type="checkbox" name="policies"
+                             [checked]="registerInfo" (change)="registerData($event)">
+                      <small class="mt-1 text-muted" for="recibir-informacion">
+                        Usar datos de registro
+                      </small>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="col-12 col-lg-9 mb-3"
+             *ngIf="parametersService.page?.permitirCompraRapidaB2c && !auth.isAuthenticated">
+          <!-- Tunnel Shopping Cart -->
+          <header *ngIf="!orderIdInsideTunnel">
+            <h1 class="title-section">
+              Finalizar compra
+            </h1>
+            <p class="text-justify">
+              ¿Tienes una cuenta? <a class="link" [routerLink]="['/','login']">Haz clic aquí para acceder</a><br>
+            </p>
+            <h4 class="w700 mb-0">Datos de Facturación</h4>
+          </header>
+          <form [formGroup]="registerForm" (ngSubmit)="registerUser()" autocomplete="off" novalidate>
+            <div class="tab-content" id="myTabContent">
+              <!-- Person -->
+              <div class="tab-pane fade show active mt-3" id="person" role="tabpanel">
+                <p class="text-justify small">Los campos marcados con * son obligatorios.</p>
+                <div class="form-row">
+                  <!-- Name -->
+                  <div class="form-group col-12 col-lg-6">
+                    <label>Nombre(s)*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user-circle"></i>
+                        </div>
+                      </div>
+                      <input type="text" formControlName="firstName"
+                             placeholder="Ingrese su(s) nombre(s)"
+                             maxlength="50"
+                             class="form-control"
+                             [class.is-invalid]="isInvalid('firstName')"
+                             appOnlyLetters>
+                      <div class="invalid-feedback" [innerHTML]="getFeedback('firstName')"></div>
+                    </div>
+                  </div>
+                  <!-- Last Name -->
+                  <div class="form-group col-12 col-lg-6">
+                    <label>Apellido(s)*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user-circle"></i>
+                        </div>
+                      </div>
+                      <input type="text" formControlName="lastName"
+                             placeholder="Ingrese su(s) apellido(s)"
+                             maxlength="50"
+                             class="form-control"
+                             [class.is-invalid]="isInvalid('lastName')"
+                             appOnlyLetters>
+                      <div class="invalid-feedback" [innerHTML]="getFeedback('lastName')"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <!-- ID Type -->
+                  <div class="form-group col-12 col-lg-6">
+                    <label>Número de Identificación*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-address-card"></i>
+                        </div>
+                      </div>
+                      <input type="text" formControlName="numberId"
+                             placeholder="Por favor ingrese el número de identificación"
+                             class="form-control"
+                             maxlength="15"
+                             [class.is-invalid]="isInvalid('numberId')"
+                             appOnlyNumbers>
+                      <div class="invalid-feedback" [innerHTML]="getFeedback('numberId')"></div>
+                    </div>
+                    <small class="text-info mt-1" *ngIf="registerForm.get('numberId').pending">
+                      <i class="fas fa-spinner fa-pulse"></i> Validando el número de identificación...
+                    </small>
+                  </div>
+                  <!-- Celular -->
+                  <div class="form-group col-12 col-lg-2">
+                    <label>Indicativo*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-plus"></i>
+                        </div>
+                      </div>
+                      <input type="tel" formControlName="personIndicative" placeholder="57" maxlength="4"
+                             class="form-control"
+                             [class.is-invalid]="isInvalid('personIndicative')" appOnlyNumbers>
+                      <div class="invalid-feedback" [innerHTML]="getFeedback('personIndicative')"></div>
+                    </div>
+                  </div>
+                  <!-- Celular -->
+                  <div class="form-group col-12 col-lg-4">
+                    <label>Celular*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-mobile"></i>
+                        </div>
+                      </div>
+                      <input type="tel" formControlName="phone"
+                             placeholder="3100000000"
+                             maxlength="10"
+                             class="form-control"
+                             [class.is-invalid]="isInvalid('phone')"
+                             appOnlyNumbers>
+                      <div class="invalid-feedback" [innerHTML]="getFeedback('phone')"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <!-- Celular Alterno -->
+              <div *ngIf="parametersService.company?.config?.data?.register?.showContactAlternateNumber"
+                   class="form-group col-12 col-lg-2">
+                <label>Indicativo</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-plus"></i>
+                    </div>
+                  </div>
+                  <input type="tel" formControlName="personIndicativeTwo" placeholder="57" maxlength="4"
+                         class="form-control"
+                         [class.is-invalid]="isInvalid('personIndicativeTwo')" appOnlyNumbers
+                         (keyup)="fieldChange()">
+                  <div class="invalid-feedback" [innerHTML]="getFeedback('personIndicativeTwo')"></div>
+                </div>
+              </div>
+              <!-- Celular -->
+              <div *ngIf="parametersService.company?.config?.data?.register?.showContactAlternateNumber"
+                   class="form-group col-12 col-lg-4">
+                <label>Celular Alterno</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-mobile"></i>
+                    </div>
+                  </div>
+                  <input type="tel" formControlName="phoneTwo"
+                         placeholder="3100000000"
+                         maxlength="10"
+                         class="form-control"
+                         [class.is-invalid]="isInvalid('phoneTwo')"
+                         (keyup)="fieldChange()"
+                         appOnlyNumbers>
+                  <div class="invalid-feedback" [innerHTML]="getFeedback('phoneTwo')"></div>
+                </div>
+              </div>
+              <!-- Celular Alterno -->
+
+              <!-- City -->
+              <div class="form-group"
+                   [ngClass]="{'col-12 col-lg-6 ': parametersService.company?.config?.data?.register?.showContactAlternateNumber,'col-12 col-lg-12 ': !parametersService.company?.config?.data?.register?.showContactAlternateNumber}">
+                <label>Ciudad de destino*</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                  <input type="search" #searchLocation="ngModel" placeholder="Ciudad de Residencia" autocomplete="nope"
+                         class="form-control"
+                         [class.is-invalid]="searchLocation.touched && registerForm.get('city').invalid"
+                         [(ngModel)]="cart.order?.location.city.name" readonly [ngModelOptions]="{ standalone: true }"
+                         (input)="setSearchTerm(searchLocation.value)" appOnlyLetters>
+                  <div class="invalid-feedback" [innerHTML]="getFeedback('city')"></div>
+                  <div role="listbox" class="box-search-container small position-absolute w-100"
+                       *ngIf="!dataForm.locationSelected">
+                    <ul class="list-group" *ngIf="dataForm.locationsByFastSearch">
+                      <li class="list-group-item" *ngFor="let locationByFastSearch of dataForm.locationsByFastSearch"
+                          (click)="setLocationCity(locationByFastSearch);">
+                        {{locationByFastSearch.cityName}}, {{locationByFastSearch.stateName}} -
+                        {{locationByFastSearch.countryName}}</li>
+                    </ul>
+                    <ul class="list-group"
+                        *ngIf="!dataForm.locationsByFastSearch && dataForm.loadedLocationsByFastSearch && searchLocation.value.length >= 3">
+                      <li class="list-group-item">
+                        No hay resultados para '{{dataForm.searchLocationText}}'
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="form-row">
+
+              <!-- Barrio -->
+              <div class="form-group col-6 col-lg-6 " *ngIf="parametersService.page?.neighborhoodCoverage">
+                <label>Barrio</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                  <input type="search" placeholder="Barrio" autocomplete="nope"
+                         class="form-control"
+                         [(ngModel)]="cart.cartLocation.neighborhoodName" readonly
+                         [ngModelOptions]="{ standalone: true }">
+                </div>
+              </div>
+              <!-- Address -->
+              <div class="form-group col-6 col-lg-6">
+                <label>Dirección de destino*</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-map-pin"></i>
+                    </div>
+                  </div>
+                  <input type="text" formControlName="address"
+                         placeholder="Ingrese la dirección de contacto"
+                         maxlength="50"
+                         class="form-control"
+                         [readOnly]="(parametersService.company?.config?.crearDireccionModalCobertura ||parametersService.page?.deliveryParams?.store_pickup_mode)"
+                         [class.is-invalid]="isInvalid('address')">
+                </div>
+                <div class="invalid-feedback" [innerHTML]="getFeedback('address')"></div>
+              </div>
+            </div>
+            <!-- Email -->
+            <div class="form-group">
+              <label>Correo Electrónico*</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </div>
+                </div>
+                <input type="text" formControlName="email"
+                       placeholder="Correo Electrónico"
+                       maxlength="50"
+                       autocomplete="nope"
+                       class="form-control"
+                       [class.is-invalid]="isInvalid('email')">
+                <div class="invalid-feedback" [innerHTML]="getFeedback('email')"></div>
+              </div>
+              <small class="text-info mt-1" *ngIf="registerForm.get('email').pending">
+                <i class="fas fa-spinner fa-pulse"></i> Validando el correo electrónico...
+              </small>
+            </div>
+          </form>
+        </div>
+        <div class="col-12 col-lg-3 mb-5">
+          <!-- Resume -->
+          <div class="card filters mb-3">
+            <div class="card-header">
+              <h5 class="font-weight-bold m-0">
+                Resumen
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0 small">
+                <li class="d-flex flex-column mb-3">
+                  <span class="w700">Método de Pago:</span>
+                  <span>{{cartService.shoppingCart.cartOrderData.payment.name}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Subtotal:</span>
+                  <span>${{cartService.shoppingCart.cartSubtotal | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Descuentos:</span>
+                  <span>${{cartService.shoppingCart.cartDiscounts | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="parametersService.company?.config?.data?.cart?.showDiscountCoupon">
+                  <span class="w700">Descuentos X cupón:</span>
+                  <span>${{cartService.shoppingCart.cartCouponDiscounts | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Impuestos:</span>
+                  <span>${{cartService.shoppingCart.cartTaxes | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3"
+                    *ngIf="cartService?.shoppingCart?.valueTaxBag > 0">
+                  <span class="w700">Impuesto a la bolsa:</span>
+                  <span>${{cartService?.shoppingCart?.valueTaxBag | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Subtotal Neto:</span>
+                  <span>${{cartService.shoppingCart.cartSubtotal - cartService.shoppingCart.cartDiscounts - cartService.shoppingCart.cartCouponDiscounts + cartService.shoppingCart.cartTaxes + cartService?.shoppingCart?.valueTaxBag | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="w700">Transporte:</span>
+                  <span>${{cartService.shoppingCart.cartTransports | number : '1.0-0' }}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center">
+                  <span class="w700 text-uppercase">Total a Pagar:</span>
+                  <span class="w700">${{cartService.shoppingCart.cartTotal | number : '1.0-0'}}</span>
+                </li>
+                <li class="d-flex justify-content-between align-items-center my-3"
+                    *ngIf="parametersService.company?.config?.data?.tunnel?.showLabelSavingIva && cartService.shoppingCart.cartSavingDayIva > 0">
+                  <h6 class="w700 text-primary">{{ parametersService.company?.config?.data?.tunnel?.labelSavingIva }}</h6>
+                  <span>${{cartService.shoppingCart.cartSavingDayIva | number : '1.0-0' }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Actions -->
+          <ng-container *ngIf="!loadingSavingOrder; else loadingOrder">
+            <button type="button"
+                    (click)="saveTunnel(forma, true)"
+                    class="btn btn-block btn-primary"
+                    *ngIf="cart.order?.totalItemsToQuote !== cart.items?.length  && auth.isAuthenticated">
+              Hacer Pedido
+            </button>
+            <button type="button"
+                    (click)="saveTunnelQuickPurchase( forma, true)"
+                    class="btn btn-block btn-primary"
+                    *ngIf="cart.order?.totalItemsToQuote !== cart.items?.length && !auth.isAuthenticated">
+              Hacer Pedido
+            </button>
+            <button [routerLink]="['/','order']"
+                    class="btn btn-block btn-secondary">
+              Regresar al Carrito
+            </button>
+            <p class="small mb-0 mt-2">*Al hacer clic en <span class="w700">Hacer Pedido</span> acepta los
+              <a class="w700" target="_blank" [routerLink]="['/', 'politics', 'terminos-y-condiciones']">Términos
+                y condiciones</a> de nuestra tienda.
+            </p>
+          </ng-container>
+          <ng-template #loadingOrder>
+            <div class="d-flex justify-content-center">
+              <div class="spinner-grow text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+            <p class="text-center">Procesando tu compra...</p>
+          </ng-template>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

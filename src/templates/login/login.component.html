@@ -1,0 +1,102 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Iniciar Sesión
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Login -->
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-6 mb-5">
+      <h1 class="title-section">
+        Iniciar Sesión
+      </h1>
+      <p class="text-justify">
+        Por favor ingrese sus datos para iniciar sesión. Sí aún no tienes una cuenta <a
+        [routerLink]="['/','register']">registrarte aquí</a>.
+      </p>
+      <!-- Form Login -->
+      <form [formGroup]="formLogin" (ngSubmit)="login()" novalidate>
+        <!-- Email -->
+        <div class="form-group">
+          <label>Correo Electrónico*</label>
+          <app-input placeholder="Correo Electrónico"
+                     [inputControl]="formLogin.get('email')"
+                     [feedback]="formLoginFeedback.email">
+            <ng-container icon>
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-envelope"></i>
+                </div>
+              </div>
+            </ng-container>
+          </app-input>
+        </div>
+        <!-- Password -->
+        <div class="form-group">
+          <label>Contraseña*</label>
+          <app-input type="password" placeholder="Contraseña"
+                     [inputControl]="formLogin.get('password')"
+                     [feedback]="formLoginFeedback.password">
+            <ng-container icon>
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-lock"></i>
+                </div>
+              </div>
+            </ng-container>
+          </app-input>
+        </div>
+        <!-- Actions Mobile -->
+        <div class="form-group d-block d-lg-none">
+          <button class="btn btn-primary btn-block mr-1" type="submit" [disabled]="loading">
+            <span *ngIf="loading">
+              <i class="fas fa-spinner fa-pulse"></i>
+            </span>
+            Iniciar Sesión
+          </button>
+          <a class="btn btn-secondary btn-block mr-1" [routerLink]="['/','register']">
+            Registrarse
+          </a>
+          <a class="btn btn-link btn-block" role="button" [routerLink]="['/','password-recovery']">
+            ¿Has olvidado tu contraseña?
+          </a>
+        </div>
+        <!-- Actions Desktop -->
+        <div class="form-group d-none d-lg-flex">
+          <button class="btn btn-primary mr-1" type="submit" [disabled]="loading">
+            <span *ngIf="loading">
+              <i class="fas fa-spinner fa-pulse"></i>
+            </span>
+            Iniciar Sesión
+          </button>
+          <a class="btn btn-secondary mr-1" [routerLink]="['/','register']">
+            Registrarse
+          </a>
+          <a class="btn btn-link" role="button" [routerLink]="['/','password-recovery']">
+            ¿Has olvidado tu contraseña?
+          </a>
+        </div>
+      </form>
+    </div>
+    <div class="col-12 col-lg-6 mb-5 d-none d-lg-block">
+      <app-advertisements *ngIf="cms" [typeContent]="'espacios'" [positions]="1" [contentData]="cms">
+      </app-advertisements>
+    </div>
+  </div>
+</div>

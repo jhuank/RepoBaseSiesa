@@ -1,0 +1,131 @@
+<ng-container *ngIf="!switchSpinnerService.state">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb-container" aria-label="breadcrumb">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <ol class="breadcrumb small">
+            <li class="breadcrumb-item">
+              <a [routerLink]="['/']">
+                <i class="icon icon-home"></i>
+              </a>
+            </li>
+            <li class="breadcrumb-item active">
+            <span class="w700">
+              Favoritos
+            </span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="favorites-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mb-3">
+          <h1 class="title-section">Favoritos</h1>
+        </div>
+      </div>
+      <!-- Content Favorites -->
+      <div class="row">
+        <div class="col-12 mb-3">
+          <!-- Accordion Filters Options -->
+          <div id="accordion">
+            <div class="card filter-options position-relative">
+              <div class="card-header" id="headingThree">
+                <div class="row no-gutters align-items-center justify-content-between">
+                  <div class="col-auto col-lg order-2 order-lg-1">
+                    <!-- Search -->
+                    <a type="button" class="btn-card-header"
+                       [ngClass]="{'collapsed':!isCollapsedFilters}"
+                       data-toggle="collapse"
+                       data-target="#collapseSearch"
+                       (click)="isCollapsedSearch = !isCollapsedSearch"
+                       [attr.aria-expanded]="isCollapsedSearch" aria-controls="collapseSearch">
+                      <i class="icon icon-magnifier"></i>
+                      <p class="d-none d-lg-inline-flex ml-2 mb-0">Buscar producto</p>
+                    </a>
+                  </div>
+                  <!-- Quantity in View -->
+                  <div class="col-auto mr-2 order-1 order-lg-2">
+                    <div class="form-inline">
+                      <label class="mr-2 d-none d-lg-inline-flex">Ver:</label>
+                      <select class="custom-select custom-select-sm"
+                              (change)="updateListByPageSize($event.target.value)">
+                        <option value="">Ver</option>
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Search -->
+              <div id="collapseSearch" class="collapse-search card-body"
+                   [ngbCollapse]="!isCollapsedSearch" [ngClass]="{'collapse':!isCollapsedSearch}"
+                   aria-labelledby="headingSearch" data-parent="#accordion">
+                <!-- Search -->
+                <div class="position-relative">
+                  <input #filterMobileText type="text" class="form-control" placeholder="Busca tu producto"
+                         aria-label="Busca tu producto" aria-describedby="internal-search-addon"
+                         (keydown.enter)="updateListByText(filterMobileText.value)"
+                         (blur)="updateListByText(filterMobileText.value)">
+                  <button class="btn btn-primary btn-search" type="button" id="internal-search-addon"
+                          (click)="updateListByText(filterMobileText.value)">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-container
+        *ngIf="localSpinner; then localSpinnerTemplate; else productListTemplate">
+      </ng-container>
+      <ng-template #productListTemplate>
+        <div class="row">
+          <div class="col-12" *ngIf="favorites.length; else notFavorites ">
+            <!-- product list -->
+            <section class="box-product mb-2">
+              <div class="row">
+                <div class="col-6 col-lg-3 mb-3" *ngFor="let product of favorites | sortBy:'asc': name">
+
+                  <!-- Component: Box Products -->
+                  <app-box-product [product]="product"></app-box-product>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #localSpinnerTemplate>
+        <div class="row d-flex justify-content-center align-items-center" style="height: 300px;">
+          <div class="d-flex flex-column text-center">
+            <div class="spinner-grow text-primary" style="width: 6rem; height: 6rem;" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-1 w700"> Cargando...</p>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #notFavorites>
+        <div class="col-12">
+          <div class="alert alert-info" role="alert">
+            No hay Favoritos
+          </div>
+        </div>
+      </ng-template>
+      <!-- Paginator -->
+      <section class="paginator mb-5" *ngIf="!localSpinner">
+        <label class="mb-2 mb-lg-0">
+          Mostrando {{ pagination.page }} a {{ pagination.pageSize }} de {{ pagination.total }} productos
+        </label>
+        <ngb-pagination [(page)]="pagination.page" [pageSize]="pagination.pageSize" [maxSize]="3"
+                        [collectionSize]="pagination.total"
+                        (pageChange)="handlePageChange($event)"></ngb-pagination>
+      </section>
+    </div>
+  </div>
+</ng-container>

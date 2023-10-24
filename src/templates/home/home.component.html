@@ -1,0 +1,22 @@
+<!-- Anuncio -->
+<app-advertisements  [typeContent]="'carrusel'" [positions]="1"
+                     [contentData]="cmsData"></app-advertisements>
+<!-- Anuncio -->
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- List Products -->
+<app-list-products itemName="destacados"></app-list-products>
+<!-- Anuncio -->
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="2"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- List Products -->
+<app-list-products itemName="nuevos"></app-list-products>
+<!-- Anuncio -->
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="3"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- Carousel Marcas -->
+<app-advertisements class="carrousel-adv" *ngIf="cmsData" [typeContent]="'carrusel'" [positions]="2"
+                    [contentData]="cmsData"></app-advertisements>
+<!-- Anuncio -->
+<app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="4"
+                    [contentData]="cmsData"></app-advertisements>

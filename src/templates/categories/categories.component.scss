@@ -1,0 +1,44 @@
+// Categories
+.categories-container {
+  .category-container {
+
+    .img-category {
+      &-product {
+        object-fit: contain;
+        -webkit-transition: all .5s ease; /* Safari y Chrome */
+        -moz-transition: all .5s ease; /* Firefox */
+        -o-transition: all .5s ease; /* IE 9 */
+        -ms-transition: all .5s ease; /* Opera */
+        border-radius: .25rem;
+        border: 1px solid var(--light);
+
+        &:hover {
+          -webkit-transform: scale(1.05);
+          -moz-transform: scale(1.05);
+          -ms-transform: scale(1.05);
+          -o-transform: scale(1.05);
+          transform: scale(1.05);
+        }
+      }
+    }
+
+    .category-name {
+      .category-name-link {
+        color: var(--text);
+
+        &:hover {
+          color: var(--primary);
+        }
+
+        .category-name-text {
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 0;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}

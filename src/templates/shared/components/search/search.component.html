@@ -1,0 +1,55 @@
+<!-- Search Component Desktop -->
+<div class="search d-none d-lg-block">
+  <!-- Form -->
+  <form autocomplete="off" class="search-form" role="search">
+    <div class="position-relative">
+      <input #inputSearch
+        type="search"
+        (input)="search(inputSearch.value)"
+        (keydown.enter)="enter(inputSearch.value)"
+        [placeholder]="placeholder"
+        class="form-control input-search">
+      <button class="btn-search" (click)="enter(inputSearch.value)" >
+        <i-feather name="search"></i-feather>
+      </button>
+    </div>
+  </form>
+  <!-- Results -->
+  <div class="search-results" *ngIf="showResults">
+    <div class="list-group list-result">
+      <a *ngFor="let product of results"
+         (click)="inputSearch.value = product.name; showResults = false"
+         [routerLink]="[product.category.slug, product.slug ]"
+         class="list-group-item list-group-item-action list-result-item">
+        {{product.name}}
+      </a>
+    </div>
+  </div>
+</div>
+<!-- Search Component Mobile -->
+<div class="mobile-search-content d-block d-lg-none">
+  <!-- Form -->
+  <form autocomplete="off" class="search-form" role="search">
+    <div class="position-relative">
+      <input #inputSearchMobile type="search"
+             (input)="search(inputSearchMobile.value)"
+             (keydown.enter)="enter(inputSearchMobile.value)"
+             [placeholder]="placeholder"
+             class="form-control input-search rounded-0">
+      <button class="btn-search btn-search-mobile" (click)="enter(inputSearch.value)">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </form>
+  <!-- Results -->
+  <div class="search-results" *ngIf="showResults">
+    <div class="list-group list-result">
+      <a *ngFor="let product of results"
+          [routerLink]="['/', product.category.slug, product.slug]"
+          (click)="inputSearchMobile.value = product.name; showResults = false"
+          class="list-group-item list-group-item-action list-result-item rounded-0">
+        <span>{{product.name}}</span>
+      </a>
+    </div>
+  </div>
+</div>

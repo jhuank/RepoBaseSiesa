@@ -1,0 +1,84 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/','blog']">
+              Blog
+            </a>
+          </li>
+          <li class="breadcrumb-item active" *ngIf="blogDetail">
+            <span>
+              {{ blogDetail.post.nombre }}
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Blog -->
+<div class="blog-container">
+  <div class="container">
+    <div class="row" *ngIf="cmsData" class="banner">
+      <div class="col-12">
+        <app-advertisements *ngIf="cmsData.espacios[1]" [typeContent]="'espacios'" [positions]="1" [contentData]="cmsData"></app-advertisements>
+      </div>
+    </div>
+    <!-- Content -->
+    <div class="row mb-3">
+      <!-- Content Blog -->
+      <div class="post col-12 col-lg-9 mb-3">
+        <!-- Title -->
+        <h1 *ngIf="blogDetail" class="w700">
+          {{ blogDetail.post.nombre }}
+        </h1>
+        <!-- Tags -->
+        <div *ngIf="blogDetail" class="mb-3">
+          <div class="badge" *ngFor="let categories of blogDetail.post.categories">
+            <button href="#" class="btn btn-sm btn-secondary"
+                    [routerLink]="['/blog/category/',categories.slug]">
+              {{ categories.nombre }}
+            </button>
+          </div>
+        </div>
+        <!-- Author and Date -->
+        <div *ngIf="blogDetail" class="mb-3">
+          <small> {{ blogDetail.post.autor | uppercase }} | {{ blogDetail.post.fecha_publicacion }} </small>
+        </div>
+        <!-- Image -->
+        <div *ngIf="blogDetail" class="mb-3">
+          <img src="{{ blogDetail.post.imagen }}" class="img-post img-fluid">
+        </div>
+        <!-- Tags -->
+        <div *ngIf="blogDetail" class="mb-3">
+          <small class="w700 mr-1">Tags:</small>
+          <div class="badge" *ngFor="let tags of blogDetail.post.tags">
+            <button class="btn btn-secondary btn-sm" [routerLink]="['/blog/tag/',tags.slug]">
+              {{ tags.nombre }}
+            </button>
+          </div>
+        </div>
+        <!-- Description -->
+        <div *ngIf="blogDetail" class="mb-3">
+          <blockquote class="bg-light p-3">
+            <p class="text-justify mb-0">{{ blogDetail.post.descripcion }}</p>
+          </blockquote>
+        </div>
+        <!-- Content -->
+        <div *ngIf="blogDetail" [innerHTML]="blogDetail.post.contenido | safeHtml" class="text-justify mb-5">
+        </div>
+      </div>
+      <div class="col-12 col-lg-3">
+        <app-aside-blog [cmsData]="cmsData" [cmsType]="'espacios'" [cmsPosition]=2></app-aside-blog>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,531 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item">
+            <a [routerLink]="['/']">
+              <i class="icon icon-home"></i>
+            </a>
+          </li>
+          <li class="breadcrumb-item active">
+            <span class="w700">
+              Cuenta
+            </span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Title -->
+<div class="container">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <h1 class="title-section">Cuenta</h1>
+      <p class="text-justify">El siguiente formulario te permite actualizar los datos que ha registrado en nuestro
+        sistema.
+        Los campos marcados con asterisco (*) son de uso obligatorio.</p>
+    </div>
+  </div>
+</div>
+<!-- My Data -->
+<section class="my-account-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-7 mb-5">
+        <ngb-tabset>
+          <ngb-tab title="Datos Básicos">
+            <ng-template ngbTabContent>
+              <div class="my-3">
+                <!-- Form -->
+                <form #forma="ngForm" (ngSubmit)="updateAccountData(forma)" id="account-form" novalidate>
+                  <div class="form-row">
+                    <!-- Name -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Primer Nombre*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user-circle"></i>
+                          </div>
+                        </div>
+                        <input type="text" id="firstName" class="form-control" name="firstName"
+                               title="Por favor ingresa tu primer nombre" placeholder="Primer nombre"
+                               [(ngModel)]="accountDataForm.firstName" #firstName="ngModel"
+                               maxlength="50"
+                               [class.is-invalid]="firstName.invalid && firstName.touched"
+                               required
+                               appOnlyLetters>
+                        <div class="invalid-feedback">
+                          Ingresa tu primer nombre
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Second Name -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Segundo Nombre</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user-circle"></i>
+                          </div>
+                        </div>
+                        <input type="text" id="middleName" class="form-control" name="middleName"
+                               title="Por favor ingresa tu segundo nombre" placeholder="Segundo Nombre"
+                               [(ngModel)]="accountDataForm.middleName"
+                               maxlength="50"
+                               appOnlyLetters>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!-- Last Name -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Primer Apellido*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user-circle"></i>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                               title="Por favor ingresa su primer apellido" placeholder="Primer apellido"
+                               [(ngModel)]="accountDataForm.lastName" #lastName="ngModel"
+                               [class.is-invalid]="lastName.invalid && lastName.touched"
+                               required
+                               maxlength="50"
+                               appOnlyLetters>
+                        <div class="invalid-feedback">
+                          Ingresa tu primer apellido
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Surname -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Segundo Apellido</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-user-circle"></i>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control" id="surName" name="surName"
+                               title="Por favor ingresa su segundo apellido" placeholder="Segundo Apellido"
+                               [(ngModel)]="accountDataForm.surName"
+                               maxlength="50"
+                               appOnlyLetters>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!-- ID Type -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Tipo de Identificación*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-address-card"></i>
+                          </div>
+                        </div>
+                        <select disabled title="Por favor selecciona el tipo de identificación"
+                                class="custom-select" name="typeId" id="typeId" #typeId="ngModel"
+                                [(ngModel)]="accountDataForm.typeId">
+                          <option disabled value="">Seleccione...</option>
+                          <option *ngFor="let IdType of identificationsTypes" [value]="IdType.id">
+                            {{IdType.nombre}}
+                          </option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Selecciona el tipo de identificación
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ID -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>N° de Identificación*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-address-card"></i>
+                          </div>
+                        </div>
+                        <input readonly type="text"
+                               class="form-control"
+                               [value]="accountDataForm.numberId">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!-- Gender -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Género*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-venus-mars"></i>
+                          </div>
+                        </div>
+                        <select title="Por favor selecciona el género" class="custom-select" name="gender"
+                                id="gender" #gender="ngModel" [(ngModel)]="accountDataForm.gender"
+                                [class.is-invalid]="gender.invalid && gender.touched"
+                                required>
+                          <option value="">Seleccione...</option>
+                          <option value="1">Femenino</option>
+                          <option value="2">Masculino</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Ingresa tu género
+                        </div>
+                      </div>
+                    </div>
+                    <!-- City -->
+                    <div class="form-group col-12 col-lg-6">
+                      <label>Ciudad de Residencia*</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-map-marker-alt"></i>
+                          </div>
+                        </div>
+                        <input #searchLocationtext="ngModel" class="form-control"
+                               id="searchLocationtext" name="searchLocationtext"
+                               placeholder="Ciudad de Residencia"
+                               [(ngModel)]="accountDataForm.searchLocationtext"
+                               (keyup)="getLocationsByFastSearch(accountDataForm.searchLocationtext)"
+                               [class.is-invalid]="city.invalid && searchLocationtext.touched"
+                               autocomplete="nope" appOnlyLetters required>
+                        <input id="city" #city="ngModel" class="form-control d-none" name="city"
+                               [(ngModel)]="accountDataForm.city" autocomplete="off">
+                        <input id="state" class="form-control d-none" name="state"
+                               [(ngModel)]="accountDataForm.state" autocomplete="off">
+                        <input id="country" class="form-control d-none" name="country"
+                               [(ngModel)]="accountDataForm.country" autocomplete="off">
+                        <input id="city" class="form-control d-none" name="city"
+                               [(ngModel)]="accountDataForm.city" required autocomplete="off">
+                        <div class="box-search-container small position-absolute w-100 shadow"
+                             *ngIf="!accountDataForm.locationSelected">
+                          <ul class="list-group" *ngIf="accountDataForm.locationsByFastSearch.length">
+                            <li class="list-group-item"
+                                *ngFor="let locationByFastSearch of accountDataForm.locationsByFastSearch"
+                                (click)="setLocationCity(locationByFastSearch);">
+                              {{locationByFastSearch.cityName}}, {{locationByFastSearch.stateName}} -
+                              {{locationByFastSearch.countryName}}
+                            </li>
+                          </ul>
+                          <ul class="list-group"
+                              *ngIf="!accountDataForm.locationsByFastSearch.length && accountDataForm.loadedLocationsByFastSearch && accountDataForm.searchLocationtext.length > 3">
+                            <li class="list-group-item">
+                              No hay resultados para '{{accountDataForm.searchLocationtext}}'
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <small class="mt-1 text-danger" *ngIf="city.invalid && searchLocationtext.touched">
+                        Selecciona la ciudad de residencia
+                      </small>
+                    </div>
+                  </div>
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label>Correo Electrónico*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-envelope"></i>
+                        </div>
+                      </div>
+                      <input type="email" id="email" class="form-control" name="email"
+                             title="Por favor ingrese un correo electrónico" #email="ngModel"
+                             placeholder="Correo Electrónico"
+                             [(ngModel)]="accountDataForm.email" autocomplete="nope"
+                             [class.is-invalid]="email.invalid && email.dirty"
+                             required
+                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                             maxlength="50">
+                      <div class="invalid-feedback">
+                        <span *ngIf="email.hasError('required')">El correo electrónico es requerido</span>
+                        <span *ngIf="email.hasError('pattern')">Ingresa un email válido</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Confirm Email -->
+                  <div class="form-group">
+                    <label>Confirmar Correo Electrónico*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-envelope"></i>
+                        </div>
+                      </div>
+                      <input id="emailConfirmation" class="form-control" name="emailConfirmation"
+                             title="Por favor ingrese un correo electrónico" #emailConfirmation="ngModel"
+                             placeholder="Confirma tu email"
+                             [(ngModel)]="accountDataForm.emailConfirmation"
+                             [class.is-invalid]="emailConfirmation.invalid || !compareToEmail"
+                             autocomplete="nope"
+                             required
+                             maxlength="50">
+                      <small class="invalid-feedback">
+                        El email ingresado no es igual
+                      </small>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!-- Telephone Number -->
+                    <label class="col-12">Teléfono</label>
+                    <div class="form-group col-4 col-lg-3">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-phone-alt"></i>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control" maxlength="4" name="IndicativeCountry"
+                               placeholder="57" [(ngModel)]="accountDataForm.IndicativeCountry"
+                               appOnlyNumbers>
+                      </div>
+                    </div>
+                    <div class="form-group col-3 col-lg-2">
+                      <input type="text" class="form-control" maxlength="2" name="IndicativeCity"
+                             placeholder="2" [(ngModel)]="accountDataForm.IndicativeCity"
+                             appOnlyNumbers>
+                    </div>
+                    <div class="form-group col-5 col-lg-7">
+                      <input type="text" id="phone" class="form-control" name="phone"
+                             maxlength="7"
+                             placeholder="1234567"
+                             [(ngModel)]="accountDataForm.phone" appOnlyNumbers>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <!-- Cell Phone Number -->
+                    <label class="col-12">Celular*</label>
+                    <div class="form-group col-4 col-lg-3">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-mobile-alt"></i>
+                          </div>
+                        </div>
+                        <input type="text" id="indicative" class="form-control" name="indicative"
+                               maxlength="4"
+                               placeholder="57" #indicative="ngModel"
+                               [(ngModel)]="accountDataForm.indicative"
+                               [class.is-invalid]="indicative.invalid && indicative.dirty"
+                               required appOnlyNumbers>
+                        <div class="invalid-feedback">
+                          Ingresa el indicativo.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-8 col-lg-9">
+                      <input type="text" id="movil" class="form-control" name="movil" minlength="10"
+                             maxlength="10" #movil="ngModel" placeholder="1234567890"
+                             [(ngModel)]="accountDataForm.movil"
+                             [class.is-invalid]="movil.invalid && movil.dirty"
+                             appOnlyNumbers required>
+                      <div class="invalid-feedback">
+                    <span *ngIf="movil.hasError('required')">
+                      El teléfono celular es requerido.
+                    </span>
+                        <span *ngIf="movil.hasError('minlength')">
+                      El numero de celular debe contener mínimo 10 dígitos
+                    </span>
+                      </div>
+                    </div>
+                    <!-- Cell Phone Number 2 -->
+                    <label *ngIf="parametersService.company?.config?.data?.register?.showContactAlternateNumber"
+                           class="col-12">Celular Alterno</label>
+                    <div *ngIf="parametersService.company?.config?.data?.register?.showContactAlternateNumber"
+                         class="form-group col-4 col-lg-3">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-mobile-alt"></i>
+                          </div>
+                        </div>
+                        <input type="text" id="indicativoMovilDos" class="form-control" name="indicativoMovilDos"
+                               maxlength="4"
+                               placeholder="57" #indicativoMovilDos="ngModel"
+                               [(ngModel)]="accountDataForm.indicativoMovilDos"
+                               [class.is-invalid]="indicativoMovilDos.invalid && indicativoMovilDos.dirty"
+                               appOnlyNumbers>
+                        <div class="invalid-feedback">
+                          Ingresa el indicativo.
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="parametersService.company?.config?.data?.register?.showContactAlternateNumber"
+                         class="form-group col-8 col-lg-9">
+                      <input type="text" id="movilAlterno" class="form-control" name="movilAlterno" minlength="10"
+                             maxlength="10" #movilAlterno="ngModel" placeholder="1234567890"
+                             [(ngModel)]="accountDataForm.movilAlterno"
+                             [class.is-invalid]="movilAlterno.invalid && movilAlterno.dirty"
+                             appOnlyNumbers>
+                      <div class="invalid-feedback">
+                    <span *ngIf="movilAlterno.hasError('minlength')">
+                      El numero de celular debe contener mínimo 10 dígitos
+                    </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Checkbox -->
+                  <div class="form-group">
+                    <input id="recibir-informacion" type="checkbox" name="receiveInformation"
+                           [(ngModel)]="accountDataForm.receiveInformation">
+                    <small class="mt-1 text-muted" for="recibir-informacion">
+                      Deseo recibir información de promociones y productos.
+                    </small>
+                  </div>
+                  <!-- Action Desktop -->
+                  <div class="form-group d-none d-lg-flex">
+                    <button class="btn btn-primary" type="submit">
+                      Actualizar Datos Básicos
+                    </button>
+                  </div>
+                  <!-- Action Mobile -->
+                  <div class="form-group d-block d-lg-none">
+                    <button class="btn btn-primary btn-block" type="submit">
+                      Actualizar Datos Básicos
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab>
+            <ng-template ngbTabTitle>Cambiar Contraseña</ng-template>
+            <ng-template ngbTabContent>
+              <div class="my-3">
+                <form id="password-form" [formGroup]="changePasswordForm" (ngSubmit)="updatePasswordData()"
+                      autocomplete="nope" novalidate>
+                  <p class="text-justify">Si deseas cambiar tu contraseña ingresa tu contraseña actual y la nueva
+                    contraseña
+                    para actualizarla</p>
+                  <!-- Current Password -->
+                  <div class="form-group">
+                    <label>Contraseña Actual*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-lock"></i>
+                        </div>
+                      </div>
+                      <input type="password" formControlName="currentPassword"
+                             class="form-control"
+                             [class.is-invalid]="(
+                      changePasswordForm.get('currentPassword').invalid &&
+                      (changePasswordForm.get('currentPassword').dirty || changePasswordForm.get('currentPassword').touched)
+                    )"
+                             placeholder="Contraseña Actual"
+                             maxlength="50">
+                      <div class="invalid-feedback">
+                        Se requiere su contraseña actual
+                      </div>
+                    </div>
+                  </div>
+                  <!-- New Password -->
+                  <div class="form-group">
+                    <label>Nueva contraseña*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-lock"></i>
+                        </div>
+                      </div>
+                      <input type="password" formControlName="password"
+                             class="form-control"
+                             [class.is-invalid]="(
+                      changePasswordForm.get('password').invalid &&
+                      (changePasswordForm.get('password').dirty || changePasswordForm.get('password').touched)
+                    )"
+                             placeholder="Contraseña Nueva"
+                             maxlength="50">
+                      <div class="invalid-feedback">
+                    <span *ngIf="changePasswordForm.get('password').hasError('required')">
+                      Se requiere la nueva contraseña
+                    </span>
+                        <span *ngIf="changePasswordForm.get('password').hasError('minlength')">
+                      La nueva contraseña debe contener mínimo 7 caracteres entre números, letras y/o caracteres
+                    </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Confirm Password -->
+                  <div class="form-group">
+                    <label>Confirmar Contraseña*</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-lock"></i>
+                        </div>
+                      </div>
+                      <input type="password" formControlName="passwordConfirmation"
+                             class="form-control"
+                             [class.is-invalid]="(
+                      changePasswordForm.get('passwordConfirmation').invalid &&
+                      (changePasswordForm.get('passwordConfirmation').dirty || changePasswordForm.get('passwordConfirmation').touched)
+                    )"
+                             maxlength="50"
+                             placeholder="Confirmar Contraseña">
+                      <div class="invalid-feedback">
+                    <span *ngIf="changePasswordForm.get('passwordConfirmation').hasError('required')">
+                      Se requiere confirmar la nueva contraseña
+                    </span>
+                        <span *ngIf="changePasswordForm.get('passwordConfirmation').hasError('compare')">
+                      La contraseña digitada no es igual a la nueva contraseña
+                    </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Action Desktop -->
+                  <div class="form-group d-none d-lg-flex">
+                    <button class="btn btn-primary" type="submit" [disabled]="changePasswordFormLoading">
+                  <span *ngIf="changePasswordFormLoading">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                  </span>
+                      Cambiar Contraseña
+                    </button>
+                  </div>
+                  <!-- Action Mobile -->
+                  <div class="form-group d-block d-lg-none">
+                    <button class="btn btn-primary btn-block" type="submit" [disabled]="changePasswordFormLoading">
+                  <span *ngIf="changePasswordFormLoading">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                  </span>
+                      Cambiar Contraseña
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+        <!-- Content -->
+      </div>
+      <!-- ADS -->
+      <div class="col-12 col-lg-5 mb-5 d-lg-block d-none">
+        <app-advertisements *ngIf="cmsData" [typeContent]="'espacios'" [positions]="1"
+                            [contentData]="cmsData"></app-advertisements>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Script Mi Cuenta -->
+<script>
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        $('#avatar_photo')
+          .attr('src', e.target.result)
+          .width(128)
+          .height(128);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>

@@ -1,0 +1,18 @@
+.mastfoot {
+  color: $footer-bottom-text;
+  background-color: $footer-bottom-bg;
+  .mastfoot--link {
+    color: $footer-bottom-text;
+    &:hover {
+      color: $footer-bottom-text;
+    }
+  }
+}
+.footer__bottom  {
+  color: $footer-bottom-text;
+  background-color: $footer-bottom-bg;
+}
+.footer{
+  color: $main-footer-text;
+  background-color: $main-footer-bg;
+}

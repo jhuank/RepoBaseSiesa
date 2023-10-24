@@ -1,0 +1,170 @@
+.card {
+  border: 1px solid var(--light);
+
+  &.filters {
+    .card-header {
+      background: var(--primary);
+      color: white;
+      padding: 1.25em;
+      text-transform: uppercase;
+
+      &-link {
+        color: white;
+
+        &:hover {
+          color: var(--gray-300);
+        }
+      }
+    }
+
+    .card-body {
+      .list-group {
+        &-item {
+          padding: .75rem 0;
+        }
+      }
+    }
+  }
+}
+
+// Accordion Search
+.filter-options {
+  border: 0;
+
+  .card-header {
+    border: 1px solid var(--light);
+    padding: 0.75rem;
+    background: var(--light);
+  }
+
+  // Medium devices (tablets, less than 992px)
+  @media (max-width: 991.98px) {
+    .collapse-search {
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      z-index: 3;
+      background: var(--light);
+      border: 1px solid var(--gray-300);
+
+      .form-control {
+        background: white;
+      }
+
+      .btn-search {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        background: var(--primary);
+        color: white;
+      }
+    }
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) {
+    .collapse-search {
+      position: absolute;
+      top: 10px;
+      left: 34px;
+      padding: 0;
+      z-index: 3;
+      border: 0;
+      width: 300px;
+      visibility: visible;
+      -webkit-transition: all .2s ease; /* Safari y Chrome */
+      -moz-transition: all .2s ease; /* Firefox */
+      -o-transition: all .2s ease; /* IE 9 */
+      -ms-transition: all .2s ease; /* Opera */
+
+      .form-control {
+        background: white;
+      }
+
+      &.collapse:not(.show) {
+        display: inherit;
+        visibility: hidden;
+        width: 0;
+      }
+
+      .btn-search {
+        display: none;
+      }
+    }
+  }
+
+  .collapse-filters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    visibility: visible;
+    -webkit-transition: all .2s ease; /* Safari y Chrome */
+    -moz-transition: all .2s ease; /* Firefox */
+    -o-transition: all .2s ease; /* IE 9 */
+    -ms-transition: all .2s ease; /* Opera */
+
+    &.collapse:not(.show) {
+      display: inherit;
+      visibility: hidden;
+      height: 0;
+    }
+
+    .btn-close {
+      font-size: 1.5em;
+    }
+  }
+}
+
+.card-rates {
+  background: var(--light);
+  border: 1px solid var(--light);
+}
+
+// Accordion
+.accordion {
+  &.shipping-info {
+    .card-header {
+      padding: 1.25rem;
+    }
+  }
+
+  &.resume {
+    .card-header {
+      cursor: pointer;
+      padding: 1.25em;
+
+      &:after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f077";
+        position: absolute;
+        right: 1.25em;
+        top: 1.1em;
+      }
+
+      &.collapsed {
+        background: var(--primary);
+        color: white;
+        transition-duration: 0.5s;
+
+        &:after {
+          content: "\f078";
+        }
+      }
+    }
+  }
+}
+
+// List Group
+.list-group {
+  &-item {
+    padding: 0.75rem;
+  }
+}
+
+

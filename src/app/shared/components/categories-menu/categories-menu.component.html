@@ -1,0 +1,22 @@
+<li *ngFor="let item of categoriesMenu ; index as i"  class="{{(!item.url_destino && item.hijas.length) ? 'dropdown' :'' }}">
+
+  <!-- si tiene url destino -->
+  <a *ngIf="item.url_destino" href="{{item.url_destino}}">
+    {{item.nombre}}
+  </a>
+
+  <!-- si no tiene hijas y no es una categoria de procedimientos -->
+  <a *ngIf="!item.url_destino && !item.hijas.length" ui-sref="home.categorySlugProducts({categorySlug:item.slug})">
+    {{item.nombre}}
+  </a>
+
+  <!-- si tiene hijas -->
+  <a *ngIf="!item.url_destino && item.hijas.length" ui-sref="home.categorySlug({categorySlug:item.slug})">
+    {{item.nombre}}
+  </a>
+  <ul *ngIf="!item.url_destino && item.hijas.length" class="dropdown list-unstyled">
+
+  </ul>
+  <ul *ngIf="!item.url_destino && item.hijas.length" class="multilevel-menu" [items]="item.hijas" appMenu></ul>
+
+</li>
