@@ -1,35 +1,27 @@
-<!-- Quantity-->
 <div class="quantity">
-  <div class="input-group">
-    <!-- Minus btn -->
-    <div class="input-group-prepend">
-      <button class="btn btn-min" type="button"
-              [disabled]="minimumAvailable() || (updatingQuantity && updatingQuantityIdItem == idItem)"
-              (click)="minusQuantity()">
-        <svg class="bi bi-dash" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-             xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M3.5 8a.5.5 0 01.5-.5h8a.5.5 0 010 1H4a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
-        </svg>
-      </button>
-    </div>
-    <input *ngIf="!updatingQuantity || updatingQuantityIdItem != idItem" #inputNumber [value]="this.cartService.calculatoQua" class="form-control text-center"
-           type="text" [formControl]="inputQuantityControl"
-           appOnlyNumbers>
-    <div *ngIf="updatingQuantity && updatingQuantityIdItem == idItem" class="spinner-border text-info" role="status">
-      <span class="sr-only"></span>
-    </div>
-    <!-- Plus btn -->
-    <div class="input-group-append">
-      <button class="btn btn-max" type="button" (click)="plusQuantity()"
-              [disabled]="updatingQuantity && updatingQuantityIdItem == idItem">
-        <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-             xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
-                clip-rule="evenodd"/>
-          <path fill-rule="evenodd" d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
-                clip-rule="evenodd"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+  <!-- Minus Button -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    [disabled]="minimumAvailable() || (updatingQuantity && updatingQuantityIdItem == idItem)"
+    (click)="minusQuantity()">
+    <i class="fas fa-minus"></i>
+  </button>
+  <!-- Input -->
+  <input
+    #inputNumber
+    appOnlyNumbers
+    *ngIf="!updatingQuantity || updatingQuantityIdItem != idItem"
+    type="text"
+    class="form-control"
+    [value]="this.cartService.calculatoQua"
+    [formControl]="inputQuantityControl">
+  <!-- Plus Button -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="plusQuantity()"
+    [disabled]="updatingQuantity && updatingQuantityIdItem == idItem">
+    <i class="fas fa-plus"></i>
+  </button>
 </div>
